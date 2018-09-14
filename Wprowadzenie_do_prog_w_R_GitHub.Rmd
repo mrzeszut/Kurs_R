@@ -35,8 +35,6 @@ Wyniki moich badań możecie śledzić za pośrednictwem tzw. facebooka dla nauk
 
 ***
 
-To jest zaktualizowany plik.
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning=F,message=F,error=F)
 ```
