@@ -43,7 +43,7 @@ h1    { font-size: 24px;} h2    { font-size: 22px;} h3    { font-size: 20px;} </
 
 ***
 
-Jeśli chcesz dowiedzieć się torchę więcej o mnie to odwiedźć stronę [WWW](http://home.agh.edu.pl/~rzeszut/). Znjadziesz tam samouczki do pakietu `openair`, który służy do analizy danych o jakości powietrza. Jeśli chcesz na te temat dowiedzieć się więcej to na III roku studiów, możesz zapisać się na [fakultet](https://syllabuskrk.agh.edu.pl/2018-2019/pl/magnesite/study_plans/stacjonarne-inzynieria-srodowiska--6/module/dis-1-715-s-pakiet-r-w-analizie-danych-srodowiskowych).
+Jeśli chcesz dowiedzieć się torchę więcej o mnie to odwiedźć stronę [WWW](http://home.agh.edu.pl/~rzeszut/). Znjadziesz tam samouczki do pakietu `openair`, który służy do analizy danych z monitoringu jakości powietrza. Jeśli chcesz na te temat dowiedzieć się więcej to na III roku studiów, możesz zapisać się na [fakultet](https://syllabuskrk.agh.edu.pl/2018-2019/pl/magnesite/study_plans/stacjonarne-inzynieria-srodowiska--6/module/dis-1-715-s-pakiet-r-w-analizie-danych-srodowiskowych).
 
 Wyniki moich badań można śledzić na tzw. facebooku dla naukowców czyli [Researchgate](https://www.researchgate.net/profile/Mateusz_Rzeszutek).
 
@@ -472,8 +472,11 @@ Nauka posługiwania się programem R, a właściwie języka programowania R char
 
 ***
 
+# Zdanie nr 1.
 
+W ramach zadania domowego, jeśli jeszcze tego nie zrobiłeś to zgodnie z rozdziałem 2 skonfiguruj `R` i `RStudio` na swoim prywatnym komputerze. Jeśli jakieś osoby nie posiadają komputera, to proszę zgłosić się do prowadzącego zajęcia. W budynku C-4 na 4 piętrze są komputery, z których mozecie korzystać po za zajęciami.
 
+***
 
 
 

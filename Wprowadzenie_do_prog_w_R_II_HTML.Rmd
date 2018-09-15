@@ -1,0 +1,374 @@
+---
+title: "Wprowadzenie do programowania w R"
+subtitle: "Podstawy programowania w R"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    html_document:
+      theme: spacelab
+      highlight: kate
+      toc: true
+      toc_float: true
+      collapsed: false
+      smooth_scroll: false
+      number_sections: false
+      toc_depth: 3
+      self_contained: true
+      code_folding: NULL
+bibliography: moja_bib.bib
+link-citations: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css"> body  { font-size: 14px; text-align: justify} code.r{ font-size: 14px;} pre   { font-size: 14px} 
+h1    { font-size: 24px;} h2    { font-size: 22px;} h3    { font-size: 20px;} </style>
+
+***
+
+**Mateusz Rzeszutek** 
+
+**AGH** Akademia Górniczo-Hutnicza im. Stanisława Staszica w Krakowie, Wydział Geodezji Górniczej i Inżynierii Środowiska, Katedra Kształtowania i Ochrony Środowiska.
+
+**e-mail:** *[rzeszut@agh.edu.pl](rzeszut@agh.edu.pl)*.
+
+**lokalizacja:**  bud. C-4, p. V, pok. 511, al. A. Mickiewicz 30, Kraków, Polska.
+
+**konsultacje:** Zgodnie z informacjami na stronie
+[dziekantu](https://dziekanat.geod.agh.edu.pl/dziekanat/index.php?menu1=4&menu2=17&co=o&lin=o&wiad=@f_konsult_prez) lub po uzgodnieniu za pośrednictwem e-mail.
+
+***
+
+![](rys/logo_WGGiIS.jpg)
+
+***
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=F,message=F,error=F)
+```
+
+
+# 1. Wprowadzenie
+
+Potrafisz już założyć nowy projekt w `RStudio`, instalować pakiety oraz przynajmniej wiesz gdzie szukać informacji o `R`. Najwyższy czas zacząć pracę z `R`. Ramach tematu *Podstawy programowania w R* nauczysz się:
+
+1. jak wykonywać obliczenia,
+2. jak tworzyć obiekty stosowane,
+3. tworzyć zmienne,
+4. indeksowania,
+5. wykonywać operacje algebraiczne i logiczne na obiektach.
+6. oraz wczytywać i zapisywać dane,
+
+Zanim zaczniesz otwórz projekt `RStudio`, który utworzyłeś na ostatnich zajęciach. Jeśli go nie masz przy sobie to utwórz nowy. 
+
+Bezpiecznym rozwiązaniem jest zapisywać projekt na nośniku zewnętrznym (pendrive, dysk przenośny). Natomiast z doświadczenia wiem, że czasem zdaża się zapomnieć wziąść go z sobą. Zwiazku z tym możesz stworzyć kopie na dysku google lub innej darmowej usłudze do przechowywania i synchronizacji plików. To drugie rozwiazanie jest bezpieczne, ale wymaga ciągłego kopiowania.
+
+# 2. R jako kalkulator
+
+## 2.1 Podstawowe operacje arytmetyczne
+
+Program R może służyć jako kalkulator matematyczny. Zaczniemy od wykonania kilku prostych działań. W tym ćwiczeniu zachęcam do bezpośredniej pracy z `konsolą R` z pominięciem okna skryptów.
+
+Najpierw poznamy podstawowe operatory arytmetyczne:
+
+```{r, echo=F}
+knitr::kable(data.frame(
+Operator = c("-", "+", "*","/","^ lub **","%%", "%/%"),
+opis = c("Odejmowanie", "Dodawanie", "Mnożenie (iloczyn)", "Dzielenie (iloraz)", 
+         "Potęgowanie","Reszta z dzielenia", "Część całkowita z dzielenia")), 
+caption = "Tabela 1. Zestawienie operatorów arytmetycznych stosowanych w R")
+```
+
+Znajac już operatory Wykonaj poniższe podstawowe polecenia w konsoli R i sprawdź jakie otrzymasz odpowiedzi:
+
+```{r, eval=F}
+2+2
+2^2
+4^2
+1/10
+(3+7)^(4-2)
+8%%3
+8%/%3
+```
+
+Po wpisaniu polecenia należny nacisnąć Enter, w celu uruchomienia wykonania operacji obliczeniowej. Wynik wyświetli się w oknie. 
+
+Uwaga !!! W przypadku gdy polecenie nie zostało ukończone, a wcisnołeś enter, konsola poprosi cię o dokończenie polecenie poprzez wyświetlenie znaku +. np.:
+
+```{r, eval=FALSE}
+## wpisz 
+2+ 
+## wciśnij enter
+## wyświetli się znak plusa +
+## wpisz 2
+2 
+## naciśnij enter i zobacz co się stało.
+```
+
+Ten problem pojawia się dość często, gdy mamy wiele nawiasów. Zdaża się o którymś pominąć, gdy jest ich bardzo dużo. W `R` można wykonywać wiele poleceń w jednej lini kodu. Do tego celu służy średnik: `;`, który rozdziela polecenia.
+
+```{r}
+2+2 ; 2+5 ; 9^2 ; "itd..."
+```
+
+***
+
+#### Ćwiczenie 1 {.tabset .tabset-pills}
+##### Treść 
+Które operatory arytmetyczne mają pierwszeństwo
+
+* mnożenie, czy dzielenie?
+* mnozenie, czy dodowanie?
+* potęgowanie, czy dzielenie?
+* dzielenie, czy dodwanie?
+
+##### Odp.
+
+Nawias wymusza pierwszeństwo. Przykłady móWią same za siebie.
+
+```{r}
+10/5*2  ; (10/5)*2 ; 10/(5*2)
+2*2+100 ; 2*(2+100)
+4^2/2  ; 4^(2/2)
+2/2+2 ; (2+2)/2
+```
+
+####
+
+***
+
+
+## 2.2. Funkcje arytmetyczne 
+
+Wspominaliśmy, żę R ma wbudowanych kilka pakietów podstawowych. W pakiecie `base` jest  szereg podstawowych  funkcji stosowanych na co dzień podczas korzystania z programu R. Pełną listę funkcji dostępnych w pakiecie base wywołać można poleceniem:
+
+```{r, eval=F}
+?base
+library(help = "base")
+```
+
+Pakiet ten zawiera bardzo dużo funkcji. Pozwalają one na wykonywanie operacji arytmetycznych m.in. na pojedyńczyć liczbach. Poniższa tabela przedstawia zestawienie wybranych funkcji wraz z opisem.
+
+```{r, echo=F}
+
+library(tidyverse)
+knitr::kable(
+tribble(
+  ~"Funkcja", ~"Opis funkcji",
+"round(x)",    "Liczba całkowita najbliższa wartości x",
+"signif(x,k)", "Wartość x zaokrąglona do k miejsc znaczących",
+"floor(x)",    "Podłoga, czyli największa liczba całkowita nie większa od x",
+"ceiling(x)", "Sufit, czyli najmniejsza liczba całkowita nie mniejsza od x",
+"trunc(x)", "Wartość x po odcięciu części rzeczywistej, dla liczb dodatnich działa jak floor(), dla ujemnych jak ceiling",
+"abs(x)", "Wartość bezwzględna z x",
+"log(x)", "Logarytm naturalny z x",
+"log(x, base)", "Logarytm o podstawie base z x",
+"log10(x)", "Logarytm o podstawie 10 z x",
+"log2(x)", "Logarytm o podstawie 2 z x",
+"exp(x)", "Funkcja wykładnicza (eksponenta) z x",
+"expm1(x)", "Funkcja równoważna wyrażeniu exp(x)-1, ale wyznaczona z większą dokładnością dla x|«1|",
+"log1p(x)", "Funkcja równoważna wyrażeniu log(1+x), ale wyznaczona z większą dokładnością dla x|«1|",
+"sqrt(x)", "Pierwiastek kwadratowy z x, równoważne poleceniu x^0.5"
+), caption = "Tabela 2. Zestawienie wybranych funkcji pakietu base")
+
+```
+
+W ramach ćwiczenia Wykonaj poniższe operacje.
+
+```{r, eval=FALSE}
+round(2.5)         ; round(2.51)
+signif(1.22562, 4) ; signif(1.22562, 2)
+floor(23.45)       ; floor(23.75)     
+ceiling(23.45)     ; ceiling(23.57)
+trunc(23.25)       ; trunc(23.89)
+abs(-54.2) ; abs(54.2)
+log(10)    ; log(1)
+log(10,10) ; log10(10)         
+log(100)   ; exp(5)            
+exp(0)     ; exp(1)
+sqrt(4)    ; sqrt(36)
+```
+
+**Uwaga !!!** Separatorem miejsc dziesiętnych jest kropka. Separator miejsca dzisiętnego można ustawić w:
+
+* Panel sterowania / Zegar, język i region / region / 
+* Zakładka format, wybierz ustawienia dodatkowe
+* W oknie symbol dziesiętny wprowadź kropkę (.) zamiast przecinka (,)
+
+
+Zauważ, że funkcja może przyjmować wiecej niż jeden argument. W większośc przypadków wprowadzaliśmy jedną wartość liczbą, a w niektórych dwie wartości. Przyjrzymy się więc pomocy funkcji `round()`
+
+```{r, eval=FALSE}
+?round
+```
+
+Zauważ, że funkcja ta może przyjmować dwa argumenty: 
+
+* x - liczba lub wektor
+* digits - liczb miejsc po separatorze miejsc dziesiętnych.
+
+Wykonjamy teraz dwa polecenia stosując nazwy argumentów i zakładając, że chcemy zaokrąglić liczbę 2.2545, odpowiednio do liczby całkowitej oraz 1, 3, 4 miejsca po przecinku.
+
+
+```{r}
+round(x = 2.2545) ; round(x = 2.2545, digits = 1) 
+round(2.2545, 3) ; round(2.2545, 4)
+```
+
+Zauważ, że gdy nie podamy argumentu `digits`, funkcja przyjmie ustawienia domyślne, czyli `digits = 0`. Ponadto nie musimy stosować nazw argumentów, jeśli podajemy je we właściwej kolejności, co jest bardzo wygodne i skraca czas pisania poleceń.
+
+Przyglądnij się, jak funkcja `round()` zaokrągla wartości liczbowe, zwróć uwagę na wartość oznaczającą połowę (5).
+
+***
+
+#### Ćwiczenie 2 {.tabset .tabset-pills}
+##### Treść 
+Wykonaj następujące polecenia:
+
+* Oblicz pierwiatek 4 stopnia z liczby 16.
+* Zaokrągl liczbę 1.23446789, do 3 miesjca po przecinku.
+* Wyznacz wartość bezwzględną liczby -23.
+* Oblicz pierwiatek i logarytm dziesiętny z liczby 100 w jednej lini poleceń.
+* Oblicz logarytm z dzisiętny z 1000 stosując dwie różne funkcje, w jednej lini poleceń.
+
+##### Odp.
+
+```{r}
+16^(1/4)
+round(1.23446789, 3) # działa dobrze ? 
+abs(-23)
+sqrt(100) ; log10(100)
+log(1000, 10) ; log10(1000)
+```
+
+####
+
+***
+
+## 2.3. Funkcje trygonometryczne 
+
+
+Funkcje trygonometryczne operują na argumentach podanych w radianach, a nie stopniach. Chcąc przeliczyć stopnie na radiany można skorzystać z wzoru: $rad = \alpha * \frac{\pi}{180}$. Gdyby ktoś nie wiedział co to radian to zapraszam na stronę [WWW](http://home.agh.edu.pl/~rudnicki/Cw1/radian.htm)
+
+
+Zestawienie funkcji trygonometrycznych:
+
+```{r, echo=F}
+
+knitr::kable(
+tribble(~"Funkcja", ~"Opis funkcji",
+"cos(x)/sin(x)",   "Wartość funkcji cosinus/sinus w punkcie x",
+"tan(x)",          "Wartość funkcji tangens w punkcie x",
+"acos(x)/asin(x)", "Wartość funkcji arcus cosinus/sinus w punkcie x",
+"atan(x)",         "Wartość funkcji arcus tangens w punkcie x",
+"atan2(y, x)",     "Funkcja wyznaczająca kąt (w radianach) pomiędzy osią OX a wektorem o początku w punkcie (0,0) a końcu w punkcie (x,y).Wygodna funkcja do zamiany współrzędnych w układzie kartezjańskich, na współrzędne w układzie biegunowym"), caption = "Tabela 3. Zestawienie funkcji trygonometrycznych")
+
+```
+
+W celu przeliczania stopni na radiany można również wykorzystać funkcje `rad()`, ale wymaga to instalacji pakietu `circular`. 
+
+W ramach przypomnienia podstaw matematyki, wykres funkcji: 
+\[y = cos(x)\]
+\[y = sin(x)\]
+
+```{r, fig.align='center', fig.height=3, fig.width=8, echo=F}
+library(ggplot2)
+
+data.frame(
+x <- seq(-10,10,0.1),
+y1 = sin(x),
+y2 = cos(x)) -> df
+  
+ggplot(data = df) + 
+  geom_line(aes(x = x, y = y1, color = "sin(x)")) +
+  geom_line(aes(x = x, y = y2, color = "cos(x)")) + 
+  labs(x = "oś X", y = "oś Y", color = "Funkcja") +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) + 
+  scale_color_manual(values = c("red", "blue"))
+rm(df)
+```
+
+
+***
+
+#### Ćwiczenie 3 {.tabset .tabset-pills}
+##### Treść 
+Wykonaj następujące polecenia:
+
+1. Oblicz sinus, cosinus, arcus tanges, arcus sinus kątów 0°, 30°, 45°, 90°, 180°, 360°
+2. Przelicz współrzędne (x,y) (0,1); (1,1); (1,0); (1,-1); (0,-1); (-1,-1); (-1,0); (-1,1) na biegunowe. Wyznacz kąt (alfa) w stopniach oraz odległość (r) względem punktu 0.0. 
+
+##### Odp.
+
+1. Wyniki zadania 1
+
+```{r, echo=F}
+rad <- c(0, 30, 45, 90, 180, 360)* (pi/180)
+
+a <-data.frame( 
+    rad = round(rad,3),
+    sin = round(sin(rad),3),
+    cos = round(cos(rad),3),
+    ata = round(atan(rad),3),
+    asi = round(asin(rad),3))
+a[is.na(a)] <- NA 
+knitr::kable(a)
+rm(rad)
+```
+
+> Dlaczego funkcja `asin(x)` zwraca wartości `NaN`. 
+
+***
+
+2. Wyniki zadania 2
+
+```{r, echo=F, fig.align='center'}
+#install.packages("useful")
+library(useful)
+x <- c(0,1,1,1,0,-1,-1,-1)
+y <- c(1,1,0,-1,-1,-1,0,1)
+useful::cart2pol(x,y) -> a
+a$alpha <- a$theta*(180/pi)
+
+knitr::kable(a[,c(3,4,1,5,2)])
+
+a$etykieta <- paste("alfa = ",a$alpha)
+
+ggplot(a, aes(x, y, label = etykieta)) + 
+  geom_rect(xmin = -1, xmax = 1, ymin = -1, ymax = 1, 
+            fill = "azure2", size = 1, linetype = 1) +
+  geom_label(nudge_x = 0.2, nudge_y = 0.2)  +
+  geom_point(size = 3, color = "red", shape = 16) + 
+  xlim(-1.5,1.5) + 
+  ylim(-1.5, 1.5) +theme_light()
+  
+rm(x,y,a)
+```
+
+
+
+####
+
+***
+
+
+# 3. Zmienna
+
+# 4. Obiekty w języku R
+##
+##
+##
+
+# 5. Indeksowanie
+
+# 6. Operacje na obiektach
+##
+##
+##
+##
+
+# 7. 
+
+
+
+
