@@ -35,8 +35,6 @@ naukowców czyli
 
 -----
 
-To jest zaktualizowany plik.
-
 # 1\. Wprowadzenie
 
 Praca z dużymi zbiorami danych może być bardzo frustrująca i
