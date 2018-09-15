@@ -39,13 +39,13 @@ h1    { font-size: 24px;} h2    { font-size: 22px;} h3    { font-size: 20px;} </
 
 ***
 
-Jeśli chcesz dowiedzieć się torchę więcej o mnie to odwiedźć stronę [WWW](http://home.agh.edu.pl/~rzeszut/).
-
-Wyniki moich badań możecie śledzić na tzw. facebooku dla naukowców czyli [Researchgate](https://www.researchgate.net/profile/Mateusz_Rzeszutek).
+![](rys/logo_WGGiIS.jpg)
 
 ***
 
-![](rys/logo_WGGiIS.jpg)
+Jeśli chcesz dowiedzieć się torchę więcej o mnie to odwiedźć stronę [WWW](http://home.agh.edu.pl/~rzeszut/). Znjadziesz tam samouczki do pakietu `openair`, który służy do analizy danych o jakości powietrza. Jeśli chcesz na te temat dowiedzieć się więcej to na III roku studiów, możesz zapisać się na [fakultet](https://syllabuskrk.agh.edu.pl/2018-2019/pl/magnesite/study_plans/stacjonarne-inzynieria-srodowiska--6/module/dis-1-715-s-pakiet-r-w-analizie-danych-srodowiskowych).
+
+Wyniki moich badań można śledzić na tzw. facebooku dla naukowców czyli [Researchgate](https://www.researchgate.net/profile/Mateusz_Rzeszutek).
 
 ***
 
