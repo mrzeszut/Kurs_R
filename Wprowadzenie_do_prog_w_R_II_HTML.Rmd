@@ -11,7 +11,7 @@ output:
       collapsed: false
       smooth_scroll: false
       number_sections: false
-      toc_depth: 3
+      toc_depth: 4
       self_contained: true
       code_folding: NULL
 bibliography: moja_bib.bib
@@ -112,8 +112,8 @@ Ten problem pojawia się dość często, gdy mamy wiele nawiasów. Zdarza się k
 
 ***
 
-#### Ćwiczenie 1 {.tabset .tabset-pills}
-##### Treść 
+##### Ćwiczenie 1 {.tabset .tabset-pills}
+###### Treść 
 Które operatory arytmetyczne mają pierwszeństwo
 
 * mnożenie, czy dzielenie?
@@ -121,7 +121,7 @@ Które operatory arytmetyczne mają pierwszeństwo
 * potęgowanie, czy dzielenie?
 * dzielenie, czy dodwanie?
 
-##### Odp.
+###### Odp.
 
 Nawias wymusza pierwszeństwo. Przykłady móWią same za siebie.
 
@@ -188,7 +188,7 @@ exp(0)     ; exp(1)
 sqrt(4)    ; sqrt(36)
 ```
 
-**Uwaga !!!** Separatorem miejsc dziesiętnych jest kropka. Separator miejsca dzisiętnego można ustawić w:
+**Uwaga !!!** Separatorem miejsc dziesiętnych jest kropka. Separator miejsca dziesiętnego można ustawić w:
 
 * Panel sterowania / Zegar, język i region / region / 
 * Zakładka format, wybierz ustawienia dodatkowe
@@ -203,8 +203,8 @@ Zauważ, że funkcja może przyjmować więcej niż jeden argument. W większoś
 
 Zauważ, że funkcja ta może przyjmować dwa argumenty: 
 
-* x - liczba lub wektor
-* digits - liczba miejsc po separatorze miejsc dziesiętnych.
+* `x` - liczba lub wektor,
+* `digits` - liczba miejsc po separatorze miejsc dziesiętnych.
 
 Wykonjamy teraz dwa polecenia stosując nazwy argumentów i zakładając, że chcemy zaokrąglić liczbę 2.2545, odpowiednio do liczby całkowitej oraz 1, 3, 4 miejsca po przecinku.
 
@@ -220,8 +220,8 @@ Przyglądnij się, jak funkcja `round()` zaokrągla wartości liczbowe, zwróć 
 
 ***
 
-#### Ćwiczenie 2 {.tabset .tabset-pills}
-##### Treść 
+##### Ćwiczenie 2 {.tabset .tabset-pills}
+###### Treść 
 Wykonaj następujące polecenia:
 
 * Oblicz pierwiastek 4 stopnia z liczby 16.
@@ -230,7 +230,7 @@ Wykonaj następujące polecenia:
 * Oblicz pierwiastek i logarytm dziesiętny z liczby 100 w jednej linii poleceń.
 * Oblicz logarytm dziesiętny z 1000 stosując dwie różne funkcje, w jednej linii poleceń.
 
-##### Odp.
+###### Odp.
 
 ```{r}
 16^(1/4)
@@ -291,16 +291,16 @@ rm(df)
 
 ***
 
-#### Ćwiczenie 3 {.tabset .tabset-pills}
-##### Treść 
+##### Ćwiczenie 3 {.tabset .tabset-pills}
+###### Treść 
 Wykonaj następujące polecenia:
 
 1. Oblicz sinus, cosinus, arcus tanges, arcus sinus kątów 0°, 30°, 45°, 90°, 180°, 360°
 2. Przelicz współrzędne (x,y) (0,1); (1,1); (1,0); (1,-1); (0,-1); (-1,-1); (-1,0); (-1,1) na biegunowe. Wyznacz kąt (alfa) w stopniach oraz odległość (r) względem punktu 0.0. 
 
-##### Odp.
+###### Odp.
 
-1. Rozwiązanie zadania pierwszego
+**Rozwiązanie zadania pierwszego.**
 
 ```{r, echo=F}
 rad <- c(0, 30, 45, 90, 180, 360)* (pi/180)
@@ -309,10 +309,10 @@ a <-data.frame(
     rad = round(rad,3),
     sin = round(sin(rad),3),
     cos = round(cos(rad),3),
-    ata = round(atan(rad),3),
-    asi = round(asin(rad),3))
+    atan = round(atan(rad),3),
+    asin = round(asin(rad),3))
 a[is.na(a)] <- NA 
-knitr::kable(a)
+knitr::kable(a, row.names = T, caption = "Tabela 4. Wyniki działań funkcji sinus, cosinus, arcus tanges, arcus sinus kątów dla katów 0°, 30°, 45°, 90°, 180°, 360°")
 rm(rad)
 ```
 
@@ -320,36 +320,38 @@ rm(rad)
 
 ***
 
-2. Rozwiązanie zadania drugiego
+**Rozwiązanie zadania drugiego.**
 
-```{r, echo=F, fig.align='center'}
+```{r, echo=F}
 #install.packages("useful")
 library(useful)
-x <- c(0,1,1,1,0,-1,-1,-1)
-y <- c(1,1,0,-1,-1,-1,0,1)
+x <- c(0,1,1,1,0,-1,-1,-1) ;y <- c(1,1,0,-1,-1,-1,0,1)
 useful::cart2pol(x,y) -> a
 a$alpha <- a$theta*(180/pi)
+knitr::kable(a[,c(3,4,1,5,2)], caption = "Tabela 5. Wartości współrzędnych x,y w układzie biegunowycm alfa, r")
+```
 
-knitr::kable(a[,c(3,4,1,5,2)])
 
-a$etykieta <- paste("alfa = ",a$alpha)
+```{r, echo=F, fig.align='center', fig.cap= "Rys. 2. Wykres współrzędnych, wraz z wartościami katą alfa i odeleglości od punktu 0.0"}
+a$etykieta <- paste("alfa = ",a$alpha,", ", "r = ", round(a$r,2))
 
 ggplot(a, aes(x, y, label = etykieta)) + 
   geom_rect(xmin = -1, xmax = 1, ymin = -1, ymax = 1, 
             fill = "azure2", size = 1, linetype = 1) +
   geom_label(nudge_x = 0.2, nudge_y = 0.2)  +
   geom_point(size = 3, color = "red", shape = 16) + 
-  xlim(-1.5,1.5) + 
-  ylim(-1.5, 1.5) +theme_light()
+  xlim(-1.3,1.42) + 
+  ylim(-1.3, 1.3) +theme_light()
   
 rm(x,y,a)
 ```
+
 
 ####
 
 ***
 
-# 3. Obiekty w języku R
+# 3. Obiekty i typy danych
 
 Każdy język programowania można postrzegać jako narzędzie służące do instruowania komputera, w jaki sposób należy przkształcić dane wejściowe, aby otrzymać interesujące dane wyjściowe [@gkagolewski2014programowanie]. W celu efektywnego korzystania z języka programowania musimy poznać obiekty stosowane w języku programowania `R`. Najważniejszymi obiektami stosowanymi w `R` są:
 
@@ -366,6 +368,8 @@ W R wszystko jest obiektem, a każdy obiekt ma swoje własności. To co w matema
 3. Czynnikowy `(factor)` lub wyliczeniowy, kategoryczny, służy do grupowania danych.
 4. Logiczny `(logical)`, przechowyjący informacje w postaci `TRUE` i `FALSE`.
 5. Daty `(as.POSIXct)`.
+
+Więcej informacji na temat podstawowych i złożonych typów danych języka R znajdziecie w @gkagolewski2014programowanie
 
 Własności obiektu w języku R możemy sprawdzać, za pomocą kilku funkcji:
 
@@ -386,7 +390,7 @@ tribble(~"Funkcja", ~"Opis funkcji",
 ```
 
 
-**Postaraj się zapamiętać:** `str(), class(), lenght(), typeof()` - będiemy z nich często i gęsto korzystać.
+**Postaraj się zapamiętać:** `str(), class(), lenght(), typeof()` - będziemy z nich często korzystać.
 
 ## 3.1. Zmienna
 
@@ -401,7 +405,7 @@ a          ## wyświetla wartość zmiennej a
 b          ## wyświetla wartość zmiennej b
 a+b        ## zwraca wyniki dodawania zmiennych
 d <- a+b   ## zapisuje winik pod zmiennej d 
-d          ### wyświetla wartość zmiennej d
+d          ## wyświetla wartość zmiennej d
 ```
 
 Kilka bardziej złożony przykładów:
@@ -427,20 +431,259 @@ nic <- NA
 pusty <- NULL
 ```
 
-Korzystając z funkcji `str(), class(), lenght(), typeof()` sprawdźć włąsności obiektów: `a, b, d, z, nazwa, logiczny, inny, calko1, calko1, rzecz, nic, pusty`. Czy twoje przypuszczenia się sprawdziły ?
+Korzystając z funkcji `str()`, `class()`, `lenght()`, `typeof()` sprawdźć włąsności obiektów: `a`, `b`, `d`, `z`, `nazwa`, `logiczny`, `inny`, `calko1`, `calko2`, `rzecz`, `nic`, `pusty`. Czy twoje przypuszczenia się sprawdziły ?
 
-**WAŻNE !!!** Operator przekazania wartości do zmiennej możemy utworzyć przy pomocy skrótu klawiszy **alt+myślnik**, czyli **(alt+-)**.
+**WAŻNE !!!** Operator przekazania wartości do zmiennej można utworzyć przy pomocy skrótu klawiszy **alt+myślnik**, czyli **(alt+-)**.
 
-**WAŻNE !!!** Jeśli chcemy, aby zawartość zmiennej została wyświetlona w ekranie konsoli od razu po jej utworzeniu, musimy polecenie zamknąć w nawiasach okrągłych np.:
+**WAŻNE !!!** Jeśli chcemy, aby zawartość zmiennej została wyświetlona w ekranie konsoli od razu po jej utworzeniu, musimy polecenie zamknąć w nawiasach okrągłych `(polecenie)`, np.:
 
 ```{r, eval=F}
 (z <- 23)
 ```
 
-
 ## 3.2 Wektor
-##
-##
+
+Wektor to uporządkowany zbiór obiektów tego samego typu. Do tworzenia wektora z pojedynczych elementów lub innych wektorów służy funkcja `c()`. W programie `R` nie ma rozróżnienia na pojedynczą wartość i wektor, pojedyncze wartości traktowane są jako jednoelementowe wektory.
+
+Utworzymy pierwszy 4 - elemetowy wektor liczbowy.
+
+```{r}
+a <- c(1,2,3,4) ; a
+```
+
+Wektory w postaci sekwencji możemy tworzyć przy pomocy operatora tworzenia ciągów arytmetycznych `:`, np:
+
+```{r}
+a <- 1:4 ; a
+```
+
+Wektor może przechowywać każdy typ danych. Poniżej kilka przykłądów skłądających się z 3 poleceń, tworzenia, wyświetlania i sprawdzenia typu obiektu: 
+
+```{r}
+a <- c(1L, 2L: 3L, 4L) ; a  ; typeof(a)
+a1 <- 1:4 ; a1 ; typeof(a1)
+a2 <- 1.1:4.1 ; a2 ; typeof(a2)
+```
+
+W tym przypadku musimy zwrócić uwagę, że utworzone wektory `a`, `a1` i `a2` są typu `intiger` i `double`, ale wrzystkie są zaliczane do `numeric`. 
+
+Wpisując liczby dozwolona jest notacja naukowa (np. 2.5e3 oznacza 2500). Separatorem miejsca dziesiętnego w programie R jest kropka. Wyróżnioną wartością jest `NaN` (to skrót rozwijający się w *ang. not a number*, czyli „nie liczba”). Ta wartość może pojawić się w wyniku wykonania niepoprawnego działania (np. próby logarytmowania liczby ujemnej). Literały `Inf` i `-Inf` oznaczają plus i minus nieskończoność.
+
+```{r}
+a <- c(2.5e3, 1.1e2, NaN, Inf, -Inf) ; a ; class(a) ; typeof(a)
+```
+
+Teraz utworzymy wektory wartości logicznych i znakowych
+
+```{r}
+a  <- c("a","b","b", "c")  ; a  ; typeof(a)
+a1 <- c(TRUE, FALSE, T, F) ; a1 ; typeof(a1)
+```
+
+**UWAGA !!!** Zauważ, że nadpisaliśmy zmienną `a` i `a1`.
+
+Wektory atomowe w R mogą przechowywać elementy jednego typu, natomaist często w wyniku w wektorze mogą pojawić się elementy innego typu. Wykonaj poniższe przykłady i odpowiedz na pytanie jaka jest hierarchia typów obiektów w R.
+
+```{r}
+a1 <- c(F, 1L, 2.2, "cztery") ; typeof(a1)
+a2 <- c(F, 1L, 2.2) ; typeof(a2)
+a3 <- c(F, 1L) ; typeof(a3)
+```
+
+Z godnie z powyższymi przykłądami, nie trudo zauważyć, że R nadaje typ obiektu w sposób, który umożliwia minimalizację strat informacji. Taki mechanizm nazywamy `uzgodnieniem typów`. Ta wiedza, będzie bardzo przydatna w trakcie wczytywania danych do programu R z plików zewnętrznych np. tekstowych.
+
+Należy zwrócić uwagę, że wartość `F` jest interpretowana przez program R jako `0`, natomiast `T` jako `1`.
+
+Domyślny typ obiektu możemy zmienić. Korzystaj z funkcji zaczynającej się od `as.` i nazwy typu obiektu. Poniżej kilka przykłądów konwersji typu danych.
+
+```{r, eval=F}
+a <- 1:4 ; a
+typeof(a)
+typeof(as.double(a)) # funkcja w funkcji
+
+a <- 1.1:4.1 ; a
+typeof(a)
+typeof(as.integer(a)) # zwraca wynik funkcji zewnętrznej
+
+a <- c(TRUE, FALSE, TRUE) ; a
+typeof(a) 
+typeof(as.character(a))
+
+a <- c(1,0,1,1,1,0) ; a
+typeof(a)
+typeof(as.logical(a))
+```
+
+Nalezy pamiętać, że stosowanie funkcji np `as.logical(a)` spowoduje, że na ekranie konsoli wyświetlą się przekonwertowane wartości wektora, ale typ obiektu `a` nie ulegnie zmianie. Zawsze trzeba nadpisywać obiekt. Wykonaj i przeanalizuj poniższy przykład.
+
+```{r}
+a <- c(1L,0L,1L,1L,1L,0L) # tworzymy wektor typu integer
+a             # wyświetlamy obiekt na ekranie konsoli
+as.logical(a) # konwersja 0 = FALSE, 1 = TRUE
+typeof(a)     # sprawdzamy
+
+# teraz poprawna składnia
+a <- c(1L,0L,1L,1L,1L,0L) 
+a <- as.logical(a) # konwersja z nadpisaniem 
+typeof(a) # sprawdzamy 
+```
+
+
+### 3.2.1 Funkcje tworzenia wektorów
+
+Poznaliśmy już dwie metody tworzenia wektorów, tj: za pomocą funkcji `c()` oraz operatora `:`. W wielu przypadkach stosowanie idywidalne tych funkcji jest nie wystarczające, lub uciążliwe. Wykonamy kilka przykładów, ktore pozwolą wam zrozumieć mozliwość łaczenia funkcj. W wielu przypadkach efektywnym jest skorzystanie z funkcji generowania sekwensji `seq()` oraz funkcji replikacji `rep()`.
+
+Utworzymy kilka wektorów przy pomocy funkcji `c()` i operatora ciagów arytmetycznych `:`.
+
+```{r}
+a <- c(10,1:3,10) ; a  
+a <- c(4:1, 1:4) ; a
+c(a, c(1,4,5), 8:5)
+c(a, c(TRUE, FALSE))
+```
+
+**Funkcja seq()**. Zacznijmy od uruchomienia pomocy dla funkcji `seq()` i zobaczmy na jej opis, dostępne argumenty funkcji i przykłady.
+
+```{r, eval=F}
+?seq()
+```
+
+W celu uruchomienia przykładów dla funkcji `seq()` skorzystamy z funkcji `example()`.
+
+```{r}
+example(seq()) ## ładuje do okna konsoli przyklady zastosowania
+```
+
+
+Zauważymy, że jest funkcją pakietu podstawowego `base`, który nie wymaga aktywacji poleceniem `library()`. Funkcja `seq()` składa się z podstawowych argumentów: **from**, **to**, **by**. Co oznacza od, do, krok. 
+
+Utworzymy teraz sekwencję liczb:
+* od 1 do 10 z krokiem 1, oraz  
+* od 1 do 2 z krokiem 0.1 
+
+Wspomagając się argumentami, następnie pomijając je (stosując prostszą formę zapisu):
+
+```{r}
+seq(from = 1, to = 10, by = 1) # pełny zapis
+seq(1,10,1) # zapis uproszczony, bez argumentów
+seq(10) # zapis uproszczony, z argumentami domyslnymi
+seq(from = 1, to = 2, by = 0.1)
+seq(1,2,0.1)
+```
+
+Teraz powinieneś rozumieć działanie tej funkcji. Zauważ że nie zawsze musimy stosować nazwy argumentów, jeśli wprowadzamy je w odpowiedniej kolejności. A czasami wystarczy podanie ostatniej liczby sekwencji np.: (10) w celu wygenerowania sekwencji z krokiem domyślnym 1 i początekiem domyślnym równym 1.
+
+Zgodnie z dokumentacją funkcji `seq()` zamiast argumentu `by` mozemy stosować argument `lenght.out`, który służy do określenia ilości elementów z których ma się składać sekwencją. Zastępuje on argument `by`. Utworzymy wektor w zakresie od 34 do 128 składa jacy się z n elementów. n to dowolna liczba całkowita.
+
+```{r}
+sek1 <- seq(from = 34, to = 128, length.out = 5)
+sek1
+sek1 <- seq(34, 128, length.out = 4)
+sek1
+```
+
+
+W przypadku konieczności utworzenia malejącego ciągu numerycznego, korzystamy z operatora `-`:
+
+```{r}
+sek2 <- seq(100,1,-12)
+sek2
+```
+
+Zauważ, że argumentami mogą być też zmienne, lub wyrażenia arytmetyczne:
+
+```{r}
+a <- 2 ; b <- 20    # tworzymy zmienne a i b
+seq(a,b, len = b/a) # wykorzystujemy je do uruchomienia funkcji seq()
+```
+
+
+**Funkcja rep()** - funkcja ta replikuje istniejący wektor określoną ilość razy. Przyjmuje ona argument
+* `x` - wektor, kóry bedzie replikowany, 
+* `times` - ilość replikacji wektora `x`, 
+* `len` - długość wektora wyjściowego,
+* `each` - ile razy ma być powielony każdy element wektora 'x'
+
+Poniżej kilka przykłądów zastosowania funkcji `rep()`:
+
+```{r}
+rep(1:4, times = 2) # lub
+rep(1:4,2)
+rep(1:4, each = 2) # nie to samo,
+
+rep(1:4, times = c(2,2,2,2)) # każdy 2 razy
+rep(1:4, times = c(2,1,2,1)) # co drugi 2 razy, co drugi raz
+
+rep(seq(4), each = 2, len = 4)    # len uciał 4 elementy
+rep(seq(4), each = 2, len = 10)   # len dodał 2 elementy
+
+rep(seq(4), each = 2, times = 3)  # który argument ma pierwszeństw ?
+```
+
+Zanim przejdziemy dalej poznamy kilka tzw. domyślnych wektorów 
+
+```{r}
+letters
+LETTERS
+month.name
+month.abb
+```
+
+
+
+
+**Funkcja sample()**
+
+
+
+### 3.2.2 Operacje wykonywane na wektorach
+
+# arytmetyczne 
+
+# logiczne
+
+
+### 3.2.3 Funkcje działajace na wektorach
+
+
+
+### ćwiczenie 4 {.tabset .tabset-pills}
+
+#### Treść
+
+* 
+* utwórz wektor 5 wartości `TRUE` oraz 6 wartosci `FALSE`.
+
+#### odp
+
+###
+
+
+Typ znakowy. Wartościami obiektów tego typu są napisy (inaczej łańcuchy znaków). W programie R napisy rozpoczynane są znakiem ' lub " oraz kończone takim samym znakiem np.: "słowo" .W łańcuchu znaków mogą występować dowolne znaki w tym znaki specjalne rozpoczynające się od znaku \. Wybrane znaki specjalne to: 
+
+\n – znak nowej linii, 
+\t – znak tabulacji, 
+\\ – oznaczający znak \, 
+\" – oznaczający ",   itp. 
+Z łańcuchów znaków można wycinać fragmenty, sklejać, wyszukiwać podciągi znaków i wykonywać wiele innych operacji, o których napiszemy w kolejnych podrozdziałach.[źródło]
+
+"To jest napis" 
+## [1] "To jest napis" 
+'To tez jest napis' 
+## [1] "To tez jest napis" 
+"To jest napis 'a to jest napis wewnetrzny'" 
+## [1] "To jest napis 'a to jest napis wewnetrzny'"
+Funkcja cat() wyświetla napis w sposób niesformatowany.
+
+cat(" co \t to \\ teraz\"\n\n bedzie?") 
+## co to \ teraz" 
+## 
+## bedzie? 
+Napisy można sklejać, za pomocą funkcji paste().
+
+paste("Napis", "napis doklejony", 12) 
+## [1] "Napis napis doklejony 12"
+
 
 # 5. Indeksowanie
 
