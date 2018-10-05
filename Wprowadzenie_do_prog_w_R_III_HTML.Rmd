@@ -609,14 +609,10 @@ as.data.frame(sredni)
 I jeszcze funkcja `tapply()`
 
 ```{r}
-tapply(dane$zarobki, dane$plec, mean)
+tapply(dane$zarobki, dane$plec, mean) # średnia w grupach
+tapply(dane$zarobki, dane$plec, counts) # c
 ```
 
-```{r}
-complete.cases(dane)
-na.omit()
-!is.na()
-```
 
 
 
