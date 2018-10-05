@@ -198,11 +198,14 @@ W pracowni komputerowej posiadasz już zainstalowane powyższe oprogramowanie. N
     * W Wartość zmiennej wprowadź: `D:Temp/pakiety_R`
 * Kliknij `OK`
 
+> Po wykonaniu powyższych poleceń otwórz `RStudio` i wpisz w konsoli polecenie `libPaths()` i naciśnij enter. Jeśli wynikiem tego polecenie będzie `D:Temp/pakiety_R`. tzn, że jest ok. Jeśli nie to uruchom ponownie RStudio, sprawdzć czy utworzyłeś zmienną `R_LIBS_USERS`. W ostateczności uruchom ponownie komputer.
+
 ```{r, fig.align='center', echo=F}
 knitr::include_graphics("rys/zmienna_srodowiskowa.jpg")
 ```
 
 Teraz wszystkie `pakiety R` będą instalowane we wskazanym katalogu, do którego jako użytkownik masz nieograniczony dostęp. 
+
 
 ***
 
@@ -249,6 +252,18 @@ W ramach pierwszego ćwiczenia, wpisz w wyszukiwarce google hasło: *"RCRAN chee
 Najwyższy czas zacząć pracę z R. Otwórz program RStudio. Aby skonfigurować nowy projekt, kliknij menu rozwijane w prawym górnym rogu RStudio. Kreator projektu poprosi cię o utworzenie lub wskzanie nowego folderu. Utwórz nowy folder projektu np.: `Projekt_1`. Tam będą zapisywane wrzystkie informacje. W folderze pojawi się plik z rozszerzeniem `.Rproj`. Za pomocą tego pliku możesz odtworzyć projekt. 
 
 Zanim rozpoczniemy pracę, utwórz nowy **r skrypt**. Opcjonalnie naciśjnij **CTRL+SHIFT+N**. Pojawi się nowe okno edytora, w którym będziemy pisać kod. Po utworzeniu skryptu zapisz go pod dowolną nazwą z rozszerzeniem `.R`.
+
+***
+
+**UWAGA!!!** 
+
+***
+
+**Pracownia komputerowa** rządzi się swoimi prawami, a niestety R nie jest na te prawa odporny. Podstawowym problemem są ścieżki dostępu do plików i katalogów. Posiadacie konta sieciowe, dzięki czemu w każdej pracowni możecie zalogować się na swoje własne konto i korzystać z plików zamieszczony na pulpicie. Efektem tego są bardzo nieprzyjemne ścieżki dostępu do pulpitu.
+
+**W przypadk programu R zakłądanie folderu projektu na pulpicie jest zabronione**. Ponieważ ścieżka dostępu do pulpitu zawiera symbole, które nie mogą być odczytane przez R. Generuje to masę problemów. Zwiazku z tym proszę tworzyć foldery projektu R na dysku **D:/Temp/...** lub co zalecam na **prywatnym pendrive**. 
+
+Jak już wspominałem, nie posiadacie również dostępu do niektórych katalogów. **Nie możecie instalować oprogramowania na komputerach w pracowni**. 
 
 ***
 

@@ -1,0 +1,686 @@
+---
+title: "Wprowadzenie do programowania w R"
+subtitle: "Podstawy programowania w R"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    html_document:
+      theme: spacelab
+      highlight: kate
+      toc: true
+      toc_float: true
+      collapsed: false
+      smooth_scroll: false
+      number_sections: false
+      toc_depth: 4
+      self_contained: true
+      code_folding: NULL
+bibliography: moja_bib.bib
+link-citations: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css"> 
+body { font-size: 14px; text-align: justify} code.r{ font-size: 14px;} pre { font-size: 14px} 
+h1   { font-size: 24px;} h2 { font-size: 22px;} h3 { font-size: 20px;} 
+</style>
+
+***
+
+**Mateusz Rzeszutek** 
+
+**AGH** Akademia Górniczo-Hutnicza im. Stanisława Staszica w Krakowie, Wydział Geodezji Górniczej i Inżynierii Środowiska, Katedra Kształtowania i Ochrony Środowiska.
+
+**e-mail:** *[rzeszut@agh.edu.pl](rzeszut@agh.edu.pl)*.
+
+**lokalizacja:**  bud. C-4, p. V, pok. 511, al. A. Mickiewicza 30, Kraków, Polska.
+
+**konsultacje:** Zgodnie z informacjami na stronie
+[dziekantu](https://dziekanat.geod.agh.edu.pl/dziekanat/index.php?menu1=4&menu2=17&co=o&lin=o&wiad=@f_konsult_prez) lub po uzgodnieniu za pośrednictwem e-mail.
+
+***
+
+![](rys/logo_WGGiIS.jpg)
+
+***
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=F,message=F,error=F)
+```
+# 3.
+## 3.5. Ramki danych
+
+Szczególnym typem obiektu jest ramka danych, nazywana również tabelą danych. Ramka danych jest zazwyczaj z tabelaryczną strukturą, której elementy w każdej kolumnie są tego samego typu, ale mogą różnić się typami pomiędzy kolumnami. Z tego powodu ramkę danych można traktować jak listę wektorów o tej samej długości, każdy wektor odpowiada jednej kolumnie. Ramki danych tworzy się zazwyczaj funkcją `data.frame()`. 
+
+Ramka danych jest oprócz wektora jednym z najczęściej wykorzystywanych typów obiektów i poświęcimy jej dość sporo uwagi.
+
+Poniżej konstruujemy ramkę danych składającą się z trzech trójelementowych zmiennych. Konstruujemy ramkę danych podając wartości dla każdej z kolumn.
+
+```{r}
+ramka <- data.frame(id = c(100,101,102), 
+                    wiek = c(25,21,22),
+                    wzrost = seq(170,190,10),
+                    chlopiec = c(TRUE,TRUE,FALSE))
+ramka
+```
+```{r, eval=F}
+View(ramka)
+```
+
+Do kolumn ramki danych (które są wektorami) możemy odwoływać się tak, jak do elementów macierzy, a także tak jak do elementów list przy pomocy operatora `$` dostępu do pól obiektu klasy S4. 
+
+```{r}
+ramka$wiek
+```
+
+***
+
+### ćwiczenie 9 {.tabset .tabset-pills}
+#### Treść
+
+Stwórz dowolną tabele składająca się 10 wierszy i 4 kolumn. Pod zmienną `dane`. W kolumny od 1 do 4 mają przechowywać odpowiednio. 
+
+* liczby całkowite
+* liczby rzeczywiste (do dwóch miejsc dzietnych)
+* tekst
+* zmienne logiczne
+* Kolumny mają mieć też określone nazwy. Nazwy dowolne, ale krótkie (jedno słowo do 5 znaków).
+
+wykonaj następujące polecenie dla obiektu dane oraz opisz co zwracają w komentarzach.
+
+```{r, eval=F}
+length()
+is.vector()
+is.atomic()
+is.data.frame()
+is.array()
+str(attributes())
+typeof()
+class()
+```
+
+#### odp.
+
+Stwórz dowolną tabele składająca się 10 wierszy i 4 kolumn. Pod zmienną `dane`. W kolumny od 1 do 4 mają przechowywać odpowiednio. 
+
+* liczby całkowite , 
+* liczby rzeczywiste (do dwóch miejsc dzietnych)
+* tekst
+* zmienne logiczne
+* Kolumny mają mieć też określone nazwy. Nazwy dowolne, ale krótkie (jedno słowo do 5 znaków).
+
+```{r}
+data.frame(calko = c(1:10),
+           rzecz = seq(0.8,20, length.out = 10),
+           tekst = letters[sample(1:26, replace = T, size = 10)],
+           logic = as.logical(rep(0:1), 5)
+           ) -> dane 
+dane ; View(dane)
+```
+
+
+wykonaj następujące polecenie dla obiektu dane oraz opisz co zwracają w komentarzach.
+
+```{r}
+length(dane)
+is.vector(dane)
+is.atomic(dane)
+is.data.frame(dane)
+is.array(dane)
+str(attributes(dane))
+str(dane) # bardzo pomocne
+typeof(dane)
+class(dane)
+```
+
+Zauważ, że w zależności od typu danych zawartych w kolumnie funkcja summary zwraca różne informacje.
+Pamietasz funkcje `table()`. Porównaj wyniki z funkcją `summary()`
+
+```{r}
+table(dane$tekst)
+```
+
+
+####
+
+***
+
+### 3.5.1. Przygotowanie danych
+
+Zanim przejdziemy do następnego tematu, musimy wczytać dane. Temu procesowi poświęcimy znacznie więcej uwagi w innym rozdziale.
+
+```{r eval=FALSE, include=FALSE}
+data.frame(imie = c("Katarzyna", "Zofia", "Julia", "Kora", 
+                    "Piotr", "Adam", "Robert", "Janusz", "Beata"),
+           Nazwisko = c(rep("Kowalska",3), "Nowak", "Zwykły", "Nowy", "Nowy", "Ptak", "Ptak"),
+           praca = c("AGH", "ZUS", "NFZ", "AGH", "PK", "UJ", "UG", "NFZ", "UMK"),
+           stanow = c("asystent", "księgowy", "księgowy", "adniunk", 
+                      rep("prof.",3), "technik", "Inżynier"),
+           Zarobki = round(runif(n = 9, 2000, 6000),1),
+           staz = round(runif(9, 5,20)),
+           urlop = round(runif(9, 1,26)),
+           Waga = round(runif(n = 9, 50, 110)),
+           Wzrost = round(runif(n = 9, 150, 190)),
+           Wiek = round(runif(n = 9, 27, 65)), 
+           Plec = sample(c("M", "K"), size = 9, replace = T),
+           Kraj = sample(c("PL", "USA", "DE"),size = 9, replace = T),
+           urodzony = c("Tarnów", "Gorlice", "Sękowa", "Kraków", "Berlin", 
+                        "Amsterdam", "Brzesko", "Wieliczka", "Skawina")
+) -> dane
+dane
+toString(colnames(dane))
+colnames(dane) <- c("imie", "nazwisko", "praca", "stanow", "zarobki", "staz", 
+                    "urlop", "waga", "wzrost", "wiek", "plec", "kraj", "urodzony")
+save(dane, file = "dane.RData")
+
+
+```
+
+W folderze który pobrałeś z [upel](http://upel.agh.edu.pl/wggiis/) znajduje się plik `dane.RData`.
+
+Sprawdzć, czy masz odpowiedni obszar roboczy.
+
+```{r, eval=F}
+getwd()
+```
+
+Jeśli nie to poleceniem `setwd("...")` ustaw go na folder w którym znajduje się plik z danymi, *gdzie 3 kropki to ścieżka dostępu*.
+
+Poleceniem `dir()` sprawdzć jakie plki i foldery znajdują się w twoim katalogu.
+
+```{r, eval=F}
+dir()
+```
+
+Jeśli jest tam plik `dane.RData`, to wykonaj polecenia ładowania.
+
+```{r}
+load(file = "dane.RData")
+```
+
+W prawym górnym oknie powinien pojawić się obiekt `dane`, który ma następującą postać:
+
+```{r}
+dane
+```
+
+***
+
+### 3.5.2. Własności obiektu data.frame
+
+W ramch cwiczenia 9 zaznajomiłeś się z charakterystyką obiektu `data.frame()`. W tym rozdziale, krótko przedsatwię kilka funkcji pozwalajacych nam lepiej przyjrzeć się zawartości naszego obiektu.
+
+W rmach tego rozdziału poznamy funkcje:
+
+* `nrow()` - liczba wierszy
+* `ncol()` - liczba kolumn
+* `dim()` - liczba wierszy i kolumn
+* `head()` - podglad kilku pierwszych wierszy
+* `tail()` - podgląd kilku ostatnih wierszy
+* `View()`, - wyświetl obiekt 
+
+W pracy z dużymi zbiorami danych przydją się funkcje zwracająca nformacje o liczbie wierszy i kolumnw w obiekcie `data.frame`:
+
+```{r}
+# Liczbę wierszy można sprawdzić funkcją nrow() 
+nrow(dane)
+#liczbę kolumn sprawdzamy funkcją ncol(). 
+ncol(dane)
+# naraz
+dim(dane)
+```
+
+Wartym uwagi jest również możliwość pozyskania informacji o nazwach kolumn i wierszy obeiektu `data.frame()`
+
+```{r}
+colnames(dane)  # nazwy kolumn
+names(dane)     # j.w
+row.names(dane) # nazwy wierszy
+```
+
+W łątwy sposób informacje o charakterystyce danych mozemy otrzymać wykonując polecenie `summary()`:
+
+```{r}
+summary(dane) 
+```
+
+Szczególnie zalecam stosowanie funkcji `str()`, która zwraca nam w bardzo przystępny sposób charakterystykę całego obiektu:
+
+```{r}
+str(dane)
+```
+
+Tak, mamy obiekty tupy `factor()`, ale o tym póżniej.
+
+Poleceniem `head()` i `tail()` możemy wyświetlić podgląd wybranych danych, aby im się przyjrzeć.
+
+```{r, eval=FALSE}
+head(dane) # 6 pierwszych
+tail(dane) # 6 ostatnich
+```
+
+Możemy określić ilość wierszy, która chcemy wyświetlić.
+
+```{r, eval=FALSE}
+head(dane, 3) # 3 pierwsze
+tail(dane, 3) # 3 ostatnie
+```
+
+Lub wyświetlić cały zestaw danych
+
+```{r, eval=F}
+View(dane)
+```
+
+***
+
+###  3.5.3. Indeksowanie
+
+Aby odwoływać się do wierszy lub kolumn ramki danych można wykorzystać operator [,]. Ważny jest przecinek, ponieważ rozdziela nam ideksator na wiersze i kolumny. `obiekt[wiersze,kolumny]`. Przecinek nie zawsze jest ważny, ale o tym pózniej.
+
+***
+
+**Filtrowanie wierszy w ramce danych** - Filtrowanie wierszy jest podstawową operacją wybiernia podzbioru danych z ramki danych. Jest ona przydatna, gdy interesuje nas tylko część zbioru danych, lub niektóre wwiersze zawierają zbędne informacje.
+
+```{r}
+dane[1,] # pierwszy wiersz
+```
+
+Jeżeli chcemy wybrać więcej niż jeden wiersz należy, podobnie jak dla wektorów, podać kilka indeksów przed przecinkiem. Aby odwołać się do kilku kolejnych wierszy można wykorzystać sekwencję zbudowaną z operatorem. Przykładowo, wiersze od 5 do 7 z ramki danych `dane` można wyłuskać następująco.
+
+```{r}
+dane[5:7,]
+```
+
+Funkcja `c()` skleja wartości i sekwencje w wektor, który można następnie wykorzystać w indeksowaniu wierszy. Poniższa instrukcja wyłuskuje wiersze 2, 3, 7 i 9.
+
+```{r}
+dane[c(2:3,7:9) , ]
+```
+
+Lub równoważnie:
+
+```{r}
+indeksy <- c(2:3,7:9)
+dane[indeksy,]
+```
+
+Jako indeksy można również wykorzystać wektor wartości logicznych. Wybiegając trochę w przyszłość, użyjemy kolumny waga aby wybrać z ramki danych tylko te wiersze, dla których waga jest wyższa niż 60.
+
+
+```{r}
+ciezkie <- dane$waga > 60 # operator relacji
+ciezkie # wyniki logical
+```
+
+Teraz wektorem logicznym wybierzemy wiersze, `TRUE` - wybierz wiersz, `FALSE` - pomiń wiersz
+
+```{r}
+dane[ciezkie, ] # waga większa od 60
+```
+
+Indeksując wiersze lub kolumny można też wykorzystywać ujemne indeksy. Oznaczają one, wszystkie wartości poza wskazanymi. Przykładowo, wszystkie wiersze poza 1, 3, 5, 7, 9 można uzyskać poleceniem.
+
+```{r}
+dane[ -seq(1,9,2), ]
+```
+
+Zauważmy, że w tym przykładzie operator arytmetyczny minus `-` przed funkcją `seq()` tworzącą wektor, powoduje zmianę znaku wszystkich elementów wektora.
+
+```{r}
+-seq(1,9,2) 
+-c(1,2,3)
+-5:3 # uwaga
+-5:-3
+```
+
+**UWAGA!!!** Nie można mieszać jednocześnie indeksów dodatnich i ujemnych.
+
+```{r, eval=F}
+dane[c(-4:-2, 8, 9),] # błąd
+```
+
+***
+
+**Selekcja kolumn w ramce danych** - Zacznijmy od prostego przykładu: 
+
+```{r}
+dane[1]
+```
+
+Wybranie jednej kolumny powoduje, że jako wynik otrzymujemy nie ramkę danych ale wektor. Łatwo to poznać po sposobie wyświetlania danych.
+
+Próba indeksowania w sposób analogiczny jak wykonywane było to dla wektora pozwoliłą wyselekcjonować dane dla kolumny pierwszej. MOżna to zrobić również w z wykorzystaniem operatora `$`:
+
+```{r}
+dane$imie
+```
+
+Ta druga metoda odrazu wyświetla nam wywołąnie funkcji `levels()` czyli informacje o niepowtarzajacych sie obiektach. Wykonajmy teraz operacje selekcji kolumny stanowisko `Kraj`:
+
+```{r}
+dane[12] # metoda 1
+dane$Kraj # metoda 2
+levels(dane$Kraj) # tylko unikalne
+unique(dane$Kraj) # działa j.w. 
+```
+
+Dzieje się tak dlatego, bo nasz obiekt jest typu `factor()`, czyli cyznnikowe, lub inaczej wyliczeniowego. O cyzm powiemy sobie później więcej. 
+
+```{r}
+class(dane$imie)
+```
+
+Podobnie jak wiersze, można indeksować również kolumny. Aby wyłuskać drugą kolumnę można wskazać jej numer po przecinku. Uwaga Ten dziwny zapis jest konsekwencją tego, że operator [,] jest w gruncie rzeczy funkcją. Więcej o zaawansowanych elementach języka dowiemy się w kolejnych odcinkach.
+
+```{r}
+dane[,2]
+```
+
+Aby zapobiec konwersji na wektor i jako wynik wciąż mieć ramkę danych, należy dodać do operatora indeksowania argument `drop=FALSE`.
+
+```{r}
+dane[,2, drop=FALSE]
+```
+
+
+W ramce danych kolumny możemy indeksować nie tylko numerami ale również nazwami (kolumny są nazywane). Aby wyłuskać z ramki danych kolumnę o nazwie waga możemy użyć tej `nazwy kolumny` jako `indeksu`.
+
+
+```{r}
+colnames(dane) # nazwy
+dane[, "praca"]
+```
+
+Aby wybrać więcej niż jedna kolumnę, podobnie jak w przypadku wierszy i wektorów można wykorzystać funkcję `c()`. Przykładowo, jeżeli chcemy wybrać 1, 2, 11 i 12 kolumnę możemy użyć instrukcji.
+
+```{r, eval=F}
+# równoważnie moglibyśmy napisać
+dane[, c("imie", "nazwisko", "plec", "kraj")]
+dane[ ,c(1,2,11:12)]
+kol <- c(1,2,11:12)
+dane[,kol]
+```
+
+```{r}
+kolumny <- c("imie", "nazwisko", "plec", "kraj")
+dane[, kolumny] # j.w.
+```
+
+***
+
+**Wybieranie pod ramki danych**
+
+Możemy jednocześnie odwoływać się do wierszy i kolumn w ramce danych, wybierając jej podramkę. Przykładowo, 
+
+
+```{r}
+# wybór czterech wierszy i czterech kolumn lub 
+dane[c(1:4), c(1:4)]
+#wybór czterech wierszy i jednej kolumny lub 
+dane[c(1:4), 2]
+#Jeden wiersz i cztery kolumny może wyglądać taki.
+dane[1, c(9:12)]
+```
+
+Pokazaliśmy wcześniej, jak można odwoływać się do kolumn poprzez ich nazwy. Podobnie można zrobić z wierszami. Funkcja rownames() pokazuje jak nazywają się wiersze w ramce danych. 
+
+```{r}
+rownames(dane)
+```
+
+Te nazwy niewiele mówią, używanie ich do indeksowania nie miałoby sensu. Zmieńmy więc nazwy wierszy na takie jak w kolumnie imie. Robimy to przez nadpisanie zmiennej wyniku funkcji `rownames()`. Najpier jednak zmienimy typ kolumny imie z factor na character.
+
+```{r}
+dane$imie <- as.character(dane$imie) # konwersja typu z nadpisaniem
+rownames(dane) <- dane$imie # podmiana nazwy wierszy
+dane[,3:6] # podgląd
+```
+
+Poniższy przykład wybiera wiersze dla czterech wskazanych miejsc urodzenia oraz trzy wybrane kolumny. Jeżeli wiersze mają sensowne nazwy, to wygodniej jest odwoływać się do wierszy przez nazwy niż przez indeksy liczbowe.
+
+```{r}
+dane[c("Zofia","Julia", "Robert", "Piotr"), 
+           c("waga", "wiek", "wzrost")]
+```
+
+Poniższym poleceniem przypisujemy spowrotem liczbowe nazwy wierszy jako liczbowe
+
+```{r}
+rownames(dane) <- NULL
+dane[,3:6] # podgląd
+```
+
+Analogiczną metodą można zmienić nazwy kolumn:
+
+```{r, eval=F}
+colnames(dane) <- c("tu wpisać nowe nazwy kolumn")
+# lub
+colnames(dane)[1:3] <- c("zmienisz tylko pierwsze trzy nazwy")
+```
+
+**Sortowanie przez indeksowanie**
+
+Interesujące i nieco zaawansowane zastosowanie indeksowania przedstawimy na przykładzie funkcji `order()`. Wynikiem tej funkcji, są indeksy kolejnych, rosnących wartości. Przykładowo, w kolumnie wzrost mamy następujące wartości
+
+
+```{r}
+dane[,"wzrost"]
+```
+
+Wynikiem funkcji `order()` są indeksy kolejnych, wartości. Najmniejsza wartość to 157, na pozycji 6, kolejna to 161 na pozycji 2, kolejna to 164 na pozycji 1 i tak dalej.
+
+```{r}
+order(dane[,"wzrost"])
+# Równoważnie
+order(dane$wzrost) ; dane$wzrost
+```
+
+Zwróć uwagę na składnie, `order()` jest funkcją nadrzędną. 
+
+Możemy wykorzystać ten wynik, aby posortować ramkę danych po określonej kolumnie. W przykładzie poniżej wykorzystujemy funkcję `order()` do wyznaczenia wektora kolejnosc. Który następnie wykorzystamy do indeksowania ramki `dane`.
+
+```{r}
+kolejnosc <- order(dane[,"wzrost"])
+dane[kolejnosc, c(1:2,7:9)]
+```
+
+Na koniec przykłąd z operatorem logicznym `&` koniunkcji. Wybierzemy na raz wrzystkie wiersze spełniajace dwa warunki.
+
+```{r}
+dane[dane$plec == "K" & dane$waga < 70, ] # 
+```
+
+***
+
+### ćwiczenie 10 {.tabset .tabset-pills}
+#### Treść
+
+Wybierz z ramki danych dane
+
+* wszystkie wiersze poza "AGH’’.
+* wiersze "Kowalska"" 
+* tylko kolumnę z wagą i wzrost.
+* wszystkie kolumny poza ostatnią.
+* wiersze dla których waga jest mniejsza niż 70 oraz cztery pierwsze kolumny.
+
+#### odp.
+
+wszystkie wiersze poza "AGH’’.
+
+```{r}
+dane[dane$praca == "AGH",]
+```
+
+wiersze "Kowalska"" 
+
+```{r}
+dane[dane$nazwisko == "Kowalska",]
+```
+
+tylko kolumnę z wagą i wzrost.
+
+```{r}
+dane[,c("waga", "wzrost")]
+```
+
+wszystkie kolumny poza ostatnią.
+```{r}
+dane[,-ncol(dane)]
+```
+
+wiersze dla których waga jest mniejsza niż 70 oraz cztery pierwsze kolumny + kolmna waga.
+
+```{r}
+dane[dane$waga < 70, c(1:4,8)]
+```
+
+####
+
+***
+
+
+
+***
+
+### 3.5.4. Operacje arytmetyczne na data.frame()
+
+Na ramkach danych możemy wykonywać wiele operacji obliczeniowych. W tym podrozdziale zaprezentujemy kilka prostych przykładów:
+
+rozwiąż równanie $$wskaźnik=\frac{X}{\overline{x}}$$ 
+
+gdzie: x - waga, a $\overline{x}$ - średnia waga
+
+```{r, eval=FALSE}
+wskaznik <- dane$waga/mean(dane$waga)
+```
+
+Chcemy mieć nasz wskaźnik w obiekcie `data.frame()`, możemy w łatwy sposób dodać dodatkową kolumnę:
+
+```{r}
+dane$wskaznik <- dane$waga/mean(dane$waga)
+```
+
+Na powyższym obiekcie możemy wykonać dowolne operacje arytmetyczne, relacyjne, czy stosując operatory logiczne.
+
+***
+
+**Funkcją aggregate()** - możemy stosować podsumowania danych w ramkach danych z podziałem na grupy, ale musimy posiadać obiekty typu factor(). 
+
+* `aggregate()`
+* `by()`
+* `taplly()`
+
+Sprawdzamy czy mamy jakiść wektor `factor()` czynnik.
+
+```{r}
+str(dane)
+```
+
+Mamy 6 kolumny typu factor, oraz 7 typu numeric i jedną character. Teraz wyliczymy średnie zarobki w każdym kraju:
+
+```{r}
+aggregate(dane$zarobki,       # kolumna uśrednia 
+          list(kraj = dane$kraj), # grupowanie wg.
+          FUN = mean)             # srednia
+```
+
+Obliczymy sumaryczne zarobki w grupie płeć, ale stosując prostszy zapis
+
+```{r}
+aggregate(dane$zarobki,list(plec = dane$plec), sum)
+```
+
+Inna funkcja to `by()`
+
+```{r}
+sredni <- by(dane$zarobki, dane$plec, FUN=mean) 
+sredni
+```
+
+Wymaga konwersji do obiektu list, i data.frame:
+
+```{r}
+sredni 
+sredni <- as.list(sredni)
+as.data.frame(sredni)
+```
+
+I jeszcze funkcja `tapply()`
+
+```{r}
+tapply(dane$zarobki, dane$plec, mean)
+```
+
+```{r}
+complete.cases(dane)
+na.omit()
+!is.na()
+```
+
+
+
+
+
+badania
+# funkcja with(), należy nakazać drukowanie wyniku
+with(badania, {
+  czas = czas/60
+print(czas)
+  })
+# funkcja within() aktualizuje data.frame
+within(badania, {
+  czas = czas*60
+})
+# Funkcja transform() działa podobnie do within(), pozwala przekształcić 
+# dane w kolumnie i dodać nową kolumne
+transform(badania, czas = czas*60, plec2 = c(1,1,2,1,2,2))
+Dodawanie kolumn i wierszy cbind() i rbind()
+Poznaliśmy już te funkcje w ramach tego kursu.
+
+
+### 3.5.5. Wybrane funkcje dla obiektu data.frame() 
+
+# poleceniem data.frame możemy scalić dwa obiekty data.frame
+a <- data.frame(badania, badania)
+a # natomiast jest to dodawanie kolumn
+# cbind -- dodanie kolumny
+cbind(badania, stezenie = c(1,3,6,8,9,10))
+# dodanie dwóch data.frame
+rbind(badania, badania)
+# dodanie nowego wiersza danych
+rbind(badania, Katarzyna = c("K", "T", 45, 52))
+
+
+
+# 4. Cechy jakościowe
+
+### 3.5.4. Typ czynnikowy 
+
+Typ czynnikowy (nazywany również wyliczeniowym lub kategorycznym). Ten typ jest przydatny do przechowywania wektorów wartości występujących na kilku poziomach (w kilku kategoriach). Przykładowo płeć występuje na dwóch poziomach, tzn. może przyjmować tylko dwie wartości, dlatego przechowując w programie R wektor danych opisujących płeć, najlepiej użyć typu czynnikowego. Zmienne tego typu są najczęściej wykorzystywane do definiowania grup. Zmienne typu czynnikowego zajmują mniej miejsca w pamięci niż odpowiadające im łańcuchy znaków. Wewnętrznie takie wektory przechowywane są jako wektory liczb przez co można na nich szybciej wykonywać określone funkcje. Gdy możemy, warto używać tego typu dla poprawienia efektywności. Ponadto wiele funkcji programu R (szczególnie statystycznych) jest w stanie rozpoznać, że argument jest typu wyliczeniowego i zastosować odpowiednie działania, np. wyznaczyć liczebności poszczególnych grup, zastosować kodowanie z użyciem zmiennych pustych itp. Zazwyczaj zmienne tego typu tworzy się z użyciem funkcji factor(). Na poniższym przykładzie konstruujemy czteroelementowy wektor elementów typu wyliczeniowego, ze słownikiem składającym się z dwóch wartości [@biecek2008przewodnik]. 
+
+
+```{r}
+nz <- factor(c("sierzant", "kapitan", 
+               "sierzant", "sierzant"))
+nz
+```
+
+zmienna nz jest obiektem czynnikowym składającym się z 4 elemetów tekstowych utworzonych z dwóch słów. Każde słowo reprezentuje kategorię. W celu utworzenie tego obiektu skorzystano z dwóch funkcji. funkcji `c()`, która utworzyła wektor tekstowy składający się z 4 elementów. Następnie wektor ten uległ konwersji do obiektu typu czynnikowego za pośrednictwem funkcji `factor()`.
+
+
+```{r}
+summary(nz)
+table(nz)
+```
+
+
+# 5. Cechy ilościowe
+
+
+
+# 4. Wczytywanie danych
+# 5. Przetwarzanie tekstu
+# 6. Przetwarzanie daty
+
+

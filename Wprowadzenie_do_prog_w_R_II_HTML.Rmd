@@ -49,18 +49,21 @@ knitr::opts_chunk$set(echo = TRUE, warning=F,message=F,error=F)
 
 # 1. Wprowadzenie
 
-Potrafisz już założyć nowy projekt w `RStudio`, instalować pakiety oraz przynajmniej wiesz gdzie szukać informacji o `R`. Najwyższy czas zacząć pracę z `R`. W ramach tematu *Podstawy programowania w R* nauczysz się:
+Potrafisz już założyć nowy projekt w `RStudio`, instalować pakiety oraz wiesz gdzie i jak szukać informacji o `R`. Najwyższy czas zacząć pracę z `R`. W ramach tematu *Podstawy programowania w R* nauczysz się:
 
 1. jak wykonywać obliczenia,
-2. jak tworzyć obiekty stosowane,
-3. tworzyć zmienne,
-4. indeksowania,
-5. wykonywać operacje algebraiczne i logiczne na obiektach,
-6. oraz wczytywać i zapisywać dane.
+2. jak pracować z różnego typu danymi,
+3. jak tworzyć obiekty,
+4. tworzyć zmienne,
+5. indeksować obiekty,
+6. wykonywać operacje algebraiczne i logiczne na obiektach,
+7. oraz wczytywać i zapisywać dane.
 
-Zanim zaczniesz, otwórz projekt `RStudio`, który utworzyłeś na ostatnich zajęciach. Jeśli go nie masz przy sobie to utwórz nowy. 
+Zanim zaczniesz, otwórz projekt `RStudio`, który utworzyłeś na ostatnich zajęciach. Jeśli go nie masz przy sobie to utwórz nowy. Najlepszym rozwiązaniem jest zakąłdanie projektu w rozpakowynm folderze, który pobrałeś z [upel](upel.agh.edu.pl).
 
 Bezpiecznym rozwiązaniem jest zapisywać projekt na nośniku zewnętrznym (pendrive, dysk przenośny). Natomiast z doświadczenia wiem, że czasem zdarza się zapomnieć wziąć go ze sobą. W związku z tym możesz stworzyć kopie na dysku google lub innej darmowej usłudze do przechowywania i synchronizacji plików. To drugie rozwiazanie jest bezpieczne, ale wymaga ciągłego kopiowania.
+
+***
 
 # 2. R jako kalkulator
 
@@ -214,9 +217,9 @@ round(x = 2.2545) ; round(x = 2.2545, digits = 1)
 round(2.2545, 3) ; round(2.2545, 4)
 ```
 
-Zauważ, że gdy nie podamy argumentu `digits`, funkcja przyjmie ustawienia domyślne, czyli `digits = 0`. Ponadto nie musimy stosować nazw argumentów, jeśli podajemy je we właściwej kolejności, co jest bardzo wygodne i skraca czas pisania poleceń.
+Zauważ, że gdy nie podamy argumentu `digits`, funkcja przyjmie ustawienia domyślne, czyli `digits = 0`. Ponadto nie musimy stosować nazw argumentów, jeśli podajemy je we własnosćiaściwej kolejności, co jest bardzo wygodne i skraca czas pisania poleceń. Zgodnie z powyższym przykłądem, wektor składa się z 4 elementów typu `character`.
 
-Przyglądnij się, jak funkcja `round()` zaokrągla wartości liczbowe, zwróć uwagę na wartość oznaczającą połowę (5).
+Przyglądnij się, jak funkcja `round()` gdy zaokrągla wartości liczbowe, zwróć uwagę na wartość oznaczającą połowę (5). Spróbuj odpowiedzieć na pytanie jaka jest zasada zaokrąglania.
 
 ***
 
@@ -288,7 +291,6 @@ ggplot(data = df) +
 rm(df)
 ```
 
-
 ***
 
 ##### Ćwiczenie 3 {.tabset .tabset-pills}
@@ -351,6 +353,57 @@ rm(x,y,a)
 
 ***
 
+## 2.4 Operatory logiczne i relacyjne
+
+Ostatnim elementem tego rozdziału jest zrozumieniu operacji logicznych oraz relacyjnych, których wynikiem jest wartość logiczna. W R występują dwa rodzaje wartości logicznych `TRUE` i `FALSE`. Wykonywać możemy na nich operacje:
+
+```{r, echo=F}
+knitr::kable(data.frame(Operacja = c("!x", "x | y", "x & y"), 
+                        Znaczenie = c("negacja","alternatywa","koniunkcja")),
+             caption = "Tabela 6. Operatory i funkcje logiczne")
+```
+
+Zerknij również do pomocy `?Logic`.
+
+Teraz wykonamy kilka operacji, które lepiej pozwolą ci zrozumieć działanie tych operacji
+
+```{r, eval=F}
+!FALSE # negacja
+!TRUE # negacja
+FALSE | FALSE # alternatywa
+TRUE  | TRUE # alternatywa
+TRUE  | FALSE # alternatywa
+FALSE & FALSE # koniunkcja
+TRUE  & TRUE # koniunkcja
+TRUE  & FALSE # koniunkcja
+```
+
+Wartość logiczna jest róWnież zwracana przez R, gdy stosujemy operatory logiczne.
+
+```{r, echo=F}
+knitr::kable(data.frame(
+Operacja = c("x < y","x > y","x <= y","x >= y","x == y","x != y"),
+Znaczenie = c("czy mniejszy?", "czy większy?", "czy nie większy?", 
+               "czy nie mniejszy?", "czy równy?", "czy nie równy"))
+, caption = "Tabela 7. Operatory relacyjne")
+```
+
+Zerknij również do pomocy `?Comparison`. 
+
+Wykonaj Kilka przykładów:
+
+```{r,eval=FALSE}
+1 > 3
+3 >= 3
+5 == 5
+5 != 5
+5 == 5 & 5 != 5 
+5 == 5 | 5 != 5
+```
+
+
+***
+
 # 3. Obiekty i typy danych
 
 Każdy język programowania można postrzegać jako narzędzie służące do instruowania komputera, w jaki sposób należy przkształcić dane wejściowe, aby otrzymać interesujące dane wyjściowe [@gkagolewski2014programowanie]. W celu efektywnego korzystania z języka programowania musimy poznać obiekty stosowane w języku programowania `R`. Najważniejszymi obiektami stosowanymi w `R` są:
@@ -361,7 +414,7 @@ Każdy język programowania można postrzegać jako narzędzie służące do ins
 4. Tablice, często zwane ramkami danych, `(data.frame)`.
 5. Funkcje, `(function)`.
 
-W R wszystko jest obiektem, a każdy obiekt ma swoje własności. To co w matematyce określamy pojęciem zbioru lub dziedziny w R nazywamy typem obiektu. Obiekty w języku programowania mogą być różnego typu, lub często składać się z wielu elementów różnego typu (tzw. struktury złożone). Podstawowe typy obiektów w R, to:
+W R wszystko jest obiektem, a każdy obiekt ma swoje własnosći. To co w matematyce określamy pojęciem zbioru lub dziedziny w R nazywamy typem obiektu. Obiekty w języku programowania mogą być różnego typu, lub często składać się z wielu elementów różnego typu (tzw. struktury złożone). PZgodnie z powyższym przykłądem, wektor składa się z 4 elementów typu `characterdstawowe typy obiektów w R, to:`, element"a"
 
 1. Liczbowy `(numeric)`, który dzielimy na liczby całkowite `(integer)` i liczby rzeczywiste `(double)`.
 2. Znakowy `(character)`, w postaci ciągu znaków.
@@ -371,7 +424,7 @@ W R wszystko jest obiektem, a każdy obiekt ma swoje własności. To co w matema
 
 Więcej informacji na temat podstawowych i złożonych typów danych języka R znajdziecie w @gkagolewski2014programowanie
 
-Własności obiektu w języku R możemy sprawdzać, za pomocą kilku funkcji:
+Własnosćiasności obiektu w języku R możemy sprawdzać, za pomocą kilku funkcji:
 
 ```{r, echo=FALSE}
 library(tidyverse)
@@ -385,12 +438,13 @@ tribble(~"Funkcja", ~"Opis funkcji",
 "object.size()", "wielkość obiektu w bajtach",
 "mode()", "wewnętrzna reprezentacja obiektu",
 "str()", "szczegóły wewnętrznej reprezentacji obiektu"
-), caption = "Tabela 2. Zestawienie wybranych funkcji zwracającyh informacje o własnościach obiektu"
+), caption = "Tabela 2. Zestawienie wybranych funkcji zwracającyh informacje o własnosćiasnościach obiektu"
 )
 ```
 
-
 **Postaraj się zapamiętać:** `str(), class(), lenght(), typeof()` - będziemy z nich często korzystać.
+
+***
 
 ## 3.1. Zmienna
 
@@ -431,7 +485,7 @@ nic <- NA
 pusty <- NULL
 ```
 
-Korzystając z funkcji `str()`, `class()`, `lenght()`, `typeof()` sprawdźć włąsności obiektów: `a`, `b`, `d`, `z`, `nazwa`, `logiczny`, `inny`, `calko1`, `calko2`, `rzecz`, `nic`, `pusty`. Czy twoje przypuszczenia się sprawdziły ?
+Korzystając z funkcji `str()`, `class()`, `lenght()`, `typeof()` sprawdźć własnosćiąsności obiektów: `a`, `b`, `d`, `z`, `nazwa`, `logiczny`, `inny`, `calko1`, `calko2`, `rzecz`, `nic`, `pusty`. Czy twoje przypuszczenia się sprawdziły ?Zgodnie z powyższym przykłądem, wektor składa się z 4 elementów typu `character`, element "a"
 
 **WAŻNE !!!** Operator przekazania wartości do zmiennej można utworzyć przy pomocy skrótu klawiszy **alt+myślnik**, czyli **(alt+-)**.
 
@@ -441,7 +495,9 @@ Korzystając z funkcji `str()`, `class()`, `lenght()`, `typeof()` sprawdźć wł
 (z <- 23)
 ```
 
-## 3.2 Wektor
+***
+
+## 3.2. Wektor
 
 Wektor to uporządkowany zbiór obiektów tego samego typu. Do tworzenia wektora z pojedynczych elementów lub innych wektorów służy funkcja `c()`. W programie `R` nie ma rozróżnienia na pojedynczą wartość i wektor, pojedyncze wartości traktowane są jako jednoelementowe wektory.
 
@@ -482,7 +538,7 @@ a1 <- c(TRUE, FALSE, T, F) ; a1 ; typeof(a1)
 
 **UWAGA !!!** Zauważ, że nadpisaliśmy zmienną `a` i `a1`.
 
-Wektory atomowe w R mogą przechowywać elementy jednego typu, natomaist często w wyniku w wektorze mogą pojawić się elementy innego typu. Wykonaj poniższe przykłady i odpowiedz na pytanie jaka jest hierarchia typów obiektów w R.
+Wektory atomowe w R mogą przechowywać elementy jednego typu, natomiast często w wyniku w wektorze mogą pojawić się elementy innego typu. Wykonaj poniższe przykłady i odpowiedz na pytanie jaka jest hierarchia typów obiektów w R.
 
 ```{r}
 a1 <- c(F, 1L, 2.2, "cztery") ; typeof(a1)
@@ -493,6 +549,19 @@ a3 <- c(F, 1L) ; typeof(a3)
 Z godnie z powyższymi przykłądami, nie trudo zauważyć, że R nadaje typ obiektu w sposób, który umożliwia minimalizację strat informacji. Taki mechanizm nazywamy `uzgodnieniem typów`. Ta wiedza, będzie bardzo przydatna w trakcie wczytywania danych do programu R z plików zewnętrznych np. tekstowych.
 
 Należy zwrócić uwagę, że wartość `F` jest interpretowana przez program R jako `0`, natomiast `T` jako `1`.
+
+```{r}
+(2==2)+3
+(2>3)+1
+```
+
+Spodziewałeś się takiego wyniku ?. 
+
+```{r}
+TRUE + 3
+FALSE + 1
+```
+
 
 Domyślny typ obiektu możemy zmienić. Korzystaj z funkcji zaczynającej się od `as.` i nazwy typu obiektu. Poniżej kilka przykłądów konwersji typu danych.
 
@@ -525,15 +594,25 @@ typeof(a)     # sprawdzamy
 # teraz poprawna składnia
 a <- c(1L,0L,1L,1L,1L,0L) 
 a <- as.logical(a) # konwersja z nadpisaniem 
+a
 typeof(a) # sprawdzamy 
 ```
 
+Odwrócimy operacje konwersji:
 
-### 3.2.1 Funkcje tworzenia wektorów
+```{r}
+as.numeric(a)
+as.integer(a)
+as.double(a)
+```
 
-Poznaliśmy już dwie metody tworzenia wektorów, tj: za pomocą funkcji `c()` oraz operatora `:`. W wielu przypadkach stosowanie idywidalne tych funkcji jest nie wystarczające, lub uciążliwe. Wykonamy kilka przykładów, ktore pozwolą wam zrozumieć mozliwość łaczenia funkcj. W wielu przypadkach efektywnym jest skorzystanie z funkcji generowania sekwensji `seq()` oraz funkcji replikacji `rep()`.
+***
 
-Utworzymy kilka wektorów przy pomocy funkcji `c()` i operatora ciagów arytmetycznych `:`.
+### 3.2.1. Funkcje tworzenia wektorów
+
+Poznaliśmy już dwie metody tworzenia wektorów, tj: za pomocą funkcji `c()` oraz operatora `:`. W wielu przypadkach stosowanie pojedyńczo tych funkcji jest nie wystarczające, lub uciążliwe. Wykonamy kilka przykładów, ktore pozwolą wam zrozumieć mozliwość łaczenia funkcj. W wielu przypadkach efektywnym jest skorzystanie z funkcji generowania sekwensji `seq()` oraz funkcji replikacji `rep()`.
+
+Utworzymy kilka wektorów przy pomocy funkcji `c()` i operatora ciagów arytmetycznych `:`. 
 
 ```{r}
 a <- c(10,1:3,10) ; a  
@@ -542,7 +621,7 @@ c(a, c(1,4,5), 8:5)
 c(a, c(TRUE, FALSE))
 ```
 
-**Funkcja seq()**. Zacznijmy od uruchomienia pomocy dla funkcji `seq()` i zobaczmy na jej opis, dostępne argumenty funkcji i przykłady.
+**Funkcja seq()** - Zacznijmy od uruchomienia pomocy dla funkcji `seq()` i zobaczmy na jej opis, dostępne argumenty funkcji i przykłady.
 
 ```{r, eval=F}
 ?seq()
@@ -558,18 +637,24 @@ example(seq()) ## ładuje do okna konsoli przyklady zastosowania
 Zauważymy, że jest funkcją pakietu podstawowego `base`, który nie wymaga aktywacji poleceniem `library()`. Funkcja `seq()` składa się z podstawowych argumentów: **from**, **to**, **by**. Co oznacza od, do, krok. 
 
 Utworzymy teraz sekwencję liczb:
-* od 1 do 10 z krokiem 1, oraz  
-* od 1 do 2 z krokiem 0.1 
 
-Wspomagając się argumentami, następnie pomijając je (stosując prostszą formę zapisu):
+* od 1 do 10 z krokiem 1, oraz  
+* od 1 do 2 z krokiem 0.1.
 
 ```{r}
-seq(from = 1, to = 10, by = 1) # pełny zapis
-seq(1,10,1) # zapis uproszczony, bez argumentów
-seq(10) # zapis uproszczony, z argumentami domyslnymi
-seq(from = 1, to = 2, by = 0.1)
+seq(from = 1, to = 10, by = 1) # integer
+seq(from = 1, to = 2, by = 0.1) # real
+```
+
+
+Pisząc polecenie wygodnym jest często pomijanie nazw argumentów. Teraz wykonamy powyższe polecenia, ale stosując zapis uproszczony.
+
+```{r}
+seq(1,10,1) # zapis uproszczony, bez nazw argumentów
+seq(10) # zapis uproszczony, z argumentami domyślnymi
 seq(1,2,0.1)
 ```
+
 
 Teraz powinieneś rozumieć działanie tej funkcji. Zauważ że nie zawsze musimy stosować nazwy argumentów, jeśli wprowadzamy je w odpowiedniej kolejności. A czasami wystarczy podanie ostatniej liczby sekwencji np.: (10) w celu wygenerowania sekwencji z krokiem domyślnym 1 i początekiem domyślnym równym 1.
 
@@ -598,99 +683,1412 @@ seq(a,b, len = b/a) # wykorzystujemy je do uruchomienia funkcji seq()
 ```
 
 
-**Funkcja rep()** - funkcja ta replikuje istniejący wektor określoną ilość razy. Przyjmuje ona argument
-* `x` - wektor, kóry bedzie replikowany, 
-* `times` - ilość replikacji wektora `x`, 
-* `len` - długość wektora wyjściowego,
-* `each` - ile razy ma być powielony każdy element wektora 'x'
+**Funkcja rep()** - funkcja ta replikuje istniejący wektor określoną ilość razy. Przyjmuje ona następujące argumenty:
+
+ * `x` - wektor, kóry bedzie replikowany, 
+ * `times` - ilość replikacji wektora `x`, 
+ * `len` - długość wektora wyjściowego,
+ * `each` - ile razy ma być powielony każdy element wektora 'x'
 
 Poniżej kilka przykłądów zastosowania funkcji `rep()`:
 
 ```{r}
-rep(1:4, times = 2) # lub
-rep(1:4,2)
+rep(1:4, times = 2) # powielamy 2 razy wektor
+rep(1:4,2) # j.w.
+rep(seq(4),2) #j.w. z seq()
+rep(seq(4), len = 3) # tylko 3 elementy wektora bez powielania
 rep(1:4, each = 2) # nie to samo,
-
-rep(1:4, times = c(2,2,2,2)) # każdy 2 razy
-rep(1:4, times = c(2,1,2,1)) # co drugi 2 razy, co drugi raz
-
-rep(seq(4), each = 2, len = 4)    # len uciał 4 elementy
-rep(seq(4), each = 2, len = 10)   # len dodał 2 elementy
-
-rep(seq(4), each = 2, times = 3)  # który argument ma pierwszeństw ?
 ```
 
-Zanim przejdziemy dalej poznamy kilka tzw. domyślnych wektorów 
+Powyższe argumenty możemy stosować zamiennie lub łącznie, kolejność wykonywania działań jest taka, że najpierw wykonywane jest polecenie `each`, a następnie `times` lub `len`. Prześledźmy poniższy przykłąd:
 
 ```{r}
-letters
-LETTERS
-month.name
-month.abb
+rep(1:3, each = 3) # każdy 3 razy
+rep(1:3, each = 3, times = 2) # j.w, potem wektor 2 razy
+rep(1:3, each = 3, times = 2, len = 9) # j.w. tylko zwraca 9 ostatnich elementów
+```
+
+Argument `len` nie tylko ucina, ale powiela również utworzoną sekwencje 
+
+```{r}
+rep(seq(3), each = 2, len = 4)  # len uciał 2 elementy
+rep(seq(3), each = 2, len = 8)  # len dodał 2 elementy
+```
+
+Argument `times` pozwala na powielanie każdego elementu określoną ilość razy, ale w tym przypadku wartością argumentu jest wektor, a nie liczba
+
+```{r}
+rep(1:3, times = c(1,2,3))
+rep(1:3, 1:3) # j.w. prościej
+rep(1:3, 3:1) # odwrotnie
+```
+
+***
+
+### 3.2.2. Wektory domyślne pakietu bas
+
+Zanim przejdziemy dalej poznamy kilka tzw. domyślnych wektorów pakietu `base` z których będziemy później korzystać.
+
+```{r}
+letters # małe litery
+LETTERS # duże litery
+month.name # nazwy miesięcy
+month.abb # skrócone j.w.
+pi # 
+```
+
+***
+
+Możemy oczywiściue stworzyć polskie nazwy miesięcy, ale jest to trochę bardziej skomplikowane.
+
+```{r}
+format(ISOdate(2000, 1:12, 1), "%B")
+format(ISOdate(2000, 1:12, 1), "%b")
+```
+
+Funkcja `ISOdate()` generuje wektor daty, skłądajacy się z pierwszego dnia każdego miesiąca. 
+
+```{r}
+czas <- ISOdate(year = 2000, month = 1:12, day = 1)  
+czas
+```
+
+Funkcja `format()` zmienia format wyswietlania na `"%B"`. 
+
+```{r}
+czas <- format(czas, "%B")  
+czas
+```
+
+Więcej o formatowaniu daty znajdziesz w pomocy dla funkcji `strptime()`
+
+***
+
+##### Ćwiczenie 4 {.tabset .tabset-pills}
+###### Treść 
+
+Wygeneruj nazwy dni tygodnia, korzystając z pomocy funkcji `strptime()` oraz funkcji `format()` i `ISOdate()`.
+
+###### Odp. 
+
+```{r}
+format(ISOdate(year = 2000, month = 1, day = 3:9), "%A")
+format(ISOdate(year = 2000, month = 1, day = 3:9), "%a")  
+```
+
+#####
+
+***
+
+##### Ćwiczenie 5 {.tabset .tabset-pills}
+###### Treść 
+
+Utwórz po dwa wektory liczbowe i tekstowe i mieszane korzystając z funkcji `c()`, `seq()`, `rep()`, opratora `:`, oraz poznanych wektorów tekstowych. Jeden wektor powinien zawierać wartości losowe z wektora tekstowego (Funkcja `sample()`, sprawdźć w pomocy)   
+
+###### Odp. 
+
+Kilka przykąłdowych odpowiedzi:
+
+```{r}
+c(1,2,3,4,5:8)
+c(seq(1,9,0.8), rep(c(8,3,75,21), len = 10))
+c(1:4, seq(0.1,0.5, length.out = 7), rep(6:2), 3)
+sample(x = letters, replace = F, size = 10)
+```
+
+#####
+
+***
+
+##### Zastosowanie sekwencji {.tabset .tabset-pills}
+###### Treść 
+
+1. Funkcją `exp()` policzmy eksponentę (eksponenta, inaczej funkcja wykładnicza, to bardzo szybko rosnąca funkcja matematyczna) z sekwencji. 
+2. Następnie - wykorzystując funkcję `plot()` - narysujmy sekwencję i jej eksponentę. 
+3. Zauważmy, że argumentem tej funkcji jest wektor, a ponieważ większość operacji w R jest wektoryzowana, funkcja exp() policzy eksponentę dla każdego elementu wektora sekwencja.
+
+###### Wykonanie 
+
+```{r}
+sekwencja <- seq(0, 10, 0.1) # sekwencja liczb
+poziom <- exp(sekwencja) # każdą liczby sekwencji(x) podnosimy do ^e
+
+plot(x = sekwencja,   # wartosci osi x
+     y = poziom,      # wartości osi y
+     xlab="czas spędzony z R",           # etykieta x
+     ylab="poziom Data Science we krwi") # etykieta y
+```
+
+Domyślnie utworzono wykres punktowy. Argumentem `type` możemy zmienić typ wykresu np. na liniowy `type = "l"`
+
+```{r}
+plot(x = sekwencja, y = poziom,
+     xlab= "Czas z R", 
+     ylab= "Poziom data Science we krwi",
+     type ="l", 
+     main = "Trochę jak wyprawa na Rysy od Słowackiej strony, ale warto")
+```
+
+#####
+
+***
+
+##### Ćwiczenie 6 {.tabset .tabset-pills}
+###### Treść 
+
+Skoro umiesz już tworzyć proste wykresy, to wykreśl kilka funkcji:
+
+* dla pierwiastkowania wektora sekwencji
+* sekwencja do potęgi drugiej
+* sekwencja po potęgi czwartej
+* logarytm naturalny sekwencji
+* logarytm dziesiętny sekwencji
+* silnia z sekwencji (`factorial()`)
+
+###### Wykonanie 
+
+```{r, eval=F}
+sek <- seq(0, 10, 0.1) # sekwencja liczb
+
+plot(x = sek[1:20], 
+     y = sqrt(sek)[1:20], type = "b")
+
+plot(x = sek, 
+     y = sek^2, type = "l")
+
+plot(x = sek, 
+     y = sek^4, type = "p") 
+
+plot(x = sek, 
+     y = log(sek)) 
+
+plot(x = sek, 
+     y = log10(sek))
+
+plot(x = sek, 
+     y = factorial(sek)) 
+
+```
+
+```{r echo=FALSE}
+sek <- seq(0, 10, 0.1) # sekwencja liczb
+rbind(
+  data.frame(sek = sek, typ = "sqrt()", obs = sqrt(sek)),
+  data.frame(sek = sek, typ = "factorial", obs = factorial(sek)),
+  data.frame(sek = sek, typ = "^2", obs = (sek^2)),
+  data.frame(sek = sek, typ = "^4", obs = (sek^2)),
+  data.frame(sek = sek, typ = "log()", obs = log(sek)),
+  data.frame(sek = sek, typ = "log10()", obs = log10(sek))
+  ) -> dane
+
+ggplot(dane, aes(x = sek, y = obs, color = typ)) + 
+  geom_line(size = 1.3) + 
+  labs(x = "Wartości wektora sekwencji",
+       y = "wartość funkcji(sekwencja)") +
+  facet_wrap(~typ, 3, scales = "free_y") +theme_bw()
+
 ```
 
 
+#####
+
+***
+
+### 3.2.3. Indeksowanie wektorów
+
+Indeksowanie wektora jest niczym innym jak operacją filtorwania, czyli wybierania interesujacych nas wartości lub spełniającyh określony warunek. NajczeWście Wartości wybieramy wskazując ich indeksy. Wektor to ciąg elementów. Pierwszy z tych elementów ma indeks 1, kolejny 2, kolejny 3 i tak aż do ostatniego elementu. np.:
+
+```{r}
+wek <-  c("a", "b", "c", "d") # tworzymy wektor
+wek # wyświetlamy
+str(wek) # wyświetlamy własnosći
+```
+
+Zgodnie z powyższym wynikiem funkcji `str()`, wektor składa się z 4 elementów typu `character`, element `"a"` ma indeks 1, a element 'd' ma indeks 4.
+
+Indeks ostatniego elementu to jednocześnie długość wektora. Można ją sprawdzić funkcją `length()`. Zbadajmy długość poznanego już przez nas wektora: 
+
+```{r}
+length(wek) ; length(letters) ; length(month.name)
+```
+
+Aby odwołać się do określonych indeksów wektora należy użyć operatora `[]`. Nosi on nazywę  **indeksator**. Wewnątrz nawiasów kwadratowych podaje się indeks elementu, do którego chcemy się odwołać. Kilka przykładów:
+
+```{r}
+LETTERS[1] # pierwszy element wektora
+LETTERS[5] # piąty
+LETTERS[26] # ostatni element wektora
+LETTERS[length(LETTERS)] # j.w. ale za pomocą funkcji length
+```
+
+Teraz wygenerujemy wektor liczbowy i wykonamy kilka operacji wybierania pojedyńczych elmentów
+
+```{r}
+wek <- c(seq(2,28,2), seq(2,4,length.out = 6))
+wek
+length(wek) # Sprawdzamy długość wektora
+wek[length(wek)] # wybieramy ostatni element wektora
+wek[10] # wybieramy 10 element wektora
+```
+
+Odwołując się do wektorów, możemy podać indeks więcej niż jednej wartości. Zasada jest jednak taka, że indeksy muszą być wektorem. Do tego przydadzą nam się już poznane funkcje `seq()`,`c()`, `rep()` i operator `:`. Przykładowo, aby wybrać 6, 12 i ostatni element z wektora LETTERS musimy wpierw skonstruować wektor z tymi trzema indeksami. Można to zrobić na 3 sposoby.
+
+```{r}
+LETTERS[c(6,12,26)] 
+LETTERS[c(6,12,length(LETTERS))]
+a <- c(6,12,26)
+LETTERS[a]
+```
+
+Wybierzmy teraz co drugi element wektora `letters` z pomocą funkcji `seq()`
+
+```{r}
+letters[seq(1,length(letters),2)]
+```
+
+Równoważnie można najpierw stworzyć wektor indeksów a następnie wykorzystać go do indeksowania wektora LETTERS.
+
+```{r}
+co_drugi <- seq(1,length(letters),2)
+letters[co_drugi]
+```
 
 
-**Funkcja sample()**
+Aby wybrać więcej elementów z wektora wygodnie jest wykorzystać sekwencje, teraz zastosujmy sekwencje tworzone operatorem ciągu arytmetycznego`:`.
+
+
+```{r}
+LETTERS[1:10] # dziesięć pierwszych liter
+LETTERS[c(1:5,21:26)] # pięć pierwszych i pięć ostatnich
+```
+
+Wiemy, że sekwencje wartości nie muszą być rosnące. Można je wykorzystać np. do tego by odwrócić kolejność elementów w wektorze. Wygenerujemy litery alfabetu w kolejności odwrotnej: 
+
+```{r}
+LETTERS[26:1]
+letters[seq(26,1,-1)]
+seq(26,1,-1) # j.w. tylko z funkcją seq()
+```
+
+Indeksowanie można wykonać również w drugą stronę, tzn. poprzez usunięcie elmentów które nas nie interesują.
+
+```{r}
+letters[-(1:20)] # 6 ostatnich elementów
+```
+
+
+Elementy wektora można również indeksować warunkiem logicznym. Operatory logiczne scharakteryzowalismy w **rozdziale 2.4**, jeśli już nie pamiętasz, to wróć tam na chwilę. Ten element nauki może być dla was trudny do zrozumienia na tak wczesnym etapie. Gdyby był z tym problem zachęcam wrócić do tego momentu po przerobieniu **rozdziału 3.2.4.**
+
+Korzystając z operatorów logicznych możemy w łątwy sposób uprosćić procedurę filtorowania wybranych elementów wektora. Wektor wek skłąda się z `20` elementów i przechowuje wartości w zakresie od `2` do `28`. 
+
+Wybierzmy z wektora `wek` liczby, które są większe od 20. Najpierw musimy zdefiniować polecenie logiczne, które utoworzy nam wektor wartości `TRUE` i `FALSE`
+
+```{r}
+wieksze_od_10 <- wek > 10
+```
+
+Teraz porównajmy wektor `wek` z wektorem `a`. 
+
+```{r, eval=F}
+wieksze_od_10 ; wek # porównujemy wartości, patrz tabela.
+```
+
+```{r, echo=FALSE}
+knitr::kable(data.frame(wek, wieksze_od_10), caption = "Tabela 8. Porównanie wekotorów wek i a")
+```
+
+Zgodnie z tabelą wynikiem polecenia `wek > 10` jest wektor wartości logicznych, który zwraca odpowiednio wartości: 
+* `TRUE` dla `> 10`,
+* `FALSE` dla `<= 10`. 
+
+Teraz wykonamy operacje indeksowanie wektorem `wieksze_od_10` i otrzmamy wektor, który zawiera wartości liczbowe większe od 10.
+
+```{r}
+wek[wieksze_od_10]
+```
+
+Możemy też skorzystac z uproszczonej formy:
+
+```{r, eval=FALSE}
+wek[wek > 10]
+```
+
+Gdy chcemy odwrócić operacje filtrowania, prostym sposobem jest skorzystania z operatora negacji `!`.
+
+```{r, eval=FALSE}
+wek[!wieksze_od_10]
+```
+
+W indeksowania możemy wykonywać również operacje bazujące róWnież na pozostałych operatorach relacyjnych `<,>,=!, ==, które pozanliście w poprzednim rozdziale.
+
+Ostatnim, ale niezwykle waznym operatorem stosowanym w indeksowaniu jest operator `%in%`. Jest on przydatny gdy chcemy wybrać określone (znane) elementy wektora.
+
+Utwórz najpierw wektor wartości: 
+
+```{r}
+wek2 <- rep(letters[1:5],3)
+wek2
+```
+
+Chcemy wybrać wrzystkie elementy `a` i `c`. Możemy to zrobić na dwa sposoby, przy wykorzystaniu połączenia operatorów relacyjnych i logicznych:
+
+```{r}
+wek2[wek2 == "a" | wek2 == "c"] # wybierz a oraz c
+wek2[wek2 != "b" | wek2 != "d"] # wybierz a oraz c
+```
+
+lub przy zastosowaniu operatora `%in%`
+
+```{r}
+wek2[wek2 %in% c("a", "b")] # wybierz a oraz c
+```
+
+Przy okazji indeksowania warto wspomnieć o dwóch ważnych funkcja, które są często stosowane w odniesieniu do wektorów liczb, tj.:`is.na()`, `na.omit()`.
+
+Funkacj `is.na()` zwraca wektor wartości logicznych. Jeśli liczba to `FALSE`, jeśli `NA` to `TRUE`.
+
+```{r}
+wek1 <- c(1:2, rep(NA, 4), seq(6,7,0.5))
+wek1
+is.na(wek1)
+```
+
+Jeśli chcemy wybrać tylko elementy różne od `NA` to korzystamy z znaku negacji `!is.na(wek1)`.
+
+```{r}
+wek1[!is.na(wek1)] # liczby
+wek1[is.na(wek1)] # NA
+```
+
+Innym sposobem jest działanie funkcją `na.omit()`, która usuwa wszystkie elementy oznaczone jako `NA`.
+
+```{r}
+na.omit(wek1) -> bez_NA
+str(bez_NA)
+```
+
+***
+
+##### Ćwiczenie 6 {.tabset .tabset-pills}
+###### Treść 
+
+Wykonaj każde poniższe polecenie dwoma metodami:
+
+1. Zbuduj sekwencję odwrotną 6 kolejnych małych liter alfabetu łacińskiego, zacznij od z.
+2. Zbuduj sekwencję 5 kolejnych liczb nieparzystych zaczynając od 3.
+3. Z wektora LETTERS wybierz litery na pozycjach 5, 10, 15, 20 i 25.
+4. Wypisz wartości wektora LETTERS od końca.
+
+###### Odp. 
+
+Zbuduj sekwencję odwrotną 6 kolejnych małych liter alfabetu łacińskiego, zacznij od z.
+```{r}
+letters[26:21] -> a ; a ; length(a)
+letters[26:(26-5)]
+letters[length(letters) : (length(letters) - 5)]  
+```
+
+Zbuduj sekwencję 5 kolejnych liczb nieparzystych zaczynając od 3.
+```{r}
+seq(3,15,2)
+seq(3,3*5, length.out = 5)
+```
+
+Z wektora LETTERS wybierz litery na pozycjach 5, 10, 15, 20 i 25.
+```{r}
+LETTERS[c(5,10,15,20,25)]
+LETTERS[seq(5,25,5)]
+```
+
+Wypisz wartości wektora LETTERS od końca.
+
+```{r}
+LETTERS[26:1]
+LETTERS[seq(26,1,-1)]
+```
+
+####
+
+***
+
+### 3.2.4. Operacje wykonywane na wektorach
+
+W rozdziale 2 poznałeś operatory arytmemytyczne. W ramach tego rozdziału nauczymy się je wykorzystywać w odniesieniu do wektorów. 
+
+**Operacja na wektorach i liczbach**
+
+Podstawowowym typem operacji jest: wektor - operator - liczba = wyniki. W tym przypadku operacje wykonywane są dla każdego elemente wektora. Operacja ta jest podobna do funkcji przeciągania w exelu. Zróbmy kilka przykładów.
+
+```{r}
+a <- c(1:4) # Tworzymy dwa wektor a
+b <- seq(2,8,2) # Tworzymy dwa wektor b
+
+a ; a+2 # wyświelt, wykonaj dodawanie
+a ; a-2 
+a ; a*2 
+a ; a/2
+a ; a^2
+a ; a%/%2 # cz. całkowita
+a ; a%%2 # reszta z dzielenia
+```
+
+**Operacje na równych wektorach**
+
+Dobrze, teraz sprawdzimy jak są wykonywane operacje arytmetyczne na dwóch wektorach. W tym przypadku każdy element wektora jest mnożony, dodwany itd.. przez odpowiedni element wektora drugiego. Odpowiedni, tzn. znajdujący się w tym samym położeniu, lub o tych samych indeksach. Przyjrzyj się ponizsyzm przykłądom, by lepiej zrozumieć tą operację.
+
+```{r}
+a ; b ; a+b
+a ; b ; a-b
+a ; b ; a*b
+a ; b ; a/b
+a ; b ; a^b
+```
+
+**Wektory o róznych długościach**
+
+W przypadku wektorów o róznych długościach stosowana jest tzw. reguła zawijania wektora. Oznacza to, że wektor krótszy jest powielany, aż wykona wrzystkie operacje na wektorze dłuższym. Przyjrzyjmy się przykładom.
+
+```{r}
+a <- seq(8)
+b <- c(2,4)
+
+a; b; b*a
+a; b; b-a
+a; b; b+a
+a; b; b^a
+```
+
+Analogiczną operację, można wykonać stosując funkcje `rep()` dla wektora b.
+
+```{r}
+a <- seq(8)
+b <- c(2,4)
+b <- rep(b,4)
+
+a; b; b*a
+a; b; b-a
+```
+
+
+Tak, wyniki są identyczne. Mam nadzieje, że jest to już zrozumiałe. Teraz w ramach ćwiczenai spróbuja wykonać operacje arytmetyczne na wektorach, które składają sie z 2 elementów i 3 elementów. np. `a = 1:3`, `b = c(4,2)`. Zastanów się jak w tym pryzpadku zadziała **reguła zawiajania**.
+
+
+**Operacje relacyjne**
+
+Na wektorach mozemy oczywiście wykonywać róWnież operacje relacyjne, o czym już wspominaliśmy. W tym przypadku róWnież obowiązuje reguła zawijania. Wykonajmy kilka prostych przykładów.
+
+```{r}
+x <- c(1,5,7,5) # tworzymy wektory
+y <- c(4,2,9,5)
+```
+
+```{r, eval=F}
+x; y; x > y # czy mniejszy ?
+x; y; x < y # czy większy ?
+x; y; x <= y # czy nie większy ?
+x; y; x >= y # czy nie mniejszy ?
+x; y; x == y # czy równy ?
+x; y; x != y # czy różny ?
+```
+
+Być może tabelaryczne zestawienie wyników, będzie czytelniejsze:
+
+```{r, echo=F}
+relacje <- data.frame(x,y,
+                      czy_mniejszy     = (x >  y),
+                      czy_wiekszy      = (x <  y),
+                      czy_nie_wiekszy  = (x <= y),
+                      czy_nie_mniejszy = (x >= y),
+                      czy_rowny        = (x == y),
+                      czy_rozny        = (x != y))
+                      knitr::kable(relacje)
+```
+
+
+**operacje logiczne**
+
+Zasady wykonywania operacji logicznych już znacie, więc tylko krtótkie przypomnienie z zastosowaniem do wektorów.
+
+```{r}
+a <- c(TRUE, FALSE, NA) # Tworzymy wektory wartości logicznych
+b <- c(T, F, NA) # to samo, ale prosty zapis
+
+a ; !a # ! negacja
+b ; !b # ! negacja
+
+T  |  b # | alternatywa
+F  |  b # | alternatywa
+NA |  b # | alternatywa
+
+T  & a # & koniunkcja
+F  & a # & koniunkcja
+NA & a # & koniunkcja
+```
+
+Zwróć uwagę, że uwzgledniono wartość `NA`. Natomiast trzeba uważać z wykonywaniem operacji logicznych na wektoach liczbowych. Spróbojmy dodać, odjąć i pomnożyć wektor wartosci liczbowych, przez wektor wartości logicznych.
+
+```{r}
+a <- c(T, T, F, F, NA, NA)
+b <- 1:6
+
+a; b; a+b
+a; b; a-b
+a; b; a*b
+a; b; a/b
+```
+
+Wynikiem są liczby, dlaczego ? Przyjrzyj się, poprzednim przykładom i zauważ że wartość logiczna `TRUE` w operacjach arytmetycznych z wektorem liczbowym działa jak `1`, a wartość `FALSE` przyjmuje `0`. Prostym przykąłdem udowodnienia tego jest wykonanie konwersji wektora wartości `logical` na typ `integer`.
+
+```{r}
+as.integer(a)
+```
+
+**Modyfikacje elementów wektora** 
+
+Częstym przypadkiem jest wprowadzenie błędnych wartości w wektorze, czy zestawie danych, które są nieprawidłowe. W celu podmiany lub zmiany wybranych elmentów wektora korzystamy z wyrażeń modyfikacji wektora. 
+
+```{r}
+# tworzymy wektor
+x <- seq(1,5,0.8) 
+y <- 1:length(a)  
+```
+
+```{r}
+# Podmieniamy 1-elemenet wektora
+x[1] <- 1.2 ; x
+# podmieniamy 6 element (ostatni)
+x[6] <- 5.1 ; x
+# j.w inny sposób
+x[length(x)] <- 7 ;x
+# podmieniamy 2-elementy, [2:3]
+x[2:3] <- c(5,5) ; x
+# podmieniamy 3 pierwsze elementy wektora x wekotem y
+x[1:3] <- y[1:3]
+x;y
+x == y
+# reguła zawijania, co podmieniamy za co ?
+x
+x[-(1:4)] <- 100
+x
+```
+
+***
+
+### 3.2.5. Funkcje działajace na elementach wektorach 
+
+Operacje arytmetyczne na każdym elemencie wektora możemy wykonywać przy pomocy różnego rodzaju funkcji dostępnych w R. Wiele z tych funkcji omówilismy w ramach rozdziału 2.
+
+
+```{r}
+x <- seq(2,20,4) # tworzymy wektor
+```
+
+Teraz wykonamy eperacje pierwiastkowania, logarytmowania, podniesiemy do potęgi x. 
+
+```{r}
+x ; sqrt(x)
+x ; exp(x)# funkcja wykładnicza każdy element e^x, a e=2.71
+x ; log(x, 10)
+```
+
+Otrzymane wyniki mają wiele miejsc po przecinku, aby ograniczyć ich ilość skorzystamy z funkcji `round()`
+
+```{r}
+x ; round(log(x, 10),2)
+```
+
+W przypadku wektora wartości odatnich i ujemnych można wyliczyć wartości bezwględne elementóW wektora np.:
+
+```{r}
+x <- seq(-100,100,25)
+x ; abs(x)
+```
+
+Pamietaj, że gdy stosujemy wiele funkcji operacje są wykonywane w określonej kolejności. Możemy również stosować w tym przypadku operacje indeksowania.= np.:
+
+
+```{r}
+x ; round(log(x[x>0], 10) * (3/2), 2)
+```
+
+Najpierw indeksowanie `[x>0]` większych od zera, potem logarymt dziesietnych z większych od zera `log(x,10)`, nastepnie mnożenie wyniku logarytmowania `*(3/2)` i na końcu zaokrąglenie wyniku do dwóch miejsc po przecinku `round(,2)`.
+
+W określonych sytuacjach koniecznym jest uporządkowanie wartości liczbowych, np.: gdy chcemy określić charakterytykę naszego zbioru danych. Służa do tego funkcje `sort()` i `order()` 
+
+Zanim zacznimy z nich korzystać posłużymy się prostą funkcją generowania wektorów liczb losowych `sample`. Funkcja ta na podstawie zadane wekrtora `x`, generuje wektor wartości losowych o okreslinej licznośc `size`. Możemy również określić, czy chcemy aby wartości wektora `x` były powtarzane lub nie `replace = T or F`. 
+
+```{r}
+a <- sample(x = 1:4,   # wektor x 
+            size = 20, # liczność obserwacji wynikowego wektora
+            replace = T) # powtarzaj 
+a
+```
+
+Teraz korzystajć z funkcji sort()  utworzymy  wektory wartosci rosnących i malejacych
+
+```{r}
+sort(a) # rosnący
+sort(a, decreasing = F) # j.w.
+sort(a, decreasing = T) # malejący
+```
+
+***
+
+### 3.2.6. Funkcje wektorów
+
+Program R posiada wiele wbudowanych funkcji operujących na wektorach i pozwalajacych zwrócić określone wartości:
+
+ * `max()` wartość maksymalna wektora
+ * `min()` wartość minimalna wektora
+ * `mean()` wartość średnia wektora
+ * `median()` Mediana z wektora (wartość środkowa zbioru)
+ * `sum()` wartość suma wektora
+ * `prod()` iloczyn elementów wektora
+ * `sd()` wartość maksymalna wektora
+ * `var()` Wariancja
+
+Do celów ćwiczenia wygenerujemy dwa 100-elementowe wektory
+```{r}
+a <- sample(x = 1:10, size = 100, replace = T) # powtarzaj 
+b <- sample(x = c(1:5,NA), size = 100, replace = T) # powtarzaj 
+```
+
+Teraz na każdym wektorze przetestujemy powyższe funkcje.
+
+```{r}
+max(a) ; max(b)
+```
+
+Zauważ, że w przypadku wektora b otrzymaliśmy wartość `NA`, w przypadku tego typu wektora możemy zgodnie z naszą wiedzą usunąć wartości `NA`, podmienić je inną wartością liczbową, lub poprostu pominąć poprzez wykorzystanie argumentu `na.rm = T`
+
+```{r}
+max(a) ; max(b, na.rm = T) 
+# lub
+max(b[!is.na(b)]) # z indeksowaniem
+# lub
+b[is.na(b)]<- 6 # podmiana NA na 3
+max(b) # podmiana
+```
+
+Argument `na.rm = T`, ma zastosowanie do wrzystkich wymienionych w tym rozdziale funkcji.
+
+```{r}
+b[b == 6]<- NA # powrót do NA
+```
+
+```{r}
+max(a); min(a); mean(a); median(a); sum(a) 
+prod(a) # ilosczyn
+sd(a) # odch.stand.
+var(a) #wariancja
+```
+
+Teraz na wektorze `b` z wartościami `NA`
+
+```{r}
+max(b, na.rm=T); min(b, na.rm=T); mean(b, na.rm=T); median(b, na.rm=T); sum(b, na.rm=T)
+
+prod(b, na.rm=T)
+sd(b, na.rm=T)
+var(b, na.rm=T)
+```
+
+Istnieją róWnież bardziej wyrafinowane funkcje, które zwracają od razu większą ilość parametróW. Funkcja `range()` zwraca zakres danych, czyli max i min z wektora.
+
+```{r}
+range(a) ; range(b)
+```
+
+Charakterystykę próbki możemy określić również przy pomocy funkcji: `unique()`, `table()`, `summary()`.
+
+Funkcja `unique()` zwraca wektor wartości unikalnych
+
+```{r}
+unique(a)
+unique(b, na.rm = T)
+```
+
+Możemy to przedstawić w troszkę bardziej przyjemny dla oka sposób.
+
+```{r}
+sort(unique(a))
+sort(unique(b, na.rm = T))
+```
+
+Funkcja `table()` zwraca informacje o liczności każdego elementu np.:
+
+```{r}
+a <- sample(seq(1,2,by = 0.1), size = 100, replace = T)
+sort(unique(a))
+sort(table(a))
+```
+
+Wynikiem jest wektor, w którym nazwy to unikalne wartosci wektora, a w drugiej kolumnie mamy liczność występowania każdej wartości. Najcześćie występowała wartość: 
+
+```{r}
+max(table(a))
+```
+
+najrzadziej wartość:
+
+```{r}
+min(table(a))
+```
+
+a liczność naszych obserwacji (ilość elmentów wektora to):
+
+```{r}
+sum(table(a)) ; length(a) ; sum(table(a)) == length(a)
+```
+
+
+Funkcja `table()` zwraca nam ilość poszczególnych obserwacji, co graficznie można przedstawić za pomocą histogramu. Histogram przedstawia liczność wartości każdego przedziału.
+
+```{r , fig.align="center", fig.cap="Rys.X Histogram wektora a"}
+hist(a, 
+     main = "Mój pierwzy histogram",
+     xlab = "Wartości wektora a",
+     ylab = "częstość występowania wartości")
+```
+
+Oprócz liczności próbkę danych możemy scharakteryzować przy pomocy kwantyli, do tego celu służą dwie funkcje:
+
+ * `summary()` - zwraca kwartyle, mediane oraz średnią
+ * `quantile()` - zwraca określony kwantyl
+
+Przetestujmy funkcje summary
+
+```{r}
+summary(a)
+summary(b) # działa nawet na brakach danych NA
+```
+
+Zauważ, żę wynikiem funkcji są:
+
+* minimum (pierwsz wartość zbioru danych)
+* 1 kwartyl (poniżej tej wartości zanjduje się 25% obserwacji)
+* mediane (poniżej i powyżej ttej obserwacji znajduje się 50 % obserwacji)
+* średnią 
+* 3 kwartyl (poniżej tej wartości znajduje się 75% obserwacji)
+* maksimum (ostatnia wartość zbioru danych)
+
+Powyższe wartości możemy przedstawić na prostym wykresie ramka wąsy:
+
+```{r}
+boxplot(a, horizontal = T, main = "Mój drugi wykres")
+```
+
+Wąsy to min i max, ramka to 1 i 3 kwartyl, a pogrubiona czarna linia to mediana.
+
+Kolejną fukcją, która pozwoli nam przybliżyć charakterystykę liczbową naszej próbki jest funkcja `quantile()`.
+
+```{r}
+quantile(a) # analogia summary - bez średniej
+```
+
+Możemy również wybrać kwantyl, który chcemy policzyć. 
+
+```{r}
+quantile(a, probs = 0.25)
+quantile(a, probs = c(0.25, 0.5))
+```
+
+Policzymy teraz decyle:
+
+```{r, fig.align="c"}
+quantile(a, probs = seq(0,1,0.1))
+```
+
+***
+
+### 3.2.7. Funkcje generowania wartości losowych
+
+Często bardzo przydatne są funkcje generowania wektorów wartości losowych. Możemy skorzystać z kilku funkcji, które generują zbior wartości o rozkładzie normalnym, o rozkładzie Poissona, czy Bernoulliego. Przedstawimu tylko dwie funkcje, pierwsza to `rnorm()` - generuje zbioró wartosci o rozkładzie normalnym, oraz funkcji `runif()`, która generuje wektor wartości losowych. 
+
+```{r}
+rk1 <- rnorm(n = 100) # podajemy tylko liczbe elementów wektora n
+rk2 <- runif(n = 100, min =2, max = 5) # podajemy n, wartość min i max. 
+```
+
+```{r, fig.align="c"}
+hist(rk1)
+hist(rk2)
+```
+
+***
+
+## 3.3. Listy
+
+Lista. Podobnie jak wektor, lista to również uporządkowany zbiór elementów. W przeciwieństwie do wektora, elementy listy mogą mieć różne typy. Podobnie jak w przypadku wektora poszczególne elementy mogą mieć nazwy. Listy tworzy się zazwyczaj z użyciem funkcji `list()`. Wykonaj polecenie i przyglądnij się wynikowi.
+
+```{r}
+al <- list(imie=c("Jan","Tomasz"), nazwisko="Kowalski", 
+           wiek=25, czyWZwiazku=T)
+al
+```
+
+Lista skłąda się z 4 nadrzędnych elementów, tj. imie, nazwisko, itd.., Zaleta listy jest to, że może przechowywać różnego typu wartosci, np. `character`, `logical`, czy `numeric`.
+
+***
+
+##### ćwiczenie 7 {.tabset .tabset-pills}
+###### Treść
+
+Wykonaj listę charakterystyczną dla książki adresowej dostępnej np. smart fonie z którego korzystacie. Ma zawierać dane dla 3 osób:
+
+* Nazwisko i Imię,
+* Adres (dokładny - jakbyście wysyłali list),
+* Numer telefonu prywatnego,
+* Numer telefonu służbowego,
+* Miejsce pracy i nazwa uczelni na której studiuje,
+* Adres mailowy (prywatny i służbowy) 
+
+Listę umieść w zmiennej o nazwie: kontak
+
+
+Następnie wykonaj kilka poniższych poleceń oraz wyjaśnij co zwraca każde polecenie (wyjaśnienia umieść w skrypcie w postaci komentarzy)
+
+* `length(kontak)`
+* `is.vector(kontakt)`
+* `is.atomic(kontakt)`
+* `typeof(kontakt)`
+* `class(kontakt)`
+* `str(kontakt)`
+
+###### odp.
+
+```{r}
+kontakt <- list(nazwisko = c("Borsuk", "Koliber", "Tygrys"),
+                imie = c("Karol", "Eliza", "Anastazia"),
+                kod_pocztowy = c("33-178", "30-877","30-854"),
+                nr_budynku = c(5, 6, 2),
+                nr_lokalu = c(85, 32, NA),
+                woj = c("Opolskie", "Ślaskie", "Mazowieckie"),
+                tel_pr = c(505359357, 505234234, 676888965),
+                tel_sl = c(607000222, 611222333, 666999777) ,
+                firma = c("EB", "KHK", "ZKM"),
+                uczelnia = c("AGH", "PK", "AGH"),
+                email = c("bk@agh.pl", "ke@agh.pl","ta@agh.pl")
+)
+
+kontakt
+```
+
+```{r}
+length(kontakt) # lista zawiera 11 atrybutów
+is.vector(kontakt) # tak 
+is.atomic(kontakt) # nie atomowy
+typeof(kontakt) # typ obiektu lista
+class(kontakt) # obiekt klasy lista
+str(kontakt) # struktura obiekty
+```
+
+#####
+
+***
+
+**Ciekawostka** 
+
+Przy pomocy polecenia `data.frame()` przekształcimy obiekt typu lista na obiekt typu ramka danych. Oraz go wyświetlimy. 
+
+```{r, eval=F}
+View(books <- data.frame(kontakt))
+```
+
+To samo polecenie możemy wykonać stosując inny prostszy zapis, ale dłuższy.
+
+```{r, eval=F}
+books <- data.frame(al)
+View(books)
+```
+
+O obiektach `data.frame()`, powiemy więcej w rozdziale 3.5:
+
+***
+
+### 3.3.1. Indeksowanie listy
+
+Do elementów listy możemy się odwoływać jak do elementów wektora, korzystając z nazw poszczególnych pól lub z operatora [[]] (operator ten został wyjaśniony w rozdziale dotyczącym indeksowania). W poniższym przykładzie konstruujemy listę czterech obiektów różnych typów.
+
+```{r}
+al[1] # odwołanie do atrybutu listy
+al[3]
+```
+
+Jeśli chcemy wykonywać operacje na obiekcie listy, to stosujemy podwójny indeksator `[[x]]` lub `$`
+
+```{r}
+al[[3]] * 2
+al$wiek * 2
+```
+
+Jeśli chcemy odwołać się do konkretnej wartości:
+
+```{r}
+al[[1]][2]
+```
+
+Podwójny nawias odwołuje się do atrybutu listy, a kolejny zestaw nawiasów do wektora.
+
+### 3.3.2. Modyfikowanie list
+
+Znamy zasady indeksowania, to modyfikacje są analogiczne jak w przypadku wektorów. Podmienimy zawartość atrybutu wiek.
+
+```{r}
+al$wiek <- c(23,35,77,58)
+al
+al[[2]] <- c("Nowak","Kowalski", "Koper")
+al
+```
+
+Listy możemy również scalać, służy do tego funkcja 
+
+```{r}
+l1 <- list(nowa = c(1:10))
+l2 <- list(koniec = c(20:29))
+lista <- c(l1,l2) 
+lista
+```
+
+### 3.3.2. Operacja na listach
+
+Tak jak poprzednio, możemy wykonywać dodowlne opercja na poszczególnych atrybutach listy, ale musimy się do nich odwołać poprzez indeksowanie.
+
+Przeprowadzimy kilka znanych nam operacji, ale najpier utworzymy listę przy pomocy poznanych funkcji:
+
+```{r}
+nowa <- list(waga = sample(50:80, replace = T, size = 5),
+             wiek = round(runif(5, 25, 77),0),
+             wzrost = sample(150:190, size = 5))
+```
+
+Teraz chcemy policzyć, średnią wagę, wiek, wzrost.
+
+```{r}
+mean(nowa) # nie działa
+```
+
+Aby wykonać operacje musimy się odwołąć do każdego elementu listy.
+
+```{r}
+mean(nowa$waga)
+mean(nowa[[2]]) # itd.
+```
+
+Odwoływanie się do każdego elementu listy bywa bardzo męczące. W celu wykluczenia tego problemu możemy skorzystać z funkcji `lapply` i sapply. Wykonuje ona operacje na każdym obiekcie. Składnia jest analogiczna, podajemy nazwę naszej listy, a następnie podajemy nazwę funkcji z której chcemy skorzystać. 
+
+Rożnica jest taka, że wynikiem funkcji `lapply` jest dalej lista, a funkcji `sapply` jest wektor.
+
+```{r}
+lapply(nowa, mean) -> a ; a
+sapply(nowa, mean) -> b ; b
+```
+
+Wykonuje również inne operacje
+
+```{r, eval=F}
+# Działą na funkcjach zwracających wektory
+lapply(nowa, summary) -> a ; a # lista wektoróW
+sapply(nowa, range) -> b ; b # ramka danych
+
+# można odwrócić wartość liczby
+lapply(nowa, "-") -> a ; a 
+
+# można przeliczyć każdy element
+lapply(nowa, sqrt) -> a ; a 
+sapply(nowa, exp) -> b ; b 
+
+# można stosować argumenty funkcji, ale bez nawiasów
+sapply(nowa, quantile) -> b ; b 
+sapply(nowa, quantile, prob = c(0.5,0.75)) -> b ; b # dodatkowy argument funkcji
+```
+
+***
+
+
+## 3.4. Macierze
+
+Macierze tworzy się zazwyczaj funkcją matrix(). Parametrami tej funkcji jest wektor inicjujący zawartość macierzy oraz dwie liczby określające wymiary macierzy. Macierz może składać się z liczb, napisów lub wartości logicznych. W poniższym przykładzie konstruujemy macierz o wymiarach 4x2 wypełnioną zerami.
+
+```{r}
+matrix(data = 0, nrow = 2, ncol = 4) 
+```
+
+```{r, eval = F}
+# lub forma skrócona
+matrix(0,2,4)
+```
+
+Drugi przykład macierzy z ciągiem arytmetycznym.
+
+```{r}
+matrix(1:6, nrow = 2, ncol = 3)
+```
+
+Trzeci przykład macierzy z sekwencją.
+
+```{r}
+matrix(seq(3,8,1), nrow = 3, ncol = 2)
+```
+
+Czwarty przykład z zastosowaniem funkcji c().
+
+```{r}
+x <- matrix(c(1,2,3,1:3,3:5), 3, 3)
+x
+x <- matrix(c(1,2,3,1:3,3:5), nrow = 3, ncol = 3)
+x
+```
+
+Macierz składająca się z elementów tekstowych.
+
+```{r}
+a <- c("A","B","C","D")
+xx <- matrix(a,2,2)
+```
+
+Funkcją `array()` można również konstruować macierze, ale większej liczbie wymiarów. Tym zagadnieniem nie będziemy zajmować się w ramach tego kursu. Jeśli będziesz potrzebował kiedyś wiecej informacji, to znajdziesz je w @gkagolewski2014programowanie oraz @biecek2008przewodnik.
+
+***
+
+#### ćwiczenie 8 {.tabset .tabset-pills}
+##### Treść
+
+Utwórz macierz: `matrix(1:6, nrow = 2, ncol = 3) -> xx` Następnie wykonaj następujące polecenia i wyjaśnij w komentarzach co one zwracają. 
+
+##### odp.
+
+```{r}
+matrix(1:6, nrow = 2, ncol = 3) -> xx
+length(xx)
+is.vector(xx)
+is.atomic(xx)
+typeof(xx)
+class(xx)
+nrow(xx)
+ncol(xx)
+```
+
+####
+
+***
+
+## 3.5. Ramki danych
+
+Szczególnym typem obiektu jest ramka danych, nazywana również tabelą danych. Ramka danych jest zazwyczaj z tabelaryczną strukturą, której elementy w każdej kolumnie są tego samego typu, ale mogą różnić się typami pomiędzy kolumnami. Z tego powodu ramkę danych można traktować jak listę wektorów o tej samej długości, każdy wektor odpowiada jednej kolumnie. Ramki danych tworzy się zazwyczaj funkcją `data.frame()`. 
+
+Ramka danych jest oprócz wektora jednym z najczęściej wykorzystywanych typów obiektów i poświęcimy jej dość sporo uwagi.
+
+Poniżej konstruujemy ramkę danych składającą się z trzech trójelementowych zmiennych. Konstruujemy ramkę danych podając wartości dla każdej z kolumn.
+
+```{r}
+ramka <- data.frame(id = c(100,101,102), 
+                    wiek = c(25,21,22),
+                    wzrost = seq(170,190,10),
+                    chlopiec = c(TRUE,TRUE,FALSE))
+ramka
+```
+```{r, eval=F}
+View(ramka)
+```
+
+Do kolumn ramki danych (które są wektorami) możemy odwoływać się tak, jak do elementów macierzy, a także tak jak do elementów list przy pomocy operatora `$` dostępu do pól obiektu klasy S4. 
+
+```{r}
+ramka$wiek
+```
+
+***
+
+#### ćwiczenie 9 {.tabset .tabset-pills}
+##### Treść
+
+Stwórz dowolną tabele składająca się 10 wierszy i 4 kolumn. Pod zmienną `dane`. W kolumny od 1 do 4 mają przechowywać odpowiednio. 
+
+* liczby całkowite
+* liczby rzeczywiste (do dwóch miejsc dzietnych)
+* tekst
+* zmienne logiczne
+* Kolumny mają mieć też określone nazwy. Nazwy dowolne, ale krótkie (jedno słowo do 5 znaków).
+
+wykonaj następujące polecenie dla obiektu dane oraz opisz co zwracają w komentarzach.
+
+```{r, eval=F}
+length()
+is.vector()
+is.atomic()
+is.data.frame()
+is.array()
+str(attributes())
+typeof()
+class()
+nrow()
+ncol()
+dim()
+colnames()
+names()
+row.names()
+summary()
+```
+
+##### odp.
+
+Stwórz dowolną tabele składająca się 10 wierszy i 4 kolumn. Pod zmienną `dane`. W kolumny od 1 do 4 mają przechowywać odpowiednio. 
+
+* liczby całkowite , 
+* liczby rzeczywiste (do dwóch miejsc dzietnych)
+* tekst
+* zmienne logiczne
+* Kolumny mają mieć też określone nazwy. Nazwy dowolne, ale krótkie (jedno słowo do 5 znaków).
+
+```{r}
+data.frame(calko = c(1:10),
+           rzecz = seq(0.8,20, length.out = 10),
+           tekst = letters[sample(1:26, replace = T, size = 10)],
+           logic = as.logical(rep(0:1), 5)
+           ) -> dane 
+dane ; View(dane)
+```
+
+
+wykonaj następujące polecenie dla obiektu dane oraz opisz co zwracają w komentarzach.
+
+```{r}
+length(dane)
+is.vector(dane)
+is.atomic(dane)
+is.data.frame(dane)
+is.array(dane)
+str(attributes(dane))
+str(dane) # bardzo pomocne
+typeof(dane)
+class(dane)
+nrow(dane)
+ncol(dane)
+dim(dane)
+colnames(dane)
+names(dane) # j.w
+row.names(dane)
+summary(dane) 
+```
+
+Zauważ, że w zależności od typu danych zawartych w kolumnie funkcja summary zwraca różne informacje.
+Pamietasz funkcje `table()`. Porównaj wyniki z funkcją `summary()`
+
+```{r}
+table(dane$tekst)
+```
+
+####
+
+***
+
+Zanim przejdziemy do następnego tematu, musimy wczytać dane. Temu procesowi poświęcimy znacznie więcej uwagi w innym rozdziale.
+
+```{r eval=FALSE, include=FALSE}
+data.frame(imie = c("Katarzyna", "Zofia", "Julia", "Kora", 
+                    "Piotr", "Adam", "Robert", "Robert", "Beata"),
+           Nazwisko = c(rep("Kowalska",3), "Nowak", "Zwykły", "Nowy", "Nowy", "Ptak", "Ptak"),
+           praca = c("AGH", "ZUS", "NFZ", "AGH", "PK", "UJ", "UG", "NFZ", "UMK"),
+           stanow = c("asystent", "księgowy", "księgowy", "adniunk", 
+                      rep("prof.",3), "technik", "Inżynier"),
+           Zarobki = round(runif(n = 9, 2000, 6000),1),
+           staz = round(runif(9, 5,20)),
+           urlop = round(runif(9, 1,26)),
+           Waga = round(runif(n = 9, 50, 110)),
+           Wzrost = round(runif(n = 9, 150, 190)),
+           Wiek = round(runif(n = 9, 27, 65)), 
+           Plec = sample(c("M", "K"), size = 9, replace = T),
+           Kraj = sample(c("PL", "USA", "DE"),size = 9, replace = T)
+) -> dane
+dane
+save(dane, file = "dane.RData")
+
+```
+
+W folderze który pobrałeś z [upel](http://upel.agh.edu.pl/wggiis/) znajduje się plik `dane.RData`.
+
+Sprawdzć, czy masz odpowiedni obszar roboczy.
+
+```{r}
+getwd()
+```
+
+Jeśli nie to poleceniem `setwd("...")` ustaw go na folder w którym znajduje się plik z danymi, *gdzie 3 kropki to ścieżka dostępu*.
+
+Poleceniem `dir()` sprawdzć jakie plki i foldery znajdują się w twoim katalogu.
+
+```{r, eval=F}
+dir()
+```
+
+Jeśli jest tam plik `dane.RData`, to wykonaj polecenia ładowania.
+
+```{r}
+load(file = "dane.RData")
+```
+
+W prawym górnym oknie powinien pojawić się obiekt `dane`, który ma następującą postać:
+
+```{r}
+dane
+```
+
+Poleceniem `head()` i `tail()` możemy wyświetlić podgląd wybranych danych, aby im się przyjrzeć.
+
+```{r, eval=FALSE}
+head(dane) # 6 pierwszych
+tail(dane) # 6 ostatnich
+```
+
+Możemy określić ilość wierszy, która chcemy wyświetlić.
+
+```{r, eval=FALSE}
+head(dane, 3) # 3 pierwsze
+tail(dane, 3) # 3 ostatnie
+```
+
+Lub wyświetlić cały zestaw danych
+
+```{r, eval=F}
+View(dane)
+```
+
+Aby odwoływać się do wierszy lub kolumn ramki danych można wykorzystać operator [].  
+
+###  3.5.1. Indeksowanie
+
+Aby odwoływać się do wierszy lub kolumn ramki danych można wykorzystać operator [,]. Obowiązkowym elementem jest przecinek. Przed przecinkiem należy wpisać indeksy wierszy, po przecinku indeksy kolumn. Jeżeli przed przecinkiem lub po przecinku nie będzie żadnych wartości to wybrane będą wszystkie elementy w wierszu / kolumnie. Przykładowo, odwołanie się do trzeciego wiersza z ramki danych. 
+
+koty_ptaki[3, ]
+##   gatunek waga dlugosc predkosc habitat zywotnosc druzyna
+## 3  Jaguar 100     1.7       90 Ameryka        15     Kot
+Liczbę wierszy można sprawdzić funkcją nrow() (odpowiednio, liczbę kolumn sprawdzamy funkcją ncol(). 
+
+nrow(koty_ptaki)
+## [1] 13
+Przydatne, jeżeli np. chcemy wyświetlić ostatni wiersz.
+
+koty_ptaki[13,]
+##     gatunek waga dlugosc predkosc  habitat zywotnosc druzyna
+## 13 Albatros    4     0.8     120 Poludnie        50    Ptak
+Jeżeli chcemy wybrać więcej niż jeden wiersz należy, podobnie jak dla wektorów, podać kilka indeksów przed przecinkiem. Aby odwołać się do kilku kolejnych wierszy można wykorzystać sekwencję zbudowaną z operatorem. Przykładowo, wiersze od 8 do 10 z ramki danych koty_ptaki można wyłuskać następująco.
+
+koty_ptaki[8:10, ]
+Funkcja c() skleja wartości i sekwencje w wektor, który można następnie wykorzystać w indeksowaniu wierszy. Poniższa instrukcja wyłuskuje wiersze 3, 8, 9 i 10.
+
+koty_ptaki[c(3, 8:10), ]
+Lub równoważnie:
+
+indeksy <- c(3, 8:10)
+koty_ptaki[indeksy,]
+Funkcjami head() i tail() wyłuskuje się kilka pierwszych lub ostatnich wierszy ze zbioru danych. Do obu funkcji można podać drugi argument, określający ile pierwszych / ostatnich wierszy chcemy odczytać, domyślnie jest to 6 wierszy.
+
+head(koty_ptaki)
+tail(koty_ptaki)
+Jako indeksy można również wykorzystać wektor wartości logicznych. Wybiegając trochę w przyszłość, użyjemy kolumny prędkość aby wybrać z ramki danych tylko te wiersze, dla których prędkość jest wyższa niż 100.
+
+najszybsze <- koty_ptaki$predkosc > 100
+najszybsze
+koty_ptaki[najszybsze, ]
+Indeksując wiersze lub kolumny można też wykorzystywać ujemne indeksy. Oznaczają one, wszystkie wartości poza wskazanymi. Przykładowo, wszystkie wiersze poza 1, 3, 8, 9 i 10 można uzyskać poleceniem.
+
+koty_ptaki[ -c(1, 3, 8:10), ]
+Zauważmy, że w tym przykładzie znak - przed funkcją c() tworzącą wektor, powoduje zmianę znaku wszystkich elementów wektora.
+
+-c(1, 3, 8:10)
+## [1]  -1 -3  -8  -9 -10
+Uwaga! Nie można mieszać jednocześnie indeksów dodatnich i ujemnych.
+
+2. Indeksowanie kolumn w ramce danych
+Podobnie jak wiersze, można indeksować również kolumny. Aby wyłuskać drugą kolumnę można wskazać jej numer po przecinku. 
+
+koty_ptaki[, 2]
+Wybranie jednej kolumny powoduje, że jako wynik otrzymujemy nie ramkę danych ale wektor. Łatwo to poznać po sposobie wyświetlania danych. Aby zapobiec takiej konwersji na wektor i jako wynik wciąż mieć ramkę danych, należy dodać do operatora indeksowania argument drop=FALSE.
+
+koty_ptaki[,2, drop=FALSE]
+Uwaga Ten dziwny zapis jest konsekwencją tego, że operator [,] jest w gruncie rzeczy funkcją. Więcej o zaawansowanych elementach języka dowiemy się w kolejnych odcinkach.
+
+W ramce danych kolumny możemy indeksować nie tylko numerami ale również nazwami (kolumny są nazywane). Nazwy kolumn z ramki danych można odczytać funkcją colnames(). Wynikiem tej funkcji jest wektor z nazwami.
+
+colnames(koty_ptaki)
+Aby wyłuskać z ramki danych kolumnę o nazwie waga możemy użyć tej nazwy jako indeksu.
+
+koty_ptaki[, "waga"]
+Ponieważ operacja odwołania się do jednej kolumny w danych jest dosyć częsta, można ją wykonać na kilka innych sposobów. Najpopularniejszym jest użycie operatora $. Z jego pomocą do kolumny waga możemy odwołać się w ten sposób.
+
+koty_ptaki$waga
+##  [1] 300.00 200.00 100.00  80.00  70.00  60.00  50.00   0.05 150.00   5.00
+## [11]   0.70   2.00   4.00
+Aby wybrać więcej niż jedna kolumnę, podobnie jak w przypadku wierszy i wektorów można wykorzystać funkcję c(). Przykładowo, jeżeli chcemy wybrać drugą, czwartą, piątą i szóstą kolumnę możemy użyć instrukcji.
+
+# równoważnie moglibyśmy napisać
+koty_ptaki[, c("waga", "predkosc", "habitat", "zywotnosc")]
+koty_ptaki[, c(2,4:6)]
+kol <- c(2,4:6)
+koty_ptaki[,kol]
+kolumny <- c("waga", "predkosc", "habitat", "zywotnosc")
+koty_ptaki[, kolumny]
+
+3. Wybieranie pod ramki danych
+Możemy jednocześnie odwoływać się do wierszy i kolumn w ramce danych, wybierając jej podramkę. Przykładowo, 
+
+wybór czterech wierszy i czterech kolumn lub 
+wybór czterech wierszy i jednej kolumny lub 
+Jeden wiersz i cztery kolumny może wyglądać taki.
+koty_ptaki[c(3,8:10), c(2,4:6)]
+koty_ptaki[c(3,8:10), 2]
+koty_ptaki[3, c(2,4:6)]
+Pokazaliśmy wcześniej, jak można odwoływać się do kolumn poprzez ich nazwy. Podobnie można zrobić z wierszami. Funkcja rownames() pokazuje jak nazywają się wiersze w ramce danych. 
+
+rownames(koty_ptaki)
+Te nazwy niewiele mówią, używanie ich do indeksowania nie miałoby sensu. Zmieńmy więc nazwy wierszy na takie jak w kolumnie gatunek
+
+rownames(koty_ptaki) <- koty_ptaki$gatunek
+rownames(koty_ptaki)
+koty_ptaki
+Poniższy przykład wybiera wiersze dla czterech wskazanych gatunków oraz trzy wybrane kolumny. Jeżeli wiersze mają sensowne nazwy, to wygodniej jest odwoływać się do wierszy przez nazwy niż przez indeksy liczbowe.
+
+koty_ptaki[c("Lew","Leopard", "Jerzyk", "Strus"), 
+           c("waga", "dlugosc", "predkosc")]
+Poniższym poleceniem przypisujemy spowrotem liczbowe nazwy wierszy jako liczbowe
+rownames(koty_ptaki) <- NULL
+koty_ptaki
+
+Sortowanie przez indeksowanie
+Interesujące i nieco zaawansowane zastosowanie indeksowania przedstawimy na przykładzie funkcji order(). Wynikiem tej funkcji, są indeksy kolejnych, rosnących wartości. Przykładowo, w kolumnie prędkość mamy następujące wartości
+
+koty_ptaki[,"predkosc"]
+Wynikiem funkcji order() są indeksy kolejnych, wartości. Najmniejsza wartość to 60, na pozycji 1, kolejna to 65 na pozycji 7, kolejna to 70 na pozycjach 4 i 9 i tak dalej.
+
+order(koty_ptaki[,"predkosc"])
+Równoważnie
+order(koty_praki$predkosc)
+Zwróć uwagę na składnie, order() jest funkcją nadrzędną 
+
+Możemy wykorzystać ten wynik, aby posortować ramkę danych po określonej kolumnie. W przykładzie poniżej wykorzystujemy funkcję order() do wyznaczenia wektora kolejnosc. Który następnie wykorzystamy do indeksowania ramki koty_ptaki.
+
+kolejnosc <- order(koty_ptaki[,"predkosc"])
+koty_ptaki[kolejnosc, ]
+
+
+Zadania nr 12 [indeksowanie]
+Wybierz z ramki danych koty_ptaki wszystkie wiersze poza ,,Sokołami’’ (wiersz 11 i 12).
+Wybierz z ramki danych koty_ptaki tylko koty (pierwsze siedem wierszy).
+Wybierz z ramki danych koty_ptaki tylko kolumnę z wagą i prędkością.
+Wybierz z ramki danych koty_ptaki wszystkie kolumny poza ostatnią.
+Wybierz z ramki wiersze dla których waga jest mniejsza niż 100 oraz cztery pierwsze kolumny.
+
+# 4. Cechy jakościowe
+
+# 5. Cechy ilościowe
 
 
 
-### 3.2.2 Operacje wykonywane na wektorach
-
-# arytmetyczne 
-
-# logiczne
-
-
-### 3.2.3 Funkcje działajace na wektorach
+# 4. Wczytywanie danych
+# 5. Przetwarzanie tekstu
+# 6. Przetwarzanie daty
 
 
 
-### ćwiczenie 4 {.tabset .tabset-pills}
 
-#### Treść
-
-* 
-* utwórz wektor 5 wartości `TRUE` oraz 6 wartosci `FALSE`.
-
-#### odp
-
-###
-
-
-Typ znakowy. Wartościami obiektów tego typu są napisy (inaczej łańcuchy znaków). W programie R napisy rozpoczynane są znakiem ' lub " oraz kończone takim samym znakiem np.: "słowo" .W łańcuchu znaków mogą występować dowolne znaki w tym znaki specjalne rozpoczynające się od znaku \. Wybrane znaki specjalne to: 
-
-\n – znak nowej linii, 
-\t – znak tabulacji, 
-\\ – oznaczający znak \, 
-\" – oznaczający ",   itp. 
-Z łańcuchów znaków można wycinać fragmenty, sklejać, wyszukiwać podciągi znaków i wykonywać wiele innych operacji, o których napiszemy w kolejnych podrozdziałach.[źródło]
-
-"To jest napis" 
-## [1] "To jest napis" 
-'To tez jest napis' 
-## [1] "To tez jest napis" 
-"To jest napis 'a to jest napis wewnetrzny'" 
-## [1] "To jest napis 'a to jest napis wewnetrzny'"
-Funkcja cat() wyświetla napis w sposób niesformatowany.
-
-cat(" co \t to \\ teraz\"\n\n bedzie?") 
-## co to \ teraz" 
-## 
-## bedzie? 
-Napisy można sklejać, za pomocą funkcji paste().
-
-paste("Napis", "napis doklejony", 12) 
-## [1] "Napis napis doklejony 12"
-
-
-# 5. Indeksowanie
-
-# 6. Operacje na obiektach
-##
-##
-##
-##
-
-# 7. 
