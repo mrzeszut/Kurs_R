@@ -20,8 +20,10 @@ editor_options:
   chunk_output_type: console
 ---
 
-<style type="text/css"> body  { font-size: 14px; text-align: justify} code.r{ font-size: 14px;} pre   { font-size: 14px} 
-h1    { font-size: 24px;} h2    { font-size: 22px;} h3    { font-size: 20px;} </style>
+<style type="text/css"> 
+body { font-size: 14px; text-align: justify} code.r{ font-size: 14px;} pre { font-size: 14px} 
+h1   { font-size: 24px;} h2 { font-size: 22px;} h3 { font-size: 20px;} 
+</style>
 
 ***
 
@@ -34,7 +36,7 @@ h1    { font-size: 24px;} h2    { font-size: 22px;} h3    { font-size: 20px;} </
 **lokalizacja:**  bud. C-4, p. V, pok. 511, al. A. Mickiewicza 30, Kraków, Polska.
 
 **konsultacje:** Zgodnie z informacjami na stronie
-[dziekantu](https://dziekanat.geod.agh.edu.pl/dziekanat/index.php?menu1=4&menu2=17&co=o&lin=o&wiad=@f_konsult_prez) lub po uzgodnieniu za pośrednictwem e-mail.
+[dziekanatu](https://dziekanat.geod.agh.edu.pl/dziekanat/index.php?menu1=4&menu2=17&co=o&lin=o&wiad=@f_konsult_prez) lub po uzgodnieniu za pośrednictwem e-mail.
 
 ***
 
@@ -138,7 +140,6 @@ Nawias wymusza pierwszeństwo. Przykłady móWią same za siebie.
 ####
 
 ***
-
 
 ## 2.2. Funkcje arytmetyczne 
 
@@ -400,7 +401,6 @@ Wykonaj Kilka przykładów:
 5 == 5 & 5 != 5 
 5 == 5 | 5 != 5
 ```
-
 
 ***
 
@@ -1798,6 +1798,136 @@ Do kolumn ramki danych (które są wektorami) możemy odwoływać się tak, jak 
 ramka$wiek
 ```
 
+
+***
+
+### 3.5.1. Przygotowanie danych
+
+Zanim przejdziemy do następnego tematu, musimy wczytać dane. Temu procesowi poświęcimy znacznie więcej uwagi w innym rozdziale.
+
+```{r eval=FALSE, include=FALSE}
+data.frame(imie = c("Katarzyna", "Zofia", "Julia", "Kora", 
+                    "Piotr", "Adam", "Robert", "Janusz", "Beata"),
+           Nazwisko = c(rep("Kowalska",3), "Nowak", "Zwykły", "Nowy", "Nowy", "Ptak", "Ptak"),
+           praca = c("AGH", "ZUS", "NFZ", "AGH", "PK", "UJ", "UG", "NFZ", "UMK"),
+           stanow = c("asystent", "księgowy", "księgowy", "adniunk", 
+                      rep("prof.",3), "technik", "Inżynier"),
+           Zarobki = round(runif(n = 9, 2000, 6000),1),
+           staz = round(runif(9, 5,20)),
+           urlop = round(runif(9, 1,26)),
+           Waga = round(runif(n = 9, 50, 110)),
+           Wzrost = round(runif(n = 9, 150, 190)),
+           Wiek = round(runif(n = 9, 27, 65)), 
+           Plec = sample(c("M", "K"), size = 9, replace = T),
+           Kraj = sample(c("PL", "USA", "DE"),size = 9, replace = T),
+           urodzony = c("Tarnów", "Gorlice", "Sękowa", "Kraków", "Berlin", 
+                        "Amsterdam", "Brzesko", "Wieliczka", "Skawina")
+) -> dane
+dane
+toString(colnames(dane))
+colnames(dane) <- c("imie", "nazwisko", "praca", "stanow", "zarobki", "staz", 
+                    "urlop", "waga", "wzrost", "wiek", "plec", "kraj", "urodzony")
+save(dane, file = "dane.RData")
+
+
+```
+
+W folderze który pobrałeś z [upel](http://upel.agh.edu.pl/wggiis/) znajduje się plik `dane.RData`.
+
+Sprawdzć, czy masz odpowiedni obszar roboczy.
+
+```{r, eval=F}
+getwd()
+```
+
+Jeśli nie to poleceniem `setwd("...")` ustaw go na folder w którym znajduje się plik z danymi, *gdzie 3 kropki to ścieżka dostępu*.
+
+Poleceniem `dir()` sprawdzć jakie plki i foldery znajdują się w twoim katalogu.
+
+```{r, eval=F}
+dir()
+```
+
+Jeśli jest tam plik `dane.RData`, to wykonaj polecenia ładowania.
+
+```{r}
+load(file = "dane.RData")
+```
+
+W prawym górnym oknie powinien pojawić się obiekt `dane`, który ma następującą postać:
+
+```{r}
+dane
+```
+
+***
+
+### 3.5.2. Własności obiektu data.frame
+
+W ramch cwiczenia 9 zaznajomiłeś się z charakterystyką obiektu `data.frame()`. W tym rozdziale, krótko przedsatwię kilka funkcji pozwalajacych nam lepiej przyjrzeć się zawartości naszego obiektu.
+
+W rmach tego rozdziału poznamy funkcje:
+
+* `nrow()` - liczba wierszy
+* `ncol()` - liczba kolumn
+* `dim()` - liczba wierszy i kolumn
+* `head()` - podglad kilku pierwszych wierszy
+* `tail()` - podgląd kilku ostatnih wierszy
+* `View()`, - wyświetl obiekt 
+
+W pracy z dużymi zbiorami danych przydją się funkcje zwracająca nformacje o liczbie wierszy i kolumnw w obiekcie `data.frame`:
+
+```{r}
+# Liczbę wierszy można sprawdzić funkcją nrow() 
+nrow(dane)
+#liczbę kolumn sprawdzamy funkcją ncol(). 
+ncol(dane)
+# naraz
+dim(dane)
+```
+
+Wartym uwagi jest również możliwość pozyskania informacji o nazwach kolumn i wierszy obeiektu `data.frame()`
+
+```{r}
+colnames(dane)  # nazwy kolumn
+names(dane)     # j.w
+row.names(dane) # nazwy wierszy
+```
+
+W łątwy sposób informacje o charakterystyce danych mozemy otrzymać wykonując polecenie `summary()`:
+
+```{r, eval=F}
+summary(dane) 
+```
+
+Szczególnie zalecam stosowanie funkcji `str()`, która zwraca nam w bardzo przystępny sposób charakterystykę całego obiektu:
+
+```{r, eval=F}
+str(dane)
+```
+
+Tak, mamy obiekty tupy `factor()`, ale o tym póżniej.
+
+Poleceniem `head()` i `tail()` możemy wyświetlić podgląd wybranych danych, aby im się przyjrzeć.
+
+```{r, eval=FALSE}
+head(dane) # 6 pierwszych
+tail(dane) # 6 ostatnich
+```
+
+Możemy określić ilość wierszy, która chcemy wyświetlić.
+
+```{r, eval=FALSE}
+head(dane, 3) # 3 pierwsze
+tail(dane, 3) # 3 ostatnie
+```
+
+Lub wyświetlić cały zestaw danych
+
+```{r, eval=F}
+View(dane)
+```
+
 ***
 
 #### ćwiczenie 9 {.tabset .tabset-pills}
@@ -1822,13 +1952,6 @@ is.array()
 str(attributes())
 typeof()
 class()
-nrow()
-ncol()
-dim()
-colnames()
-names()
-row.names()
-summary()
 ```
 
 ##### odp.
@@ -1863,13 +1986,6 @@ str(attributes(dane))
 str(dane) # bardzo pomocne
 typeof(dane)
 class(dane)
-nrow(dane)
-ncol(dane)
-dim(dane)
-colnames(dane)
-names(dane) # j.w
-row.names(dane)
-summary(dane) 
 ```
 
 Zauważ, że w zależności od typu danych zawartych w kolumnie funkcja summary zwraca różne informacje.
@@ -1883,212 +1999,1635 @@ table(dane$tekst)
 
 ***
 
-Zanim przejdziemy do następnego tematu, musimy wczytać dane. Temu procesowi poświęcimy znacznie więcej uwagi w innym rozdziale.
+###  3.5.3. Indeksowanie
 
-```{r eval=FALSE, include=FALSE}
-data.frame(imie = c("Katarzyna", "Zofia", "Julia", "Kora", 
-                    "Piotr", "Adam", "Robert", "Robert", "Beata"),
-           Nazwisko = c(rep("Kowalska",3), "Nowak", "Zwykły", "Nowy", "Nowy", "Ptak", "Ptak"),
-           praca = c("AGH", "ZUS", "NFZ", "AGH", "PK", "UJ", "UG", "NFZ", "UMK"),
-           stanow = c("asystent", "księgowy", "księgowy", "adniunk", 
-                      rep("prof.",3), "technik", "Inżynier"),
-           Zarobki = round(runif(n = 9, 2000, 6000),1),
-           staz = round(runif(9, 5,20)),
-           urlop = round(runif(9, 1,26)),
-           Waga = round(runif(n = 9, 50, 110)),
-           Wzrost = round(runif(n = 9, 150, 190)),
-           Wiek = round(runif(n = 9, 27, 65)), 
-           Plec = sample(c("M", "K"), size = 9, replace = T),
-           Kraj = sample(c("PL", "USA", "DE"),size = 9, replace = T)
-) -> dane
+Aby odwoływać się do wierszy lub kolumn ramki danych można wykorzystać operator [,]. Ważny jest przecinek, ponieważ rozdziela nam ideksator na wiersze i kolumny. `obiekt[wiersze,kolumny]`. Przecinek nie zawsze jest ważny, ale o tym pózniej.
+
+***
+
+**Filtrowanie wierszy w ramce danych** - Filtrowanie wierszy jest podstawową operacją wybiernia podzbioru danych z ramki danych. Jest ona przydatna, gdy interesuje nas tylko część zbioru danych, lub niektóre wwiersze zawierają zbędne informacje.
+
+```{r}
+load("dane.RData")
+```
+
+```{r}
+dane[1,] # pierwszy wiersz
+```
+
+Jeżeli chcemy wybrać więcej niż jeden wiersz należy, podobnie jak dla wektorów, podać kilka indeksów przed przecinkiem. Aby odwołać się do kilku kolejnych wierszy można wykorzystać sekwencję zbudowaną z operatorem. Przykładowo, wiersze od 5 do 7 z ramki danych `dane` można wyłuskać następująco.
+
+```{r}
+dane[5:7,]
+```
+
+Funkcja `c()` skleja wartości i sekwencje w wektor, który można następnie wykorzystać w indeksowaniu wierszy. Poniższa instrukcja wyłuskuje wiersze 2, 3, 7 i 9.
+
+```{r}
+dane[c(2:3,7:9) , ]
+```
+
+Lub równoważnie:
+
+```{r}
+indeksy <- c(2:3,7:9)
+dane[indeksy,]
+```
+
+Jako indeksy można również wykorzystać wektor wartości logicznych. Wybiegając trochę w przyszłość, użyjemy kolumny waga aby wybrać z ramki danych tylko te wiersze, dla których waga jest wyższa niż 60.
+
+```{r}
+ciezkie <- dane$waga > 60 # operator relacji
+ciezkie # wyniki logical
+```
+
+Teraz wektorem logicznym wybierzemy wiersze, `TRUE` - wybierz wiersz, `FALSE` - pomiń wiersz
+
+```{r}
+dane[ciezkie, ] # waga większa od 60
+```
+
+Indeksując wiersze lub kolumny można też wykorzystywać ujemne indeksy. Oznaczają one, wszystkie wartości poza wskazanymi. Przykładowo, wszystkie wiersze poza 1, 3, 5, 7, 9 można uzyskać poleceniem.
+
+```{r}
+dane[ -seq(1,9,2), ]
+```
+
+Zauważmy, że w tym przykładzie operator arytmetyczny minus `-` przed funkcją `seq()` tworzącą wektor, powoduje zmianę znaku wszystkich elementów wektora.
+
+```{r}
+-seq(1,9,2) 
+-c(1,2,3)
+-5:3 # uwaga
+-5:-3
+```
+
+**UWAGA!!!** Nie można mieszać jednocześnie indeksów dodatnich i ujemnych.
+
+```{r, eval=F}
+dane[c(-4:-2, 8, 9),] # błąd
+```
+
+***
+
+**Selekcja kolumn w ramce danych** - Zacznijmy od prostego przykładu: 
+
+```{r}
+dane[1]
+```
+
+Wybranie jednej kolumny powoduje, że jako wynik otrzymujemy nie ramkę danych ale wektor. Łatwo to poznać po sposobie wyświetlania danych.
+
+Próba indeksowania w sposób analogiczny jak wykonywane było to dla wektora pozwoliłą wyselekcjonować dane dla kolumny pierwszej. MOżna to zrobić również w z wykorzystaniem operatora `$`:
+
+```{r}
+dane$imie
+```
+
+Ta druga metoda odrazu wyświetla nam wywołąnie funkcji `levels()` czyli informacje o niepowtarzajacych sie obiektach. Wykonajmy teraz operacje selekcji kolumny stanowisko `Kraj`:
+
+```{r}
+dane[12] # metoda 1
+dane$Kraj # metoda 2
+levels(dane$Kraj) # tylko unikalne
+unique(dane$Kraj) # działa j.w. 
+```
+
+Dzieje się tak dlatego, bo nasz obiekt jest typu `factor()`, czyli cyznnikowe, lub inaczej wyliczeniowego. O cyzm powiemy sobie później więcej. 
+
+```{r}
+class(dane$imie)
+```
+
+Podobnie jak wiersze, można indeksować również kolumny. Aby wyłuskać drugą kolumnę można wskazać jej numer po przecinku. Uwaga Ten dziwny zapis jest konsekwencją tego, że operator [,] jest w gruncie rzeczy funkcją. Więcej o zaawansowanych elementach języka dowiemy się w kolejnych odcinkach.
+
+```{r}
+dane[,2]
+```
+
+Aby zapobiec konwersji na wektor i jako wynik wciąż mieć ramkę danych, należy dodać do operatora indeksowania argument `drop=FALSE`.
+
+```{r}
+dane[,2, drop=FALSE]
+```
+
+
+W ramce danych kolumny możemy indeksować nie tylko numerami ale również nazwami (kolumny są nazywane). Aby wyłuskać z ramki danych kolumnę o nazwie waga możemy użyć tej `nazwy kolumny` jako `indeksu`.
+
+
+```{r}
+colnames(dane) # nazwy
+dane[, "praca"]
+```
+
+Aby wybrać więcej niż jedna kolumnę, podobnie jak w przypadku wierszy i wektorów można wykorzystać funkcję `c()`. Przykładowo, jeżeli chcemy wybrać 1, 2, 11 i 12 kolumnę możemy użyć instrukcji.
+
+```{r, eval=F}
+# równoważnie moglibyśmy napisać
+dane[, c("imie", "nazwisko", "plec", "kraj")]
+dane[ ,c(1,2,11:12)]
+kol <- c(1,2,11:12)
+dane[,kol]
+```
+
+```{r}
+kolumny <- c("imie", "nazwisko", "plec", "kraj")
+dane[, kolumny] # j.w.
+```
+
+***
+
+**Wybieranie pod ramki danych**
+
+Możemy jednocześnie odwoływać się do wierszy i kolumn w ramce danych, wybierając jej podramkę. Przykładowo, 
+
+```{r}
+# wybór czterech wierszy i czterech kolumn lub 
+dane[c(1:4), c(1:4)]
+#wybór czterech wierszy i jednej kolumny lub 
+dane[c(1:4), 2]
+#Jeden wiersz i cztery kolumny może wyglądać taki.
+dane[1, c(9:12)]
+```
+
+Pokazaliśmy wcześniej, jak można odwoływać się do kolumn poprzez ich nazwy. Podobnie można zrobić z wierszami. Funkcja rownames() pokazuje jak nazywają się wiersze w ramce danych. 
+
+```{r}
+rownames(dane)
+```
+
+Te nazwy niewiele mówią, używanie ich do indeksowania nie miałoby sensu. Zmieńmy więc nazwy wierszy na takie jak w kolumnie imie. Robimy to przez nadpisanie zmiennej wyniku funkcji `rownames()`. Najpier jednak zmienimy typ kolumny imie z factor na character.
+
+```{r}
+dane$imie <- as.character(dane$imie) # konwersja typu z nadpisaniem
+rownames(dane) <- dane$imie # podmiana nazwy wierszy
+dane[,3:6] # podgląd
+```
+
+Poniższy przykład wybiera wiersze dla czterech wskazanych miejsc urodzenia oraz trzy wybrane kolumny. Jeżeli wiersze mają sensowne nazwy, to wygodniej jest odwoływać się do wierszy przez nazwy niż przez indeksy liczbowe.
+
+```{r}
+dane[c("Zofia","Julia", "Robert", "Piotr"), 
+           c("waga", "wiek", "wzrost")]
+```
+
+Poniższym poleceniem przypisujemy spowrotem liczbowe nazwy wierszy jako liczbowe
+
+```{r}
+rownames(dane) <- NULL
+dane[,3:6] # podgląd
+```
+
+Analogiczną metodą można zmienić nazwy kolumn:
+
+```{r, eval=F}
+colnames(dane) <- c("tu wpisać nowe nazwy kolumn")
+# lub
+colnames(dane)[1:3] <- c("zmienisz tylko pierwsze trzy nazwy")
+```
+
+**Sortowanie przez indeksowanie**
+
+Interesujące i nieco zaawansowane zastosowanie indeksowania przedstawimy na przykładzie funkcji `order()`. Wynikiem tej funkcji, są indeksy kolejnych, rosnących wartości. Przykładowo, w kolumnie wzrost mamy następujące wartości
+
+
+```{r}
+dane[,"wzrost"]
+```
+
+Wynikiem funkcji `order()` są indeksy kolejnych, wartości. Najmniejsza wartość to 157, na pozycji 6, kolejna to 161 na pozycji 2, kolejna to 164 na pozycji 1 i tak dalej.
+
+```{r}
+order(dane[,"wzrost"])
+# Równoważnie
+order(dane$wzrost) ; dane$wzrost
+```
+
+Zwróć uwagę na składnie, `order()` jest funkcją nadrzędną. 
+
+Możemy wykorzystać ten wynik, aby posortować ramkę danych po określonej kolumnie. W przykładzie poniżej wykorzystujemy funkcję `order()` do wyznaczenia wektora kolejnosc. Który następnie wykorzystamy do indeksowania ramki `dane`.
+
+```{r}
+kolejnosc <- order(dane[,"wzrost"])
+dane[kolejnosc, c(1:2,7:9)]
+```
+
+Na koniec przykłąd z operatorem logicznym `&` koniunkcji. Wybierzemy na raz wrzystkie wiersze spełniajace dwa warunki.
+
+```{r}
+dane[dane$plec == "K" & dane$waga < 70, ] # 
+```
+
+***
+
+### ćwiczenie 10 {.tabset .tabset-pills}
+#### Treść
+
+Wybierz z ramki danych dane
+
+* wszystkie wiersze poza "AGH’’.
+* wiersze "Kowalska"" 
+* tylko kolumnę z wagą i wzrost.
+* wszystkie kolumny poza ostatnią.
+* wiersze dla których waga jest mniejsza niż 70 oraz cztery pierwsze kolumny.
+
+#### odp.
+
+wszystkie wiersze poza "AGH’’.
+
+```{r}
+dane[dane$praca == "AGH",]
+```
+
+wiersze "Kowalska"" 
+
+```{r}
+dane[dane$nazwisko == "Kowalska",]
+```
+
+tylko kolumnę z wagą i wzrost.
+
+```{r}
+dane[,c("waga", "wzrost")]
+```
+
+wszystkie kolumny poza ostatnią.
+```{r}
+dane[,-ncol(dane)]
+```
+
+wiersze dla których waga jest mniejsza niż 70 oraz cztery pierwsze kolumny + kolmna waga.
+
+```{r}
+dane[dane$waga < 70, c(1:4,8)]
+```
+
+####
+
+***
+
+
+
+***
+
+### 3.5.4. Operacje arytmetyczne na data.frame()
+
+Na ramkach danych możemy wykonywać wiele operacji obliczeniowych. W tym podrozdziale zaprezentujemy kilka prostych przykładów:
+
+rozwiąż równanie $$wskaźnik=\frac{X}{\overline{x}}$$ 
+
+gdzie: x - waga, a $\overline{x}$ - średnia waga
+
+```{r, eval=FALSE}
+wskaznik <- dane$waga/mean(dane$waga)
+```
+
+Chcemy mieć nasz wskaźnik w obiekcie `data.frame()`, możemy w łatwy sposób dodać dodatkową kolumnę:
+
+```{r}
+dane$wskaznik <- dane$waga/mean(dane$waga)
+```
+
+Na powyższym obiekcie możemy wykonać dowolne operacje arytmetyczne, relacyjne, czy stosując operatory logiczne.
+
+***
+
+**Funkcją aggregate()** - możemy stosować podsumowania danych w ramkach danych z podziałem na grupy, ale musimy posiadać obiekty typu `factor()`.
+
+* `aggregate()`
+* `by()`
+* `taplly()`
+
+Sprawdzamy czy mamy kolumnę typu `factor()` czynnik.
+
+```{r, eval=F}
+str(dane)
+```
+
+Mamy 6 kolumny typu factor, oraz 7 typu numeric i jedną character. Teraz wyliczymy średnie zarobki w każdym kraju:
+
+```{r}
+aggregate(dane$zarobki,       # kolumna uśrednia 
+          list(kraj = dane$kraj), # grupowanie wg.
+          FUN = mean)             # srednia
+```
+
+Obliczymy sumaryczne zarobki w grupie płeć, ale stosując prostszy zapis
+
+```{r}
+aggregate(dane$zarobki,list(plec = dane$plec), sum)
+```
+
+Inna funkcja to `by()`
+
+```{r}
+sredni <- by(dane$zarobki, dane$plec, FUN=mean) 
+sredni
+```
+
+Wymaga konwersji do obiektu list, i data.frame:
+
+```{r}
+sredni 
+sredni <- as.list(sredni)
+as.data.frame(sredni)
+```
+
+I jeszcze funkcja `tapply()`
+
+```{r}
+tapply(dane$zarobki, dane$plec, mean) # średnia w grupach
+```
+
+***
+
+### 3.5.5. Wybrane funkcje dla obiektu data.frame() 
+
+Poleceniem data.frame możemy dodawać dodatkowe kolumny:
+
+```{r}
+dane$typ <- c(seq(1,7,1), NA, NA) # wymierzony
+dane$rodzaj <- c(TRUE, FALSE, FALSE) # reguła zawijania
+```
+
+```{r, eval=F}
 dane
-save(dane, file = "dane.RData")
+```
+
+
+Usuniemy dodane kolumny
+
+```{r, eval=F}
+dane[,-nrow(dane):-(nrow(dane)-3)]
+colnames(dane) ; ncol(dane) # sprawdzamy
+```
+
+Do wykonywania operacji dodawania kolumny i wierszy wygodnym jest stosowanie funkcji `cbind()` i `rbind()`. Utworzymy najpierw dwa obiekty `data.frame()`
+
+
+```{r}
+a <- data.frame(las = runif(5, 0, 5),
+                lit = sample(LETTERS[1:3], size = 5, replace = T))
+
+b <- data.frame(las = runif(5, 0, 3),
+                lit = sample(LETTERS[4:8], size = 5, replace = T))
+a ; b
+```
+
+Poleceniem `rbind()` możemy scalić obydwie kolumny w jedną, bo mają takie same nazwy kolumn.
+
+```{r}
+rbind(a,b) -> nowy
+nowy
+```
+
+Możemy dodac również jeden dowolny wiersz:
+
+```{r}
+rbind(a, c(10.1, "A"))
+```
+
+Funkcją `cbind()` dodajemy dodatkowe kolumny, lub
+
+```{r}
+cbind(a,b) # doda prefiks do nazwy kolumny
+```
+
+Teraz dodamy jedną kolumne z zastosowanie reguły zawijania.
+
+```{r}
+cbind(a, logiczna = c(T,T,F,F,F))
+```
+
+Możemy dodać dowolną ilość kolumn.
+
+```{r}
+cbind(a, 
+      logarytm = log(a$las),
+      pierw = sqrt(b$las),
+      nowa = seq(0,20, length.out = 5))
+```
+
+lub, może bardziej czytelnie
+
+```{r}
+logarytm <-  log(a$las)
+pierw <-  sqrt(b$las) 
+nowa  <-  seq(0,20, length.out = 5) 
+logarytm ; pierw ; nowa
+cbind(a, logarytm, pierw, nowa)
+```
+
+***
+
+# 4. Wczytywanie danych
+
+***
+
+## 4.1. Operacje na plikach i katalogach
+
+Zanim zaczniemy wczytywać i zapisywać dane warto zapoznać się wstępnie z kilkoma funkcjami pakietu base, które służą do wykonywania operacji na plikach i katalogach. Najpierw przypomnienie dotyczące ustawienia katalogu domyślnego.
+
+Teraz możemy wczytywać dane znajdujące się w katalogu domyślnym bez konieczności podawania pełnej ścieżki dostępu do pliku z danymi. Teraz sprawdzimy zawartość katalogu domyślnego. Mamy dwie opcje:
+
+```{r}
+getwd() ## zwraca informacje o aktualnym katalogu domyślnym
+setwd("...") ## ustawia katalog domyślny 
+```
+
+Możemy zajrzeć do prawego dolnego okna Rstudio (zakładka Files) lub wpisać polecenie:
+```{r, eval=F}
+dir()
+list.files() # j.w.
+```
+
+Korzystając z tego polecenia możemy otworzyć bardzo przydatny wektor, który można zastosować np.: w przypadku wczytywania danych z wielu plików danych. Utworzymy teraz wektor o nazwie pliki.
+
+```{r, eval=FALSE}
+pliki <- dir()
+pliki
+```
+
+***
+
+**Wykaz i opis wybranych funkcji** 
+
+* `file.create(...)` - Funkcja tworzy pliki o zadanych nazwach, jeżeli takie pliki istnieją, to ich zawartość jest kasowana.
+* `file.exists(...)` - Funkcja sprawdza czy pliki o zadanych nazwach istnieją.
+* `file.remove(...)` - Funkcja usuwa pliki o zadanych nazwach (patrz też funkcja `unlink()`).
+* `file.rename(from, to)` - Funkcja zmienia nazwę pojedynczego pliku.
+* `file.append(file1, file2)` - Funkcja dokleja plik o nazwie file2 do pliku file1.
+* `file.copy(from, to, overwrite=FALSE)` - Funkcja do kopiowania pliku z `from` w pozycje wskazaną przez argument `to`.
+* `file.symlink(from, to)` - Funkcja do tworzenia linków symbolicznych (pod Unixami).
+* dir.create(path, showWarnings=TRUE, recursive=FALSE) - Funkcja do tworzenia katalogów. Wynikiem tej funkcji jest wartość TRUE, jeżeli operacja utworzenia katalogu została wykonana pomyślnie. Jeżeli dany katalog już istnieje lub nie udało go się utworzyć funkcja przekazuje wartość FALSE.
+* `file.info(...)` - Wynikiem tej funkcji są informacje o wskazanych plikach.
+* `file_test(op, x, y)` - Funkcja do testowania plików. Dostępne testy to: jednoargumentowe (tylko x jest używane) op="-f" istnieje i nie jest katalogiem, op="-d" istnieje i jest katalogiem oraz dwuargumentowe op="-nt" jest młodszy niż (pod uwagę brane są daty modyfikacji) i op="-ot" jest starszy niż.
+* `file.show(...)` - Funkcja wyświetla w oknie R zawartość jednego lub większej liczby plików.
+
+***
+
+**Przykłady**
+
+W katalogu tematu drugiego powinienieś mieć dwa pliki tekstowe `im1.txt` oraz `im2.txt`. Otwórz je w notatniku, lub notepad++. Postaraj się by okno katalogu było otwarte. 
+
+```{r, eval=F}
+file.create("im3.txt")
+file.create("im4.txt")
+dir()
+file.info("im1.txt")
+file.info("im3.txt")
+file.exists("im3.txt")
+file.remove("im3.txt")
+dir()
+file.rename(from = "im4.txt", to = "im3.txt" )
+dir()
+file.remove("im3.txt")
+file.append("im1.txt", "im2.txt")
+## Teraz podglądnij w notatnik zawartość pliku im1.txt
+file.copy(from = "im1.txt", to = "im3.txt", overwrite=FALSE)
+dir.create("Twoje_Nazwisko", showWarnings=TRUE, recursive=FALSE)
 
 ```
 
-W folderze który pobrałeś z [upel](http://upel.agh.edu.pl/wggiis/) znajduje się plik `dane.RData`.
+***
 
-Sprawdzć, czy masz odpowiedni obszar roboczy.
+## 4.2. Wczytywanie danych
+
+W tym rozdziale omówimy metody wczytywania danych. Jest to dość proste i intuicyjne jednak wymaga znajomości rozszerzeń i typów plików. Jeśli wymienione w poniższym przykładzie rozszerzenia plików, programy nie są Państwu znane zachęcam do poczytania o nich. Akurat w tym wypadku Wikipedia jest wystarczającym źródłem informacji.
+
+Dane mogą być przechowywane w najróżniejszych formatach, takich jak: 
+
+* baza danych (Postgress, MySQL, Oracle), 
+* plik tekstowy (.txt, .csv), 
+* plik w formacie programu Excel (nowszym .xslx lub starszym .xls) 
+* lub plik w formacie innego programu do analizy danych (SAS, SPSS, Statistica, itp).
+
+W tym rozdziale odpowiemy na kilka zasadniczych pytań:
+
+* Jak wczytywać dane tabelaryczne z plików tekstowych?
+* Jak wczytywać dane tabelaryczne z plików Excela [xls lub xlsx]?
+* Jak wczytywać dane z pakietów R?
+
+Zawartość tego rozdziału nie jest wystarczająca, w przyszłości napewno będziecie korzystać z wielu różnych formatóW danych. Podstawowe informacje znajdziecie w rozdziale 3.1. [Przewodnik po pakiecie R 4.0](http://pbiecek.github.io/Przewodnik/). Bardzo prostym rozwiazaniem jest skorzystanie z wyszukiwarki google, gdzie wpisując np.: read shp in R, znajdziesz sporo informacji o wczytywaniu danych przestrzennych.
+
+*** 
+
+### 4.2.1. Dane w plikach tekstowych
+
+Jednym z częstszych formatów używanych do przechowywania i wymiany danych są pliki tekstowe. Nazwa ‘plik tekstowy’ bierze się stąd, że treść tego pliku możemy otworzyć w standardowym edytorze takim jak Notepad/Notatnik w Windowsie lub vim w Linuxie/OSX. Pliki tekstowe można również otwierać z użyciem programu RStudio (uwaga, duże pliki mogą się długo otwierać). Jeżeli często pracujemy z dużymi lub wieloma plikami tekstowymi to warto wyposażyć się w dobre narzędzie do pracy z nimi, np. edytor Sublime Text i Notepad++.
+
+Otwórz plik: `dane1_srednik.txt`
+
+* pierwszy wiersz to nagłówek - zawiera nazwy kolumn rozdzielane średnikiem
+* kolejne wiersze przedstawiają dane w postaci wektora wartości, które są rozdzielane znakiem `;`,
+* w pliku występują liczby, które nie są liczbami całkowitymi - separatorem dziesiętnym jest znak `.`.
 
 ```{r}
 getwd()
-```
-
-Jeśli nie to poleceniem `setwd("...")` ustaw go na folder w którym znajduje się plik z danymi, *gdzie 3 kropki to ścieżka dostępu*.
-
-Poleceniem `dir()` sprawdzć jakie plki i foldery znajdują się w twoim katalogu.
-
-```{r, eval=F}
+setwd("dane/") # wchodzę do foldera dane
+getwd()
 dir()
 ```
 
-Jeśli jest tam plik `dane.RData`, to wykonaj polecenia ładowania.
+Instrukcja wczytująca dane do R składa się zazwyczaj z trzech członów. Ostatnim (po prawej stronie na poniższym schemacie) jest funkcja, która odczytuje dane, przetwarza i zamienia na postać zrozumiałą dla programu R.
+
+Do wczytywania danych z pliku tekstowego posłużyć może funkcja `read.table()`. Ponieważ pliki tekstowe mogą mieć bardzo różną postać, funkcja ta ma wiele argumentów. Wybrane argumenty przedstawia poniższa deklaracja.
+    
+    read.table(file,
+                header = FALSE,
+                sep = "",
+                dec = ".", 
+                nrows = -1,
+                skip = 0, comment.char = "#",
+                stringsAsFactors = default.stringsAsFactors(), ...)
+
+
+Ponieważ dane mogą być zapisane z użyciem różnych formatów, argumenty tej funkcji określają format danych do wczytania. Znaczenie kolejnych argumentów podane jest poniżej.
+
+* `file` - ścieżka do pliku z danymi, może być też adres URL. Jeżeli wartości argumentów podajemy w ich domyślnej kolejności, to możemy pominąć nazwy argumentów (dlatego w kolejnych przykładach nie będziemy podawać nazwy tego argumentu).
+* `header` - flaga określająca, czy pierwszy wiersz należy traktować jako nagłówek. W naszym przypadku header=TRUE.
+* `sep` - znak rozdzielający kolumny. W naszym przypadku sep=";", ale popularnymi separatorami są również znak tabulacji (oznaczany \t), przecinek lub spacja. Separatorem może być dowolny, ale tylko jeden znak.
+* `dec` - separator dziesiętny. Zazwyczaj jest to . lub ,. W naszym przypadku dec=",".
+* `nrows` - maksymalna liczba wierszy do wczytania. Domyślnie ten argument przyjmuje wartość -1, czyli wczytaj wszystkie wiersze.
+* `skip` - liczba pierwszych wierszy do pominięcia przy wczytywaniu danych, domyślnie 0, czyli nie pomijaj żadnego wiersza.
+* `comment.char` - znak komentarza. Jeżeli w danych wystąpi ten znak to treść od tego znaku do końca linii będzie zignorowana.
+* `stringsAsFactors` - czy napisy powinny być domyślnie przekształcone w zmienne jakościowe. Domyślnie TRUE.
+
+Wynikiem funkcji read.table() jest tabelaryczny zbiór danych, który w R nazywa się ramką danych (ang. data.frame). 
+
+***
+
+**Pierwszy przykład** 
+
+**UWAGA:** sprawdźć ścieżka dostępu do lokalizacji twojego pliku.
 
 ```{r}
-load(file = "dane.RData")
+dane <- read.table(file = "Z:/R/Kurs_R/dane/dane1_srednik.txt", # lokalizacja i nazwa pliku
+                   header = TRUE, # czy zawiera nazwy kolumn
+                   sep = ";", # separtor wartosci
+                   dec=".") # separator miejsca dzisiętnego
 ```
-
-W prawym górnym oknie powinien pojawić się obiekt `dane`, który ma następującą postać:
-
-```{r}
-dane
-```
-
-Poleceniem `head()` i `tail()` możemy wyświetlić podgląd wybranych danych, aby im się przyjrzeć.
-
-```{r, eval=FALSE}
-head(dane) # 6 pierwszych
-tail(dane) # 6 ostatnich
-```
-
-Możemy określić ilość wierszy, która chcemy wyświetlić.
-
-```{r, eval=FALSE}
-head(dane, 3) # 3 pierwsze
-tail(dane, 3) # 3 ostatnie
-```
-
-Lub wyświetlić cały zestaw danych
 
 ```{r, eval=F}
+dane 
 View(dane)
 ```
 
-Aby odwoływać się do wierszy lub kolumn ramki danych można wykorzystać operator [].  
+**Drugi przykład**
 
-###  3.5.1. Indeksowanie
+Najpierw polecenie `setwd()` ustaw ścieżkę dostępu do katalogu.
 
-Aby odwoływać się do wierszy lub kolumn ramki danych można wykorzystać operator [,]. Obowiązkowym elementem jest przecinek. Przed przecinkiem należy wpisać indeksy wierszy, po przecinku indeksy kolumn. Jeżeli przed przecinkiem lub po przecinku nie będzie żadnych wartości to wybrane będą wszystkie elementy w wierszu / kolumnie. Przykładowo, odwołanie się do trzeciego wiersza z ramki danych. 
+```{r, eval=F}
+setwd("z:/R/Kurs_R/dane/") # To nie jest twoja ścieżka
+getwd()
+```
 
-koty_ptaki[3, ]
-##   gatunek waga dlugosc predkosc habitat zywotnosc druzyna
-## 3  Jaguar 100     1.7       90 Ameryka        15     Kot
-Liczbę wierszy można sprawdzić funkcją nrow() (odpowiednio, liczbę kolumn sprawdzamy funkcją ncol(). 
+Z powodzeniem wczytaliśmy dane, jeśli nie to sprawdźć ścieżke katalogu.
 
-nrow(koty_ptaki)
-## [1] 13
-Przydatne, jeżeli np. chcemy wyświetlić ostatni wiersz.
+```{r}
+dane2 <- read.table("dane2_przecinek.txt", # lokalizacja i nazwa pliku
+                   header = TRUE, 
+                   sep = ",", # przecinek  
+                   dec=".")
+```
 
-koty_ptaki[13,]
-##     gatunek waga dlugosc predkosc  habitat zywotnosc druzyna
-## 13 Albatros    4     0.8     120 Poludnie        50    Ptak
-Jeżeli chcemy wybrać więcej niż jeden wiersz należy, podobnie jak dla wektorów, podać kilka indeksów przed przecinkiem. Aby odwołać się do kilku kolejnych wierszy można wykorzystać sekwencję zbudowaną z operatorem. Przykładowo, wiersze od 8 do 10 z ramki danych koty_ptaki można wyłuskać następująco.
+```{r, eval=F}
+dane2 
+```
 
-koty_ptaki[8:10, ]
-Funkcja c() skleja wartości i sekwencje w wektor, który można następnie wykorzystać w indeksowaniu wierszy. Poniższa instrukcja wyłuskuje wiersze 3, 8, 9 i 10.
+**Trzeci przykład:**
 
-koty_ptaki[c(3, 8:10), ]
-Lub równoważnie:
+Otwórz plik "dane3_brudny.txt" w notatniku. Zauważ, że kilka wierzy danych jest nieprawidłowych.Dokłądnie są to wiersze od 1 i 2. Pomijamy je za pomocą argumentu `skip`.
 
-indeksy <- c(3, 8:10)
-koty_ptaki[indeksy,]
-Funkcjami head() i tail() wyłuskuje się kilka pierwszych lub ostatnich wierszy ze zbioru danych. Do obu funkcji można podać drugi argument, określający ile pierwszych / ostatnich wierszy chcemy odczytać, domyślnie jest to 6 wierszy.
+```{r}
+dane3 <- read.table("dane3_brudny.txt", # lokalizacja i nazwa pliku
+                   header = TRUE, 
+                   sep = ";",  
+                   dec=".", skip = 2)
+```
 
-head(koty_ptaki)
-tail(koty_ptaki)
-Jako indeksy można również wykorzystać wektor wartości logicznych. Wybiegając trochę w przyszłość, użyjemy kolumny prędkość aby wybrać z ramki danych tylko te wiersze, dla których prędkość jest wyższa niż 100.
+```{r, eval=F}
+dane3 
+```
 
-najszybsze <- koty_ptaki$predkosc > 100
-najszybsze
-koty_ptaki[najszybsze, ]
-Indeksując wiersze lub kolumny można też wykorzystywać ujemne indeksy. Oznaczają one, wszystkie wartości poza wskazanymi. Przykładowo, wszystkie wiersze poza 1, 3, 8, 9 i 10 można uzyskać poleceniem.
+**czwarty przykład:**
 
-koty_ptaki[ -c(1, 3, 8:10), ]
-Zauważmy, że w tym przykładzie znak - przed funkcją c() tworzącą wektor, powoduje zmianę znaku wszystkich elementów wektora.
+Funkcją `read.table()` można wczytać również pliki .csv. Otwórz plik "dane1_srednik.csv" w w notatniku.
 
--c(1, 3, 8:10)
-## [1]  -1 -3  -8  -9 -10
-Uwaga! Nie można mieszać jednocześnie indeksów dodatnich i ujemnych.
+```{r}
+dane4 <- read.table("dane1_srednik.csv", # lokalizacja i nazwa pliku
+                   header = TRUE, 
+                   sep = ";",  
+                   dec=".")
+```
 
-2. Indeksowanie kolumn w ramce danych
-Podobnie jak wiersze, można indeksować również kolumny. Aby wyłuskać drugą kolumnę można wskazać jej numer po przecinku. 
+lub funkcja `read.csv`:
 
-koty_ptaki[, 2]
-Wybranie jednej kolumny powoduje, że jako wynik otrzymujemy nie ramkę danych ale wektor. Łatwo to poznać po sposobie wyświetlania danych. Aby zapobiec takiej konwersji na wektor i jako wynik wciąż mieć ramkę danych, należy dodać do operatora indeksowania argument drop=FALSE.
+```{r}
+read.csv("dane1_srednik.csv", sep = ";") -> dane6
+```
 
-koty_ptaki[,2, drop=FALSE]
-Uwaga Ten dziwny zapis jest konsekwencją tego, że operator [,] jest w gruncie rzeczy funkcją. Więcej o zaawansowanych elementach języka dowiemy się w kolejnych odcinkach.
+Pliki można też pobierać za posrednictwem adresu internetowego.
 
-W ramce danych kolumny możemy indeksować nie tylko numerami ale również nazwami (kolumny są nazywane). Nazwy kolumn z ramki danych można odczytać funkcją colnames(). Wynikiem tej funkcji jest wektor z nazwami.
+```{r}
+dane7 <- read.table(file = "http://biecek.pl/MOOC/dane/koty_ptaki.csv", 
+                    sep=";", dec=",", header=TRUE)
 
-colnames(koty_ptaki)
-Aby wyłuskać z ramki danych kolumnę o nazwie waga możemy użyć tej nazwy jako indeksu.
+read.csv(file = "http://biecek.pl/MOOC/dane/koty_ptaki.csv", sep = ";") -> dane7
+```
 
-koty_ptaki[, "waga"]
-Ponieważ operacja odwołania się do jednej kolumny w danych jest dosyć częsta, można ją wykonać na kilka innych sposobów. Najpopularniejszym jest użycie operatora $. Z jego pomocą do kolumny waga możemy odwołać się w ten sposób.
+***
 
-koty_ptaki$waga
-##  [1] 300.00 200.00 100.00  80.00  70.00  60.00  50.00   0.05 150.00   5.00
-## [11]   0.70   2.00   4.00
-Aby wybrać więcej niż jedna kolumnę, podobnie jak w przypadku wierszy i wektorów można wykorzystać funkcję c(). Przykładowo, jeżeli chcemy wybrać drugą, czwartą, piątą i szóstą kolumnę możemy użyć instrukcji.
+### 4.2.2. Wczytywanie plików xlsx.
 
-# równoważnie moglibyśmy napisać
-koty_ptaki[, c("waga", "predkosc", "habitat", "zywotnosc")]
-koty_ptaki[, c(2,4:6)]
-kol <- c(2,4:6)
-koty_ptaki[,kol]
-kolumny <- c("waga", "predkosc", "habitat", "zywotnosc")
-koty_ptaki[, kolumny]
+Aby wczytać pliki xlsx, lub xls trzeba zainstalować i załadować pakiet `openxlsx`
 
-3. Wybieranie pod ramki danych
-Możemy jednocześnie odwoływać się do wierszy i kolumn w ramce danych, wybierając jej podramkę. Przykładowo, 
+```{r, eval=FALSE}
+install.packages("openxlsx")
+```
 
-wybór czterech wierszy i czterech kolumn lub 
-wybór czterech wierszy i jednej kolumny lub 
-Jeden wiersz i cztery kolumny może wyglądać taki.
-koty_ptaki[c(3,8:10), c(2,4:6)]
-koty_ptaki[c(3,8:10), 2]
-koty_ptaki[3, c(2,4:6)]
-Pokazaliśmy wcześniej, jak można odwoływać się do kolumn poprzez ich nazwy. Podobnie można zrobić z wierszami. Funkcja rownames() pokazuje jak nazywają się wiersze w ramce danych. 
+```{r}
+library(openxlsx)
+```
 
-rownames(koty_ptaki)
-Te nazwy niewiele mówią, używanie ich do indeksowania nie miałoby sensu. Zmieńmy więc nazwy wierszy na takie jak w kolumnie gatunek
+W folerze dane znajduje się plik, który składa się z dwóch arkuszy danych. Najpierw wczytamy arkusz dane, a potem arkusz koty_ptaki.
 
-rownames(koty_ptaki) <- koty_ptaki$gatunek
-rownames(koty_ptaki)
-koty_ptaki
-Poniższy przykład wybiera wiersze dla czterech wskazanych gatunków oraz trzy wybrane kolumny. Jeżeli wiersze mają sensowne nazwy, to wygodniej jest odwoływać się do wierszy przez nazwy niż przez indeksy liczbowe.
+```{r}
+openxlsx::read.xlsx("dwa_arkusze.xlsx", sheet = 1) -> dane
+dane
+```
 
-koty_ptaki[c("Lew","Leopard", "Jerzyk", "Strus"), 
-           c("waga", "dlugosc", "predkosc")]
-Poniższym poleceniem przypisujemy spowrotem liczbowe nazwy wierszy jako liczbowe
-rownames(koty_ptaki) <- NULL
-koty_ptaki
+Teraz drugi arkusz:
 
-Sortowanie przez indeksowanie
-Interesujące i nieco zaawansowane zastosowanie indeksowania przedstawimy na przykładzie funkcji order(). Wynikiem tej funkcji, są indeksy kolejnych, rosnących wartości. Przykładowo, w kolumnie prędkość mamy następujące wartości
+```{r}
+read.xlsx("dwa_arkusze.xlsx", sheet = 2) -> zwierz
+zwierz
+```
 
-koty_ptaki[,"predkosc"]
-Wynikiem funkcji order() są indeksy kolejnych, wartości. Najmniejsza wartość to 60, na pozycji 1, kolejna to 65 na pozycji 7, kolejna to 70 na pozycjach 4 i 9 i tak dalej.
+***
 
-order(koty_ptaki[,"predkosc"])
-Równoważnie
-order(koty_praki$predkosc)
-Zwróć uwagę na składnie, order() jest funkcją nadrzędną 
+### 4.2.3. pliki binarne
 
-Możemy wykorzystać ten wynik, aby posortować ramkę danych po określonej kolumnie. W przykładzie poniżej wykorzystujemy funkcję order() do wyznaczenia wektora kolejnosc. Który następnie wykorzystamy do indeksowania ramki koty_ptaki.
+Natywnym formatem dla programu R są pliki binarne o rozszerzeniu `.rda` lub `.RData`. Dane w tym formacie są skompresowane, przez co zajmują mniej miejsca na dysku niż w pliku tekstowym lub formacie Excela. Wadą jest to, że niewiele programów poza programem R potrafi je odczytać.
 
-kolejnosc <- order(koty_ptaki[,"predkosc"])
-koty_ptaki[kolejnosc, ]
+Dane w tym formacie można wczytać do programu R poleceniem `load()`. Pierwszym argumentem tej funkcji jest ścieżka do pliku z danymi. Jeżeli chcemy dane odczytać z internetu, należy dodatkowo użyć funkcji `url()`.
 
+Uwaga !!! W przeciwieństwie do wcześniej poznanych funkcji, funkcja `load()` nie zwraca zbioru danych jako wynik, ale ładuje zbiór danych bezpośrednio do przestrzeni nazw (dane zapisane są wraz z nazwą zmiennej). 
 
-Zadania nr 12 [indeksowanie]
-Wybierz z ramki danych koty_ptaki wszystkie wiersze poza ,,Sokołami’’ (wiersz 11 i 12).
-Wybierz z ramki danych koty_ptaki tylko koty (pierwsze siedem wierszy).
-Wybierz z ramki danych koty_ptaki tylko kolumnę z wagą i prędkością.
-Wybierz z ramki danych koty_ptaki wszystkie kolumny poza ostatnią.
-Wybierz z ramki wiersze dla których waga jest mniejsza niż 100 oraz cztery pierwsze kolumny.
+```{r}
+load(url("http://biecek.pl/MOOC/dane/koty_ptaki.rda"))
+load("dane.RData")
+```
 
-# 4. Cechy jakościowe
+***
 
-# 5. Cechy ilościowe
+## 4.3. Zapisywanie danych 
 
+Zapisywanie danych przebiega w sposób analogiczny. Funkcję różnią się z reguły nazwą, zamiast `read` jest `write`. Przykłady:
 
+```{r}
+getwd() # tu zapisujemy
+write.table(dane, file = "write1.txt",  # txt
+            sep = ";", dec = ".", 
+            row.names = F, col.names = T)
 
-# 4. Wczytywanie danych
+write.table(dane, file = "write2.csv",  # csv
+            sep = ",", dec = ".", 
+            row.names = F, col.names = T)
+
+write.csv(dane, file = "write3.csv", row.names = F)
+
+write.xlsx(zwierz, file = "zwierz.xlsx")
+
+save(dane, dane2, zwierz, koty_ptaki,
+     file = "dane_all.RData") # można od razu zapisać kilka 
+```
+
+Usuwanie zapisanych plików.
+
+```{r}
+file.remove(c("dane_all.RData", "write1.txt", "write2.csv", "write3.csv", "zwierz.xlsx"))
+```
+
+***
+
 # 5. Przetwarzanie tekstu
+
+Napisy są jednym z podstawowych, często stosowanych rodzajów zmiennych. Napisy możemy przekształcać (np. data, którą można przekształcić na napisy by wyłuskać rok i miesiąc). W tym rozdziale omówimy jak przekształcać napisy i wykonywać na nich operacje. W ramach tego rozdziału poznasz funkcje:
+
+* `cat()`
+* `paste()`
+* `nchar()`
+* `which()`
+* `grep()`
+* `grepl()`
+* `gsub()`
+* `substr()`
+* `toupper()`
+* `tolower()`
+
+***
+
+## 5.1 Wprowadzenie
+
+**Typ znakowy**. Wartościami obiektów tego typu są napisy (inaczej łańcuchy znaków). W programie R napisy rozpoczynane są znakiem ' lub " oraz kończone takim samym znakiem np.: `"słowo"`. W łańcuchu znaków mogą występować dowolne znaki w tym znaki specjalne rozpoczynające się od znaku \. Wybrane znaki specjalne to: 
+\n – znak nowej linii, 
+\t – znak tabulacji, 
+\\ – oznaczający znak \, 
+\" – oznaczający ",   itp. 
+
+Z łańcuchów znaków można wycinać fragmenty, sklejać, wyszukiwać podciągi znaków i wykonywać wiele innych operacji, o których napiszemy w kolejnych podrozdziałach.[źródło]
+
+```{r}
+"To jest napis" 
+'To tez jest napis' 
+"To jest napis 'a to jest napis wewnetrzny'" 
+```
+
+Funkcjami `tolower()` i `toupper` mozemy odpowiednio zmienic wielkość liter.
+
+```{r}
+tolower(LETTERS)
+toupper(letters)
+```
+
+Natomiast przydatną funcją jest `toString`, która wstawia przecinki pomiedzy wyświetlane elementy wektora i przekształca wiele napisów w jeden element.
+
+```{r}
+letters[1:5] ; toString(letters[1:5])
+```
+
+
+Funkcja `cat()` wyświetla napis w sposób niesformatowany.
+
+```{r}
+cat(" co \t to \\ teraz\"\n\n bedzie?") 
+```
+
+Napisy można sklejać, za pomocą funkcji `paste()`.
+
+```{r}
+paste("Napis", "napis doklejony", 12) 
+```
+
+***
+
+## 5.2. Konwersje napisów
+
+Wybierzmy kolumnę `nazwisko`. W zbiorze danych `dane` jest to zmienna jakościowa (factor). Użyjemy funkcji as.character() by przekształcić ją na napisy. Otrzymane napisy zapiszemy w kolumnie `nazw_nap`.
+
+```{r}
+class(dane$nazwisko) # typ ?
+``` 
+
+Tworzymy nowa kolumnę w zestawie danych typu charakter.
+
+```{r}
+dane$nazw_nap <- as.character(dane$nazwisko)
+dane$nazw_nap
+```
+
+Teraz sprawdź klase.
+
+```{r}
+class(dane$nazw_nap)
+```
+
+Funkcja `length()` dla każdego wektora sprawdza jego długość (liczbę napisów). Funkcja `nchar()` dla napisu sprawdza liczbę znaków w każdym napisie w wektorze (długość każdego napisu).
+
+```{r}
+length(dane$nazw_nap)
+nchar(dane$nazw_nap)
+```
+
+Napisy pojawiają się też, gdy wczytywane są dane ilościowe lub jakościowe, ale z jakiegoś powodu w procesie wczytywania dane te zinterpretowane zostały jako napisy (np. przez źle określone formatowanie). W takim przypadku napisy przekształcamy często na pożądany typ, np. ilościowy, jakościowy, datę itp.
+
+```{r}
+as.numeric("2016") # konwersja na liczbę
+as.factor(c("A", "B", "A", "A")) # konwersja na zmienną jakościową
+as.Date("2016-01-01") # konwersja na datę
+```
+
+***
+
+## 5.3. Wyszukiwanie napisów
+
+Częstą operacją na napisach jest wyszukanie tych, które pasują do wzorca. Jeżeli chodzi nam o zgodność co do znaku, to wygodne będzie użycie funkcji `which()`. Jako wynik zwraca indeksy, dla których określony warunek jest prawdziwy.
+
+Które wartości wektora nazw_nap to Azja?
+
+```{r}
+which(dane$nazw_nap == "Kowalska")
+```
+
+Które wartości wektora nazw_nap to Nowy lub Ptak?
+
+```{r}
+which(dane$nazw_nap %in% c("Nowy", "Ptak"))
+```
+
+Często jednak, zamiast wymieniać wszystkie wartości, które chcemy wyszukać, wygodniejsze jest opisanie tych wartości przez pewien wzorzec. Do takiego wyszukiwania służy funkcja `grep()`. Testuje ona, w którym z napisów występuje określony ciąg znaków, a jako wynik zwraca numery napisów z tym ciągiem.
+
+Sprawdźmy, które wiersze w kolumnie nazw_nap posiadają w nazwie znak "a". Pierwszym argumentem funkcji `grep()` jest wzorzec, drugim wektor napisów. Możemy te argumenty podać w innej kolejności, ale wtedy zmuszeni jesteśmy do podawania ich nazwy.
+
+```{r}
+grep("a", dane$nazw_nap)
+```
+
+lub:
+
+```{r}
+grep(dane$nazw_nap, pattern = "a")
+```
+
+Teraz możemy wybrać z tabeli przez indeksowanie wiersze, zwrócone funkcją `grep()`:
+
+```{r}
+dane[grep(dane$nazw_nap, pattern="a"), ]
+```
+
+Jeżeli zamiast indeksów chcemy otrzymać wartości (napisy), które zostały dopasowane, wtedy powinniśmy ustawić argument value na wartość TRUE.
+
+```{r}
+grep("a", dane$nazw_nap, value = TRUE)
+```
+
+Zróbmy to teraz dla kolumny nazwisko.
+
+```{r}
+str(dane$nazwisko) # to jest factor
+grep("a", as.character(dane$nazw_nap), value = TRUE) # z konwersją
+```
+
+Możemy jeszcze tak:
+
+```{r}
+dane$nazwisko <- as.character(dane$nazwisko) # konwersja
+grep("a", dane$nazw_nap, value = TRUE) # z konwersją
+```
+
+
+Innym przydatnym argumentem funkcji `grep()` jest możliwość określenia, że wyszukiwanie ma być wykonane z pominięciem informacji o wielkości znaków. Służy do tego argument ignore.case=TRUE.
+
+```{r}
+grep("A", dane$nazwisko, ignore.case = TRUE)
+```
+
+Określając wzorzec możemy wykorzystać wyrażenia regularne. Pozwalają one opisać pewną prawidłowość, którą chcemy wyszukać w danych. Wyrażenia regularne są często stosowane, aby sprawdzić czy napis jest na przykład mailem, numerem telefonu lub kodem pocztowym.
+
+Poniższe wyrażenie, sprawdza czy początek napisu to litera A lub E.
+
+```{r}
+grep("^[Pt]", dane$nazwisko, value = F)
+grep("^[Pt]", dane$nazwisko, value = T)
+```
+
+***
+
+## 5.4. Fragmenty napisów
+
+Kolejną przydatną funkcją do operowania na napisach jest `substr()`. Pozwala ona z napisu wyciąć fragment o określonej pozycji, drugim i trzecim argumentem są indeksy początku i końca napisu, który chcemy wyciąć.
+
+Przykładowo, w ten sposób możemy z dat wycinać informację o latach lub miesiącach.
+
+```{r}
+daty <- c("2018-01-05", "2018-03-25", "2012-12-23")
+substr(daty, 1, 4) # pierwsze 4
+```
+
+```{r}
+substr(daty, 6, 7) # miesiące
+```
+
+```{r}
+substr(daty, 9, 10) # dni
+```
+
+Innym sposobem wyłuskiwania elementu napisu jest podanie wzorca który rozdziela istotne elementy napisu, np. słowa. W poniższym przykładzie dwa zdania są rozbijane na wyrazy (a dokładniej rozbijane na fragmenty rozdzielane spacją). Wynikiem jest dwuelementowa lista wektorów. Wybieramy pierwszy wektor i odczytujemy z niego drugie słowo.
+
+```{r}
+zdanie <- c( "W Szczebrzeszynie chrząszcz brzmi w trzcinie", "Ząb zupa zębowa dąb zupa dębowa")
+(podzielony <- strsplit(zdanie, " ")) # tworzy liste
+```
+
+***
+
+## 5.5 Tworzenie nowych cech
+
+Zainstaluj i wczytaj pakiet `PogromcyDanych` (patrz lekcja 1).
+
+```{r, echo=FALSE, include=F}
+library(PogromcyDanych)
+```
+
+Teraz przegladnij zesta danych auta2012 załądowany wraz z pakietem pogromcy danych.
+
+```{r, eval=FALSE}
+str(auta2012)
+```
+
+Przekonwertujemy dwie zmienne
+
+```{r}
+auta2012$Kolor_napis <- as.character(auta2012$Kolor)
+```
+
+W analizie danych często stoimy przed potrzebą stworzenia nowych cech na bazie starych. Przykładowo, jeżeli spojrzymy na wektor kolorów samochodów, możemy uznać że interesującą cechą byłoby określenie, czy lakier jest koloru metalicznego czy nie.
+
+```{r, eval=F}
+sort(table(auta2012$Kolor_napis))
+```
+
+Można zrobić to na kilka sposobów. Najłatwiejszym jest użycie funkcji `grepl(`), o takich samych parametrach jak funkcja `grep()` z tym wyjątkiem, że wynikiem jest wektor wartości logicznych `TRUE` i `FALSE` określający czy dany wzorzec został odnaleziony czy nie w napisach.
+
+```{r}
+auta2012$czy_metallic <- grepl("metallic", auta2012$Kolor_napis)
+table(auta2012$czy_metallic)
+```
+
+***
+
+## 5.6. Sklejanie napisów
+
+Funkcje `paste()` już poznaliście, teraz omówimy troszkę bardziej skomplikowany przykład.
+
+Przedstawmy funkcję do sklejania napisów na przykładzie sklejania nazwy marki i modelu dla auta. W pierwszej linii skleimy oba wektory, używając za separator ': '. Następnie zliczymy ile było wystąpień takich par i uporządkujemy je w kolejności malejącej. Wyświetlamy 25 najczęstszych modeli.
+
+```{r}
+auta2012$MarkaModel   <- paste(auta2012$Marka, auta2012$Model, sep=": ")
+statystykiMarkiModelu <- sort(table(auta2012$MarkaModel), decreasing = TRUE)
+statystykiMarkiModelu[1:25] # to jest obiekt table
+```
+
+***
+
+## 5.7. Liczby, cechy jakościowe i napisy
+
+Funkcja `as.character()` może być przydatna jeszcze w jednej sytuacji, tzn. gdy zmienną jakościową chcemy przekształcić na zmienną liczbową. Nie powinniśmy tego zrobić bezpośrednio, ale poprzez funkcję `as.character()`. Pokażmy ten problem na przykładzie. Zamienimy zmienne na zmienne jakościowe funkcją `as.factor()` a następnie na liczby funkcją `as.numeric()`. Okazuje się jednak, że wynik nie jest zgodny z oczekiwaniami.
+
+```{r}
+x <- c(2, 4, 5.5)
+fx <- as.factor(x) ; fx
+```
+
+**Uwaga!** Program R nie wie że to są napisy, a zmienną jakościową zamienia na kolejne liczby całkowite.
+
+```{r}
+as.numeric(fx)
+```
+
+Zmienne jakościowe przez funkcję as.numeric() zamieniane są na kolejne liczby całkowite. Jeżeli chcemy odzyskać liczby, które są treścią czynników, to musimy je wpierw zamienić na napisy, funkcją as.character().
+
+```{r}
+as.numeric(as.character(fx))
+```
+
+***
+
+## 5.8. Co dalej
+
+W ramach rozdziału 5 dowiedzieliście się trochę o możliwościach przetwarzania tekstu z wykorzystaniem istniejacych funkcji w R. Wiecej o operacjach na zmiennych tekstowych znajdziecie w @Wickham:2017:RDS:3086927 w rozdziale `14. Strings` [(link)](http://r4ds.had.co.nz/strings.html). Dodatkowo zalecam pobranie [cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/strings.pdf) do pakietu `stringr`.
+
+#####
+
+***
+
+##### Ćwiczenie 11 {.tabset .tabset-pills}
+###### Treść 
+
+1. Wyznacz indeksy wierszy w zbiorze danych `dane`, w których `stanow` literę `i`.
+2. Wyznacz wszystkie wiersze, w których opisano osoby pracujące na AGH i NFZ.
+3. Sprawdź ile samochodów ma zainstalowany autoalarm (oznaczony jako ‘autoalarm’).
+4. Sprawdź ile samochodów ma lakier w metalicznym kolorze (oznaczony jako ‘metallic’).
+
+
+###### Odp. 
+
+Wyznacz indeksy wierszy w zbiorze danych `dane`, w których `stanow` literę `i`.
+
+```{r}
+grep("i", dane$stanow)
+```
+
+Wyznacz wszystkie wiersze, w których opisano osoby pracujące na AGH i NFZ.
+
+```{r}
+dane[dane$praca %in% c("AGH","NFZ"),]
+```
+
+Sprawdź ile samochodów ma zainstalowany autoalarm (oznaczony jako autoalarm).
+
+```{r}
+library(PogromcyDanych)
+data(package = "PogromcyDanych")
+auta2012 <-  auta2012
+```
+```{r}
+auta2012$autoalarm <- grepl("autoalarm", auta2012$Wyposazenie.dodatkowe)
+table(auta2012$autoalarm) -> a
+a ; (a[2]/sum(a))*100 # procent z autoalarm
+```
+
+
+Sprawdź ile samochodów ma alufelgi i ABS.
+
+```{r}
+auta2012$ABS <- grepl("ABS", auta2012$Wyposazenie.dodatkowe)
+table(auta2012$ABS)
+auta2012$ALU <- grepl("alufelgi", auta2012$Wyposazenie.dodatkowe)
+table(auta2012$ALU)
+
+sum(auta2012$ABS == TRUE & auta2012$ALU == TRUE) -> a # TRUE = 1
+a ; paste(round((a/nrow(auta2012))*100,1), "%")
+```
+
+#####
+
+***
+
 # 6. Przetwarzanie daty
 
+Analizując dane spotkamy się z zmiennymi związanymi z datami i czasem. W tym rozdziale dowiedzą się Państwo jak tworzyć zmienne opisujące datę i czas, jakie operacje są wykonywane na tych zmiennych, jak je podsumowywać. W programie R istnieją trzy podstawowe typy zmiennych opisujące daty lub czas.
+
+* Klasa `Date` służy do opisywania dat z dokładnością do dnia. Na datach można wykonywać operacje takie jak odejmowanie dwóch dat, dodawanie liczby do dnia itp.
+* Klasa `POSIXct`, służy do opisywania czasu z dokładnością do sekundy. Czas jest pamiętany jako liczba sekund od określonego początku. Sufiks `ct` oznacza calendar time.
+* Klasa `POSIXlt`, służy do opisywania czasu w formacie listy wartości. Sufiks `lt` oznacza local time.
+
+***
+## 6.1. Obiekty klasy date
+
+Konstruktorem klasy Date jest funkcja `as.Date()`.
+
+Jako pierwszy argument przyjmuje wektor napisów opisujących daty. Drugi opcjonalny argument określa formatowanie daty. Domyślne formatowanie to rok-miesiąc-dzień.
+
+```{r}
+as.Date("2015-02-22")
+as.Date("02/22/2015", format = "%m/%d/%Y")
+as.Date("Czerwiec 2, 2015", format = "%B %d, %Y")
+```
+
+Obiekty klasy Date można tworzyć także na podstawie liczb całkowitych lub obiektów klasy `POSIXct`, w obu przypadkach przy pomocy funkcji `as.Date()`.
+
+```{r}
+?strptime ## zasięgnijmy pomocy i zróbmy kilka przykładów 
+```
+
+Sformatujemy czas lokalny:  
+
+```{r}
+Sys.time()
+format(Sys.time(), "%a %b %d %X %Y %Z")
+format(Sys.time(), "%H:%M:%OS3")
+```
+
+Teraz sformatujemy wybraną datę:
+
+```{r}
+a <- as.Date("2014-03-21") ;a
+format(a, "%a %b %d %X %Y %Z")
+format(a, "%H:%M:%OS3")
+```
+
+Spróbujemy utworzyć zmienną `POSIXct()`:
+
+```{r}
+dates <- c("02/27/92", "02/27/92", "01/14/92", "02/28/92", "02/01/92")
+times <- c("23:03:20", "22:29:56", "01:03:30", "18:21:03", "16:56:26")
+x <- paste(dates, times) ## tworzymy listę
+strptime(x, "%m/%d/%y %H:%M:%S") ## tworzymy POSIXlt
+a <- strptime(x, "%m/%d/%y %H:%M:%S")
+a
+```
+
+UWAGA !! śledzić uważnie wykonywane czynności i obserwuj metody tworzenia szeregów dat
+
+***
+
+## 6.2. Czas ct() calender time
+
+Konstruktorem klasy POSIXct jest funkcja `as.POSIXct()`. Jako pierwszy argument przyjmuje wektor napisów opisujących chwile czasu. Drugi opcjonalny argument określa formatowanie daty. Domyślne formatowanie to rok-miesiąc-dzień godzina:minuta:sekunda.
+
+```{r}
+(czas1 <- as.POSIXct("2015-02-13 12:56:26"))
+(czas2 <- as.POSIXct("14022015 12:56:26", 
+                     format = "%d%m%Y %H:%M:%S"))
+```
+
+Na czasach można wykonywać takie operacje jak odejmowanie czy dodawane do określonego przedziału czasu (dodanie liczby całkowitej, domyślnie dodaje określoną liczbę sekund).
+
+```{r}
+# różnica czasów
+czas2 - czas1
+czas1 ; czas1 + 30 # + 30 sekund
+czas1 ; czas1 + (24*60*60) # + 1 dzień
+czas1 ; czas1 + 7*(24*3600) # + 7 dni
+```
+
+Funkcja `Sys.time()` jako wynik zwraca aktualny czas w formacie `POSIXct`.
+
+```{r}
+Sys.time()
+Sys.time() - czas1 
+Sys.timezone() ## zwraca strefę czasową
+```
+
+***
+
+## 6.3  Czas lt() local time
+
+Konstruktorem klasy `POSIXlt` jest funkcja `as.POSIXlt()`. Jako pierwszy argument przyjmuje wektor napisów opisujących chwile czasu. Drugi opcjonalny argument określa formatowanie daty. Opis formatowania stosuje się taki sam, jak w przypadku klasy `POSIXct`.
+
+```{r}
+(czas1 <- as.POSIXlt("2015-02-13 12:56:26"))
+(czas2 <- as.POSIXlt("14022015 12:56:26", 
+                     format = "%d%m%Y %H:%M:%S"))
+```
+
+Obiekty klasy `POSIXlt` to listy, można się do ich elementów odwoływać przez nazwę.
+
+```{r}
+czas1$sec
+czas1$min
+czas1$zone
+```
+
+Wiele funkcji można stosować zamiennie do obiektów klasy `POSIXlt` i `POSIXct`
+
+```{r}
+czas2 - czas1
+czas1 + 7*3600 # 7 godzin
+```
+
+***
+
+## 6.4. Pakiet lubridate
+
+W podstawowym programie R operacje na datach i czasie nie zawsze są proste. Tzn. proste operacje są proste, ale złożone już niekoniecznie. Pakiet `lubridate` zawiera zestaw funkcji ułatwiający pracę z datami. Instalujemy i wczytujemy:
+
+```{r, eval=F}
+install.packages("lubridate")
+```
+```{r}
+library(lubridate)
+```
+
+Jedną z takich funkcji jest `now()`, która zwraca obiekt opisujący bieżącą chwilę.
+
+```{r}
+now() # do sekundy
+today() # do dnia
+```
+
+Uproszczono nazwy funkcji, służące do konwertowania napisów na czas. Nazwa funkcji staje się opisem formatu.
+
+```{r}
+ymd_hms("2015-02-14 23:59:59")
+(czas3 <- mdy_hm("02/14/15 08:32"))
+```
+
+Z dat można wyłuskiwać takie informacje jak dzień tygodnia, dzień miesiąca itd. Funkcją `wday()` można odczytać dzień tygodnia, podobnie funkcje `day()`, `month()` i `year()` opisują składowe daty.
+
+```{r}
+wday(czas3, label = TRUE)
+```
+
+Tydzień w roku, dzień miesiąca, miesiąc i rok.
+
+```{r}
+week(czas1)
+day(czas1)
+month(czas1)
+year(czas1)
+```
+
+Na czasach można wykonywać wygodne operacje używając funkcji `days(`), `months()`, `years()`, `minutes()`, `seconds()`.
+
+```{r}
+czas3 + hours(4)
+czas3 + days(2) + months(4) + years(1)
+```
+
+*** 
+
+## 6.7. Co dalej
+
+W ramach rozdziału 6 dowiedzieliście się trochę o możliwościach przetwarzania daty z wykorzystaniem istniejacych funkcji w R. Wiecej o operacjach na zmiennych tekstowych znajdziecie w @Wickham:2017:RDS:3086927 w rozdziale `16. Dates and Times` [(link)](http://r4ds.had.co.nz/strings.html). Dodatkowo zalecam pobranie [cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/lubridate.pdf) do pakietu `stringr`.
+
+##### Ćwiczenie 12 {.tabset .tabset-pills}
+###### Treść 
+
+* Używając odpowiedniego formatowania zamień napis 01-15-2015 10:20:59 na obiekt klasy POSIXct.
+* Oblicz liczbę dni pomiędzy 1 września 1945 roku a 8 maja 1945.
+* Sprawdź jaki dzień tygodnia będzie za 100 dni od dziś
+
+###### Odp. 
+
+* Używając odpowiedniego formatowania zamień napis 01-15-2015 10:20:59 na obiekt klasy POSIXct.
+
+```{r}
+a <- "01-15-2015 10:20:59"
+as.POSIXct(a, format = "%m-%d-%Y %H:%M:%S")
+```
+
+* Oblicz liczbę dni pomiędzy 1 września 1945 roku a 8 maja 1945.
+
+```{r}
+a <- as.Date("1945-09-01")
+b <- as.Date("1945-05-08")
+b-a
+```
+
+* Sprawdź jaki dzień tygodnia, miesiąc, rok, będzie za 100 dni od dziś
+
+```{r}
+a <- Sys.time() ; a 
+b <- a + 100*24*3600 ; b
+wday(b, label = T)
+month(b, label = T)
+year(b)
+```
+
+####
+
+***
+
+
+
+
+
+# 7. Typ czynnikowy - cechy jakościowe
+
+**Typ czynnikowy (nazywany również wyliczeniowym lub kategorycznym)**. Ten typ jest przydatny do przechowywania wektorów wartości występujących na kilku poziomach (w kilku kategoriach). Przykładowo płeć występuje na dwóch poziomach, tzn. może przyjmować tylko dwie wartości, dlatego przechowując w programie R wektor danych opisujących płeć, najlepiej użyć typu czynnikowego. Zmienne tego typu są najczęściej wykorzystywane do definiowania grup. Na poniższym przykładzie konstruujemy czteroelementowy wektor elementów typu wyliczeniowego, ze słownikiem składającym się z dwóch wartości [@biecek2008przewodnik]. 
+
+```{r}
+nz <- factor(c("sierzant", "kapitan", 
+               "sierzant", "sierzant"))
+nz
+```
+
+Zmienna nz jest obiektem czynnikowym składającym się z 4 elemetów tekstowych utworzonych z dwóch słów. Każde słowo reprezentuje kategorię.
+
+Przejrzyjmy sie danym typu `factor`:
+```{r, eval=FALSE}
+summary(nz)
+table(nz)
+str(dane)
+```
+
+***
+
+## 7.1. Wprowadzenie
+
+Za pomocą cech jakościowych opisujemy przynależność danego zbioru danych do pewnej grup. Często cechę tą nazywa się grupową, a w R cechę jakościową oznacza obiekt typu `factor()` czynniki (cecha czynnikowa). Przykładami zmiennych jakościowych są: np. Wykształcenie (podstawowe, średnie, wyższe, specjalistyczne), kraj zamieszkania(PL, GER, RUS ....). 
+
+Czasami zmienną jakościowa opisujemy liczbami jest to np. nr albumu, nr telefonu, pesel, kod pocztowy. Zmienną jakosciową, może być np.: Ocena końcowa z TI, ale można ją też traktować jako zmienną ilościową. Tutaj mamy do czynienia z dualnością i jak będzie ta zmienna interpretowana zależny od celu naszych analiz.
+
+Dane jakościowe, lub grupowanie danych jest bardzo ważne ponieważ stanowi podstawę do utworzenia baz danych, oraz pozyskania z baz danych odpowiednich informacji. 
+
+Jakkolwiek zmienne jakościowe mogą bardzo różnić się liczbą grup oraz rodzajem grup, można na nich wykonywać kilka wspólnych operacji. omówimy jej w tym rozdziale. Najpierw jednak proszę wczytać zestawy danych `dane` oraz z pakietu `PogromcyDanych` zestaw `auta2012`.
+
+## 7.2. Cechy jakosciowe
+
+Wczytaj zestaw danych `dane` z pliku `"dane.RData"`.
+
+```{r}
+getwd() # gdzie jestem 
+# setwd("tam gdzie plik dane.RData") # ustaw lokalizację 
+load(file = "dane.RData")
+```
+
+W celu pewnego uproszczenie skleimy imie i nazwisko w jedną kolumnę (patrz przetwarzanie danych tekstowych)
+
+```{r}
+osoba <- paste(dane$imie, 
+               dane$nazwisko) 
+osoba # nowa cecha
+
+dane <- cbind(osoba,  # dodawanie kolumny
+              dane[,3:ncol(dane)]) # selekcja 
+dane[,1:4] # kulmny imie i nazwisko zastąpiono kolumną osoba
+```
+
+Gdy te zmienne są wyświetlane, poza wartościami dodatkowo wyświetlany jest zbiór wszystkich możliwych wartości. Ten zbiór nazywa się najczęściej poziomami zmiennej jakościowej lub słownikiem zmiennej. Sprawdźmy tym zmiennej wybranych kolumn poleceniem `class()`.
+
+```{r}
+class(dane$osoba)
+class(dane$praca)
+class(dane$zarobki)
+```
+
+Jeżeli wynikiem jest napis `factor` to mamy do czynienia ze zmienną jakościową. Jeżeli wynikiem jest `integer` lub `numeric` to mamy do czynienia ze zmienną ilościową. Teraz znane wam polecenie `str()`.
+
+```{r, eval=FALSE}
+View(dane)
+str(dane)
+```
+
+Bardzo podobną funkcją jest `glimpse()` z pakiety `dplyr` zawartego w megapakiecie `tidyverse`.
+
+```{r}
+library(tidyverse)
+dplyr::glimpse(dane)
+```
+
+Otrzymaliśmy informacje, o klasie wszystkich kolumn(atrybótów) naszych danych. Przydatnymi funkcja mogą być również `laves()` i `table()`:
+
+* `levels()` zwraca wektor napisów - poziomów zmiennej jakościowej.
+* `table()` zwraca wektor liczebności każdego czynnika,
+
+```{r, eval=F}
+levels(dane$praca)
+table(dane$kraj)
+table(auta2012$Waluta)
+```
+
+Zmienne jakościowe często opisuje się tablicą liczebności, a więc informacją ile razy wystąpiła każda z wartości ze słownika. Tablicę liczebności można wyznaczyć funkcją `table()` lub `summary()`. Jeżeli w zmiennej jakościowej występują wartości brakujące, to funkcja `summary()` też napisze ile ich jest (funkcja `table()` domyślnie tego nie robi, można takie zachowanie wymusić dodając argument `useNA = "always"`).
+
+```{r}
+summary(auta2012$Waluta)
+table(auta2012$Waluta, useNA = "always")
+```
+
+***
+
+## 7.3. Procenty
+
+W niniejszy rozdziale zastosujemy funkcje, które były już omawiane. Więc zrezygnowano z opisu. Proszę się zastanowić nad poniższymi poleceniami i określić co one wykonują.
+
+```{r}
+waluty <- table(auta2012$Waluta)
+(frakcje <- prop.table(waluty))
+(procenty <- 100*frakcje)
+round(procenty, digits = 1)
+zaokragloneProcenty <- round(procenty,1)
+sort(zaokragloneProcenty)
+sort(zaokragloneProcenty, decreasing = TRUE)
+order(zaokragloneProcenty)
+kolejnoscPosortowanych <- order(zaokragloneProcenty)
+zaokragloneProcenty[kolejnoscPosortowanych]
+zaokragloneProcenty[kolejnoscPosortowanych]
+zaokragloneProcenty[rev(kolejnoscPosortowanych)]
+```
+
+***
+
+## 7.4. Graficzne statystyki opisowe
+
+Tabele liczebności są proste w interpretacji. Podobnie jednak jak w innych przypadkach, graficzne przedstawienie liczb pozwala na łatwiejsze dostrzeżenie co się dzieje w danych. Koniec końców, w tabeli liczb łatwo pomylić się nawet gdy chodzi o liczbę cyfr w liczbie. Na wykresie takie wartości natychmiast rzucają się w oczy. Więc zróbmy wykres słupkowy, modyfikując go po drodze:
+
+```{r}
+
+auta2012[as.numeric(as.character(auta2012$Rok.produkcji)) > 1995,] -> auta
+rok <- table(auta$Rok.produkcji, useNA = "always" )
+rok
+```
+
+Wykres słupkowy:
+
+```{r}
+barplot(rok) # ustawienia standardowe
+
+barplot(as.table(rok),
+        horiz = T, # poziomo
+        las = 1) # # napisy poziomo
+
+```
+
+***
+
+## 7.5. character or factor
+
+`Character` to oczywiście nazwa typu zmiennej reprezentującej napisy, czyli po prostu tekst
+`factor` to oczywiście nazwa typu zmiennej reprezentującej grupy.
+
+Z wyglądu, cechy jakościowe (czynniki) przypominają cechy napisowe. Jednak pod spodem, ich reprezentacja jest zupełnie inna. Czynniki nie są pamiętane jako napisy, ale jako para - wektor liczb i słownik, określający, który napis odpowiada, której liczbie.
+
+Na napisach zazwyczaj wykonuje się inne operacje niż na zmiennych jakościowych, może się więc tak zdarzyć, że celowo chcemy jakieś dane odczytać jako napisy. Ale gdy dane są wczytywane z pliku tekstowego w którym są napisy, domyślnie traktowane są jako czynniki.
+
+W poniższym przykładzie takie zmienne jak gatunek i habitat są wczytywane jako zmienna klasy factor. Efektem ubocznym jest sposób wyświetlania wyników np. przez zmienną `cat()`. Dla zmiennej czynnikowej, ta funkcja na ekranie wypisze liczby a nie wartości napisowe.
+
+```{r}
+cat(dane$praca)
+cat(as.character(dane$praca))
+```
+
+```{r}
+czynnik <- as.factor(dane$kraj) ; str(czynnik)
+napisy <- as.character(dane$kraj) ; str(napisy)
+```
+
+***
+
+## 7.6. Tablice częstości
+
+Tablice częstości nie są ramkami danych, mimo że wyglądają bardzo podobnie.
+
+A co gdybyśmy chcieli przedstawić zależność pomiędzy dwoma zmiennymi jakościowymi? Można to zrobić używając funkcji `table()` (należy kolejne kolumny(atrybuty) podawać jako kolejne argumenty). Przykładowe wywołanie dla dwóch zmiennych Waluty i Kraju pochodzenia.
+
+```{r, eval=FALSE}
+table(auta2012$Kraj.pochodzenia, auta2012$Waluta)
+```
+
+Jednak wygodniej jest, takie tabele tworzyć używając funkcji `xtabs()`, która jest trochę wygodniejsza w pracy. Pierwszym argumentem tej funkcji jest formuła o składni `~ zmienna_1 + .. + zmienna_n`, t.j. rozpoczynająca się `~`` a następnie ze zmiennymi porozdzielanymi znakiem `+`. Drugim argumentem jest ramka danych, która powinna zawierać zmienne wymienione w formule.
+
+Wynikiem jest tablica kontyngencji o tylu wymiarach, ile zmiennych występuje w formule.
+
+Przykładowo, zestawiając ze sobą kraj pochodzenia oraz walutę w ogłoszeniu, otrzymujemy tablicę częstości o wymiarach 32 wiersze i 8 kolumn. Pierwszy wiersz tej tabeli odpowiada pustej wartości kraju pochodzenia, stąd brak nazwy w pierwszym wierszu.
+
+
+```{r}
+krajWaluta <- xtabs( ~ Kraj.pochodzenia + Waluta, auta2012)
+```
+
+```{r, eval=FALSE}
+krajWaluta # wyświetlamy
+```
+
+Funkcja `prop.table()` liczy procenty (z drugim argumentem =1 liczy procenty w wierszach)
+
+```{r}
+round(prop.table(krajWaluta, 1), 3)
+```
+
+Tablice częstości nie są ramkami danych.
+
+Gdy w grę wchodzą dwie zmienne, to rzeczywiście wyglądają one jak ramki danych - mają wiersze i kolumny. Muszą być jednak czymś innym, ponieważ w sytuacji, gdy tablica kontyngencji dotyczy trzech lub większej liczby zmiennych to wynikowa macierz kontyngencji ma więcej wymiarów niż dwa.
+
+Funkcją `as.data.frame` można przekształcić wielowymiarowe tabele do ramki danych. Otrzyma się w tym przypadku tak zwaną reprezentację rzadką macierzy kontyngencji, w której pierwsze kolumny opisują wszystkie kombinacje czynników zmiennych a ostatnia kolumna opisuje liczebność występowania poszczególnej kombinacji czynników.
+
+```{r, eval=F}
+xt <- xtabs(~Kraj.pochodzenia+Waluta, auta2012)
+xt <- as.data.frame(xt)
+xt[xt$Freq > 0, ]
+```
+
+***
+
+## 7.7. Przekształcanie zmiennych ilościowych w jakościowe
+
+Opisując dane ilościowe, często można ułatwić ich zrozumienie, jeżeli zmienne ilościowe podzieli się na przedziały. Takie przedziały są już zmienną jakościową. Zmienną jakościową z ilościowej można stworzyć używając funkcji `cut()`, która za pierwszy argument przyjmuje zmienną ilościową, a jako drugi liczbę przedziałów do zbudowania lub punkty odcięcia dla tych przedziałów.
+
+W przykładzie poniżej przekształcimy zmienną `urlop` ze zbioru dane na dwa przedziały: 0-10, 10-20. Tak stworzoną zmienną dodamy do zbioru dane pod kateg.
+
+```{r}
+dane$kateg <- cut(dane$urlop, 
+                  breaks = c(0,10,max(dane$urlop)))
+table(dane$kateg)
+barplot(table(dane$kateg))
+```
+
+Teraz wyświetlmy dane, posortowaną względem nowej zmiennej:
+
+```{r}
+sort(table(dane$kateg))
+```
+
+Dwuwymiarową tabelę wykreslimy za pomocą funkcji `mosaicplot()`. Rysuje ona tak zwany wykres mozaikowy przedstawiający jednocześnie wiele zależności. 
+
+```{r}
+levels(auta2012$Skrzynia.biegow)
+levels(auta2012$Rodzaj.paliwa)
+tab <- xtabs(~Rodzaj.paliwa + Skrzynia.biegow, auta2012)
+```
+
+```{r}
+mosaicplot(tab, las=2, col=c("green", "blue", "red"))
+```
+
+Teraz dla obiektu `round(prop.table(krajWaluta, 1), 3)`
+
+```{r}
+krajWaluta <- xtabs( ~Waluta + Kraj.pochodzenia, auta2012)
+mosaicplot(round(prop.table(krajWaluta, 1), 3), 
+           col = c(2:(length(levels(auta2012$Kraj.pochodzenia)) + 1)
+                   ), las =2
+           )
+```
+
+Zróbmy coś innego. Wczytamy dane mydata i wygenerujemy wykres częstości przedziałów prędkości wiatru.
+
+```{r, eval=F}
+install.packages("openair")
+library(openair)
+View(mydata)
+```
+
+```{r,echo=F, include=F}
+library(openair)
+```
+
+```{r}
+mydata$p.ws <- cut(mydata$ws, c(0, 2,4,6,8, 10, max(mydata$ws, na.rm = T)))
+a <- round(prop.table(table(mydata$p.ws)),4)*100
+barplot(a,  las = 2, col = c("red", "green","blue", "yellow", "grey", "tomato4"), 
+        xlab = "przedziały prędkosci wiatru [m/s]", ylab =  "Udziały wiatrów [%]")
+```
+
+***
+
+##  7.8. Kolejność i nazwy czynników
+
+Domyślna kolejność czynników, to kolejność leksykograficzna. Tworząc wykresy, zazwyczaj wartości prezentowane są zgodnie z kolejnością opisaną przez atrybut levels.
+
+```{r}
+levels(auta2012$Rodzaj.paliwa)
+```
+
+Stworzymy wykres roku produkcji względem rodzaju spalanego paliwa
+
+```{r}
+boxplot(Rok.produkcji ~ Rodzaj.paliwa, auta2012, las=2)
+```
+
+Domyślną kolejność można zmienić. Jednym ze sposobów określania kolejności czynników jest argument levels w funkcji `factor()`. Czynniki będą mieć kolejność zgodną z tam wskazaną. Nazwy czynników można też dowolnie zmieniać. Najprościej można to zrobić używając funkcji `levels()` tak jak na poniższym przykładzie.Nazwy czynników można też dowolnie zmieniać. Najprościej można to zrobić używając funkcji `levels()` tak jak na poniższym przykładzie.
+
+```{r}
+levels(auta2012$Skrzynia.biegow)
+
+auta2012$Skrzynia.biegow <- factor(auta2012$Skrzynia.biegow, 
+                                   levels=c("manualna","automatyczna", ""))
+levels(auta2012$Skrzynia.biegow)
+```
+
+Jeżeli chcemy ,,posortować’’ poziomy zgodnie z pewną cechą ilościową, to wygodne będzie użycie funkcji `reorder()`. Jako argumenty pobiera ona wektor ze zmienną czynnikową, wektor z dowolną zmienną i funkcję. Dla każdej grupy określonej przez zmienną czynnikową, dla wartości wskazanych przez drugi argument wyznaczana jest wartość funkcji - trzeciego argumentu. Następnie czynniki są porządkowane zgodnie z kolejnością wyników trzeciej funkcji.
+
+W przykładzie poniżej, rodzaje paliwa są porządkowane zgodnie ze średnim rokiem produkcji aut o określonym rodzaju paliwa. Tak jak się można spodziewać, bardziej ,,nowoczesne’’ paliwa są w autach młodszych.
+
+```{r}
+auta2012$sort <- reorder(auta2012$Rodzaj.paliwa, # jakościowa
+                         auta2012$Rok.produkcji, # ilościowa
+                         mean)
+boxplot(Rok.produkcji ~ sort, auta2012, las=2)
+boxplot(Rok.produkcji ~ sort, auta2012, 
+        las=2, outline = F) # bez odstających obs.
+```
+
+*** 
+##### Ćwiczenie 12 {.tabset .tabset-pills}
+###### Treść 
+
+[1] Ile zmiennych jakosciowych jest w w zbiorze danych `mydata` z pakietu `openair`?
+
+[2] Cecha Marka opisuje markę samochodu. Sprawdź, która marka jest najpopularniejsza.
+
+[3] Cecha Rodzaj.paliwa opisuje rodzaj paliwa wykorzystywanego przez auto. Czy jest to benzyna, olej, gaz? [4] Sprawdź jaki procent samochodów jest napędzana na benzynę?
+
+[5] W zbiorze danych auta2012 podziel zmienne Rok.produkcji na przedziały 1900-1990, 1991-1995, 1996-2000, 2001-2005, 2006-2010, 2011-2012, a zmienną Przebieg.w.km na przedziały 0-1000, 1001-10 000, 10 001-100 000, 100 001 - 1000 000, 1000 000 - 10 000 000.
+
+[6] Wyznacz tabelę liczebności dla tych dwóch nowych zmiennych.Przedstaw tę tabelę graficznie.
+
+###### Odp.
+
+Ile zmiennych jakosciowych jest w w zbiorze danych `mydata` z pakietu `openair`?
+
+```{r}
+str(mydata)
+```
+
+Cecha Marka opisuje markę samochodu. Sprawdź, która marka jest najpopularniejsza?
+
+```{r}
+head(sort(table(auta2012$Marka), decreasing = T),1)
+tail(sort(table(auta2012$Marka)),1)
+```
+
+Cecha Rodzaj.paliwa opisuje rodzaj paliwa wykorzystywanego przez auto. Czy jest to benzyna, olej, gaz? 
+
+```{r}
+levels(auta2012$Rodzaj.paliwa)
+```
+
+Sprawdź jaki procent samochodów jest napędzana na benzynę?
+
+```{r}
+prop.table(table(auta2012$Rodzaj.paliwa))*100 -> a
+sort(a, decreasing = T)
+
+barplot(sort(a, decreasing = T),
+        col =c(2:7)) #  numery kolorów
+```
+
+W zbiorze danych auta2012 podziel zmienne Rok.produkcji na przedziały 1900-1990, 1991-1995, 1996-2000, 2001-2005, 2006-2010, 2011-2012, a zmienną Przebieg.w.km na przedziały 0-1000, 1001-10 000, 10 001-100 000, 100 001 - 1000 000, 1000 000 - 10 000 000.
+
+```{r}
+p1 <- c(1900,1995,2000,2005,2010,2012)
+p2 <- c(0, 1000, 10000, 100000, 1000000, 10000000)
+
+auta2012$Rok.prod.prz <- cut(auta2012$Rok.produkcji, breaks = p1)
+auta2012$Prze.km.prz <- cut(auta2012$Przebieg.w.km, breaks = p2)
+```
+
+Wyznacz tabelę liczebności dla tych dwóch nowych zmiennych.Przedstaw tę tabelę graficznie.
+
+```{r}
+table(auta2012$Rok.prod.prz, 
+      auta2012$Prze.km.prz) -> a ;a
+barplot(a, col = c(1:20))
+```
+
+####
+
+***
 
 
 

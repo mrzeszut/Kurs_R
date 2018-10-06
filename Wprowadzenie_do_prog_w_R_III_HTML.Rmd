@@ -36,7 +36,7 @@ h1   { font-size: 24px;} h2 { font-size: 22px;} h3 { font-size: 20px;}
 **lokalizacja:**  bud. C-4, p. V, pok. 511, al. A. Mickiewicza 30, Kraków, Polska.
 
 **konsultacje:** Zgodnie z informacjami na stronie
-[dziekantu](https://dziekanat.geod.agh.edu.pl/dziekanat/index.php?menu1=4&menu2=17&co=o&lin=o&wiad=@f_konsult_prez) lub po uzgodnieniu za pośrednictwem e-mail.
+[dziekanatu](https://dziekanat.geod.agh.edu.pl/dziekanat/index.php?menu1=4&menu2=17&co=o&lin=o&wiad=@f_konsult_prez) lub po uzgodnieniu za pośrednictwem e-mail.
 
 ***
 
@@ -47,636 +47,297 @@ h1   { font-size: 24px;} h2 { font-size: 22px;} h3 { font-size: 20px;}
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning=F,message=F,error=F)
 ```
-# 3.
-## 3.5. Ramki danych
 
-Szczególnym typem obiektu jest ramka danych, nazywana również tabelą danych. Ramka danych jest zazwyczaj z tabelaryczną strukturą, której elementy w każdej kolumnie są tego samego typu, ale mogą różnić się typami pomiędzy kolumnami. Z tego powodu ramkę danych można traktować jak listę wektorów o tej samej długości, każdy wektor odpowiada jednej kolumnie. Ramki danych tworzy się zazwyczaj funkcją `data.frame()`. 
+***
 
-Ramka danych jest oprócz wektora jednym z najczęściej wykorzystywanych typów obiektów i poświęcimy jej dość sporo uwagi.
+# 4. Wczytywanie danych
 
-Poniżej konstruujemy ramkę danych składającą się z trzech trójelementowych zmiennych. Konstruujemy ramkę danych podając wartości dla każdej z kolumn.
+***
+
+## 4.1. Operacje na plikach i katalogach
+
+Zanim zaczniemy wczytywać i zapisywać dane warto zapoznać się wstępnie z kilkoma funkcjami pakietu base, które służą do wykonywania operacji na plikach i katalogach. Najpierw przypomnienie dotyczące ustawienia katalogu domyślnego.
+
+Teraz możemy wczytywać dane znajdujące się w katalogu domyślnym bez konieczności podawania pełnej ścieżki dostępu do pliku z danymi. Teraz sprawdzimy zawartość katalogu domyślnego. Mamy dwie opcje:
 
 ```{r}
-ramka <- data.frame(id = c(100,101,102), 
-                    wiek = c(25,21,22),
-                    wzrost = seq(170,190,10),
-                    chlopiec = c(TRUE,TRUE,FALSE))
-ramka
+getwd() ## zwraca informacje o aktualnym katalogu domyślnym
+setwd("...") ## ustawia katalog domyślny 
 ```
+
+Możemy zajrzeć do prawego dolnego okna Rstudio (zakładka Files) lub wpisać polecenie:
 ```{r, eval=F}
-View(ramka)
+dir()
+list.files() # j.w.
 ```
 
-Do kolumn ramki danych (które są wektorami) możemy odwoływać się tak, jak do elementów macierzy, a także tak jak do elementów list przy pomocy operatora `$` dostępu do pól obiektu klasy S4. 
+Korzystając z tego polecenia możemy otworzyć bardzo przydatny wektor, który można zastosować np.: w przypadku wczytywania danych z wielu plików danych. Utworzymy teraz wektor o nazwie pliki.
 
-```{r}
-ramka$wiek
+```{r, eval=FALSE}
+pliki <- dir()
+pliki
 ```
 
 ***
 
-### ćwiczenie 9 {.tabset .tabset-pills}
-#### Treść
+**Wykaz i opis wybranych funkcji** 
 
-Stwórz dowolną tabele składająca się 10 wierszy i 4 kolumn. Pod zmienną `dane`. W kolumny od 1 do 4 mają przechowywać odpowiednio. 
-
-* liczby całkowite
-* liczby rzeczywiste (do dwóch miejsc dzietnych)
-* tekst
-* zmienne logiczne
-* Kolumny mają mieć też określone nazwy. Nazwy dowolne, ale krótkie (jedno słowo do 5 znaków).
-
-wykonaj następujące polecenie dla obiektu dane oraz opisz co zwracają w komentarzach.
-
-```{r, eval=F}
-length()
-is.vector()
-is.atomic()
-is.data.frame()
-is.array()
-str(attributes())
-typeof()
-class()
-```
-
-#### odp.
-
-Stwórz dowolną tabele składająca się 10 wierszy i 4 kolumn. Pod zmienną `dane`. W kolumny od 1 do 4 mają przechowywać odpowiednio. 
-
-* liczby całkowite , 
-* liczby rzeczywiste (do dwóch miejsc dzietnych)
-* tekst
-* zmienne logiczne
-* Kolumny mają mieć też określone nazwy. Nazwy dowolne, ale krótkie (jedno słowo do 5 znaków).
-
-```{r}
-data.frame(calko = c(1:10),
-           rzecz = seq(0.8,20, length.out = 10),
-           tekst = letters[sample(1:26, replace = T, size = 10)],
-           logic = as.logical(rep(0:1), 5)
-           ) -> dane 
-dane ; View(dane)
-```
-
-
-wykonaj następujące polecenie dla obiektu dane oraz opisz co zwracają w komentarzach.
-
-```{r}
-length(dane)
-is.vector(dane)
-is.atomic(dane)
-is.data.frame(dane)
-is.array(dane)
-str(attributes(dane))
-str(dane) # bardzo pomocne
-typeof(dane)
-class(dane)
-```
-
-Zauważ, że w zależności od typu danych zawartych w kolumnie funkcja summary zwraca różne informacje.
-Pamietasz funkcje `table()`. Porównaj wyniki z funkcją `summary()`
-
-```{r}
-table(dane$tekst)
-```
-
-
-####
+* `file.create(...)` - Funkcja tworzy pliki o zadanych nazwach, jeżeli takie pliki istnieją, to ich zawartość jest kasowana.
+* `file.exists(...)` - Funkcja sprawdza czy pliki o zadanych nazwach istnieją.
+* `file.remove(...)` - Funkcja usuwa pliki o zadanych nazwach (patrz też funkcja `unlink()`).
+* `file.rename(from, to)` - Funkcja zmienia nazwę pojedynczego pliku.
+* `file.append(file1, file2)` - Funkcja dokleja plik o nazwie file2 do pliku file1.
+* `file.copy(from, to, overwrite=FALSE)` - Funkcja do kopiowania pliku z `from` w pozycje wskazaną przez argument `to`.
+* `file.symlink(from, to)` - Funkcja do tworzenia linków symbolicznych (pod Unixami).
+* dir.create(path, showWarnings=TRUE, recursive=FALSE) - Funkcja do tworzenia katalogów. Wynikiem tej funkcji jest wartość TRUE, jeżeli operacja utworzenia katalogu została wykonana pomyślnie. Jeżeli dany katalog już istnieje lub nie udało go się utworzyć funkcja przekazuje wartość FALSE.
+* `file.info(...)` - Wynikiem tej funkcji są informacje o wskazanych plikach.
+* `file_test(op, x, y)` - Funkcja do testowania plików. Dostępne testy to: jednoargumentowe (tylko x jest używane) op="-f" istnieje i nie jest katalogiem, op="-d" istnieje i jest katalogiem oraz dwuargumentowe op="-nt" jest młodszy niż (pod uwagę brane są daty modyfikacji) i op="-ot" jest starszy niż.
+* `file.show(...)` - Funkcja wyświetla w oknie R zawartość jednego lub większej liczby plików.
 
 ***
 
-### 3.5.1. Przygotowanie danych
+**Przykłady**
 
-Zanim przejdziemy do następnego tematu, musimy wczytać dane. Temu procesowi poświęcimy znacznie więcej uwagi w innym rozdziale.
+W katalogu tematu drugiego powinienieś mieć dwa pliki tekstowe `im1.txt` oraz `im2.txt`. Otwórz je w notatniku, lub notepad++. Postaraj się by okno katalogu było otwarte. 
 
-```{r eval=FALSE, include=FALSE}
-data.frame(imie = c("Katarzyna", "Zofia", "Julia", "Kora", 
-                    "Piotr", "Adam", "Robert", "Janusz", "Beata"),
-           Nazwisko = c(rep("Kowalska",3), "Nowak", "Zwykły", "Nowy", "Nowy", "Ptak", "Ptak"),
-           praca = c("AGH", "ZUS", "NFZ", "AGH", "PK", "UJ", "UG", "NFZ", "UMK"),
-           stanow = c("asystent", "księgowy", "księgowy", "adniunk", 
-                      rep("prof.",3), "technik", "Inżynier"),
-           Zarobki = round(runif(n = 9, 2000, 6000),1),
-           staz = round(runif(9, 5,20)),
-           urlop = round(runif(9, 1,26)),
-           Waga = round(runif(n = 9, 50, 110)),
-           Wzrost = round(runif(n = 9, 150, 190)),
-           Wiek = round(runif(n = 9, 27, 65)), 
-           Plec = sample(c("M", "K"), size = 9, replace = T),
-           Kraj = sample(c("PL", "USA", "DE"),size = 9, replace = T),
-           urodzony = c("Tarnów", "Gorlice", "Sękowa", "Kraków", "Berlin", 
-                        "Amsterdam", "Brzesko", "Wieliczka", "Skawina")
-) -> dane
-dane
-toString(colnames(dane))
-colnames(dane) <- c("imie", "nazwisko", "praca", "stanow", "zarobki", "staz", 
-                    "urlop", "waga", "wzrost", "wiek", "plec", "kraj", "urodzony")
-save(dane, file = "dane.RData")
-
+```{r, eval=F}
+file.create("im3.txt")
+file.create("im4.txt")
+dir()
+file.info("im1.txt")
+file.info("im3.txt")
+file.exists("im3.txt")
+file.remove("im3.txt")
+dir()
+file.rename(from = "im4.txt", to = "im3.txt" )
+dir()
+file.remove("im3.txt")
+file.append("im1.txt", "im2.txt")
+## Teraz podglądnij w notatnik zawartość pliku im1.txt
+file.copy(from = "im1.txt", to = "im3.txt", overwrite=FALSE)
+dir.create("Twoje_Nazwisko", showWarnings=TRUE, recursive=FALSE)
 
 ```
 
-W folderze który pobrałeś z [upel](http://upel.agh.edu.pl/wggiis/) znajduje się plik `dane.RData`.
+***
 
-Sprawdzć, czy masz odpowiedni obszar roboczy.
+## 4.2. Wczytywanie danych
 
-```{r, eval=F}
+W tym rozdziale omówimy metody wczytywania danych. Jest to dość proste i intuicyjne jednak wymaga znajomości rozszerzeń i typów plików. Jeśli wymienione w poniższym przykładzie rozszerzenia plików, programy nie są Państwu znane zachęcam do poczytania o nich. Akurat w tym wypadku Wikipedia jest wystarczającym źródłem informacji.
+
+Dane mogą być przechowywane w najróżniejszych formatach, takich jak: 
+
+* baza danych (Postgress, MySQL, Oracle), 
+* plik tekstowy (.txt, .csv), 
+* plik w formacie programu Excel (nowszym .xslx lub starszym .xls) 
+* lub plik w formacie innego programu do analizy danych (SAS, SPSS, Statistica, itp).
+
+W tym rozdziale odpowiemy na kilka zasadniczych pytań:
+
+* Jak wczytywać dane tabelaryczne z plików tekstowych?
+* Jak wczytywać dane tabelaryczne z plików Excela [xls lub xlsx]?
+* Jak wczytywać dane z pakietów R?
+
+Zawartość tego rozdziału nie jest wystarczająca, w przyszłości napewno będziecie korzystać z wielu różnych formatóW danych. Podstawowe informacje znajdziecie w rozdziale 3.1. [Przewodnik po pakiecie R 4.0](http://pbiecek.github.io/Przewodnik/). Bardzo prostym rozwiazaniem jest skorzystanie z wyszukiwarki google, gdzie wpisując np.: read shp in R, znajdziesz sporo informacji o wczytywaniu danych przestrzennych.
+
+*** 
+
+### 4.2.1. Dane w plikach tekstowych
+
+Jednym z częstszych formatów używanych do przechowywania i wymiany danych są pliki tekstowe. Nazwa ‘plik tekstowy’ bierze się stąd, że treść tego pliku możemy otworzyć w standardowym edytorze takim jak Notepad/Notatnik w Windowsie lub vim w Linuxie/OSX. Pliki tekstowe można również otwierać z użyciem programu RStudio (uwaga, duże pliki mogą się długo otwierać). Jeżeli często pracujemy z dużymi lub wieloma plikami tekstowymi to warto wyposażyć się w dobre narzędzie do pracy z nimi, np. edytor Sublime Text i Notepad++.
+
+Otwórz plik: `dane1_srednik.txt`
+
+* pierwszy wiersz to nagłówek - zawiera nazwy kolumn rozdzielane średnikiem
+* kolejne wiersze przedstawiają dane w postaci wektora wartości, które są rozdzielane znakiem `;`,
+* w pliku występują liczby, które nie są liczbami całkowitymi - separatorem dziesiętnym jest znak `.`.
+
+```{r}
 getwd()
-```
-
-Jeśli nie to poleceniem `setwd("...")` ustaw go na folder w którym znajduje się plik z danymi, *gdzie 3 kropki to ścieżka dostępu*.
-
-Poleceniem `dir()` sprawdzć jakie plki i foldery znajdują się w twoim katalogu.
-
-```{r, eval=F}
+setwd("dane/") # wchodzę do foldera dane
+getwd()
 dir()
 ```
 
-Jeśli jest tam plik `dane.RData`, to wykonaj polecenia ładowania.
+Instrukcja wczytująca dane do R składa się zazwyczaj z trzech członów. Ostatnim (po prawej stronie na poniższym schemacie) jest funkcja, która odczytuje dane, przetwarza i zamienia na postać zrozumiałą dla programu R.
 
-```{r}
-load(file = "dane.RData")
-```
+Do wczytywania danych z pliku tekstowego posłużyć może funkcja `read.table()`. Ponieważ pliki tekstowe mogą mieć bardzo różną postać, funkcja ta ma wiele argumentów. Wybrane argumenty przedstawia poniższa deklaracja.
+    
+    read.table(file,
+                header = FALSE,
+                sep = "",
+                dec = ".", 
+                nrows = -1,
+                skip = 0, comment.char = "#",
+                stringsAsFactors = default.stringsAsFactors(), ...)
 
-W prawym górnym oknie powinien pojawić się obiekt `dane`, który ma następującą postać:
 
-```{r}
-dane
-```
+Ponieważ dane mogą być zapisane z użyciem różnych formatów, argumenty tej funkcji określają format danych do wczytania. Znaczenie kolejnych argumentów podane jest poniżej.
+
+* `file` - ścieżka do pliku z danymi, może być też adres URL. Jeżeli wartości argumentów podajemy w ich domyślnej kolejności, to możemy pominąć nazwy argumentów (dlatego w kolejnych przykładach nie będziemy podawać nazwy tego argumentu).
+* `header` - flaga określająca, czy pierwszy wiersz należy traktować jako nagłówek. W naszym przypadku header=TRUE.
+* `sep` - znak rozdzielający kolumny. W naszym przypadku sep=";", ale popularnymi separatorami są również znak tabulacji (oznaczany \t), przecinek lub spacja. Separatorem może być dowolny, ale tylko jeden znak.
+* `dec` - separator dziesiętny. Zazwyczaj jest to . lub ,. W naszym przypadku dec=",".
+* `nrows` - maksymalna liczba wierszy do wczytania. Domyślnie ten argument przyjmuje wartość -1, czyli wczytaj wszystkie wiersze.
+* `skip` - liczba pierwszych wierszy do pominięcia przy wczytywaniu danych, domyślnie 0, czyli nie pomijaj żadnego wiersza.
+* `comment.char` - znak komentarza. Jeżeli w danych wystąpi ten znak to treść od tego znaku do końca linii będzie zignorowana.
+* `stringsAsFactors` - czy napisy powinny być domyślnie przekształcone w zmienne jakościowe. Domyślnie TRUE.
+
+Wynikiem funkcji read.table() jest tabelaryczny zbiór danych, który w R nazywa się ramką danych (ang. data.frame). 
 
 ***
 
-### 3.5.2. Własności obiektu data.frame
+**Pierwszy przykład** 
 
-W ramch cwiczenia 9 zaznajomiłeś się z charakterystyką obiektu `data.frame()`. W tym rozdziale, krótko przedsatwię kilka funkcji pozwalajacych nam lepiej przyjrzeć się zawartości naszego obiektu.
-
-W rmach tego rozdziału poznamy funkcje:
-
-* `nrow()` - liczba wierszy
-* `ncol()` - liczba kolumn
-* `dim()` - liczba wierszy i kolumn
-* `head()` - podglad kilku pierwszych wierszy
-* `tail()` - podgląd kilku ostatnih wierszy
-* `View()`, - wyświetl obiekt 
-
-W pracy z dużymi zbiorami danych przydją się funkcje zwracająca nformacje o liczbie wierszy i kolumnw w obiekcie `data.frame`:
+**UWAGA:** sprawdźć ścieżka dostępu do lokalizacji twojego pliku.
 
 ```{r}
-# Liczbę wierszy można sprawdzić funkcją nrow() 
-nrow(dane)
-#liczbę kolumn sprawdzamy funkcją ncol(). 
-ncol(dane)
-# naraz
-dim(dane)
+dane <- read.table(file = "Z:/R/Kurs_R/dane/dane1_srednik.txt", # lokalizacja i nazwa pliku
+                   header = TRUE, # czy zawiera nazwy kolumn
+                   sep = ";", # separtor wartosci
+                   dec=".") # separator miejsca dzisiętnego
 ```
-
-Wartym uwagi jest również możliwość pozyskania informacji o nazwach kolumn i wierszy obeiektu `data.frame()`
-
-```{r}
-colnames(dane)  # nazwy kolumn
-names(dane)     # j.w
-row.names(dane) # nazwy wierszy
-```
-
-W łątwy sposób informacje o charakterystyce danych mozemy otrzymać wykonując polecenie `summary()`:
-
-```{r}
-summary(dane) 
-```
-
-Szczególnie zalecam stosowanie funkcji `str()`, która zwraca nam w bardzo przystępny sposób charakterystykę całego obiektu:
-
-```{r}
-str(dane)
-```
-
-Tak, mamy obiekty tupy `factor()`, ale o tym póżniej.
-
-Poleceniem `head()` i `tail()` możemy wyświetlić podgląd wybranych danych, aby im się przyjrzeć.
-
-```{r, eval=FALSE}
-head(dane) # 6 pierwszych
-tail(dane) # 6 ostatnich
-```
-
-Możemy określić ilość wierszy, która chcemy wyświetlić.
-
-```{r, eval=FALSE}
-head(dane, 3) # 3 pierwsze
-tail(dane, 3) # 3 ostatnie
-```
-
-Lub wyświetlić cały zestaw danych
 
 ```{r, eval=F}
+dane 
 View(dane)
 ```
 
-***
 
-###  3.5.3. Indeksowanie
+**Drugi przykład:**
 
-Aby odwoływać się do wierszy lub kolumn ramki danych można wykorzystać operator [,]. Ważny jest przecinek, ponieważ rozdziela nam ideksator na wiersze i kolumny. `obiekt[wiersze,kolumny]`. Przecinek nie zawsze jest ważny, ale o tym pózniej.
-
-***
-
-**Filtrowanie wierszy w ramce danych** - Filtrowanie wierszy jest podstawową operacją wybiernia podzbioru danych z ramki danych. Jest ona przydatna, gdy interesuje nas tylko część zbioru danych, lub niektóre wwiersze zawierają zbędne informacje.
+Najpierw polecenie `setwd()` ustaw ścieżkę dostępu do katalogu.
 
 ```{r}
-dane[1,] # pierwszy wiersz
+setwd("Z:/R/Kurs_R/dane/") # To nie jest twoja ścieżka
+getwd()
 ```
 
-Jeżeli chcemy wybrać więcej niż jeden wiersz należy, podobnie jak dla wektorów, podać kilka indeksów przed przecinkiem. Aby odwołać się do kilku kolejnych wierszy można wykorzystać sekwencję zbudowaną z operatorem. Przykładowo, wiersze od 5 do 7 z ramki danych `dane` można wyłuskać następująco.
+Z powodzeniem wczytaliśmy dane, jeśli nie to sprawdźć ścieżke katalogu.
 
 ```{r}
-dane[5:7,]
+dane2 <- read.table(file = "dane2_przecinek.txt", # lokalizacja i nazwa pliku
+                   header = TRUE, 
+                   sep = ",", # przecinek  
+                   dec=".")
 ```
-
-Funkcja `c()` skleja wartości i sekwencje w wektor, który można następnie wykorzystać w indeksowaniu wierszy. Poniższa instrukcja wyłuskuje wiersze 2, 3, 7 i 9.
-
-```{r}
-dane[c(2:3,7:9) , ]
-```
-
-Lub równoważnie:
-
-```{r}
-indeksy <- c(2:3,7:9)
-dane[indeksy,]
-```
-
-Jako indeksy można również wykorzystać wektor wartości logicznych. Wybiegając trochę w przyszłość, użyjemy kolumny waga aby wybrać z ramki danych tylko te wiersze, dla których waga jest wyższa niż 60.
-
-
-```{r}
-ciezkie <- dane$waga > 60 # operator relacji
-ciezkie # wyniki logical
-```
-
-Teraz wektorem logicznym wybierzemy wiersze, `TRUE` - wybierz wiersz, `FALSE` - pomiń wiersz
-
-```{r}
-dane[ciezkie, ] # waga większa od 60
-```
-
-Indeksując wiersze lub kolumny można też wykorzystywać ujemne indeksy. Oznaczają one, wszystkie wartości poza wskazanymi. Przykładowo, wszystkie wiersze poza 1, 3, 5, 7, 9 można uzyskać poleceniem.
-
-```{r}
-dane[ -seq(1,9,2), ]
-```
-
-Zauważmy, że w tym przykładzie operator arytmetyczny minus `-` przed funkcją `seq()` tworzącą wektor, powoduje zmianę znaku wszystkich elementów wektora.
-
-```{r}
--seq(1,9,2) 
--c(1,2,3)
--5:3 # uwaga
--5:-3
-```
-
-**UWAGA!!!** Nie można mieszać jednocześnie indeksów dodatnich i ujemnych.
 
 ```{r, eval=F}
-dane[c(-4:-2, 8, 9),] # błąd
+dane2 
 ```
 
-***
+**Trzeci przykład:**
 
-**Selekcja kolumn w ramce danych** - Zacznijmy od prostego przykładu: 
+Otwórz plik "dane3_brudny.txt" w notatniku. Zauważ, że kilka wierzy danych jest nieprawidłowych.Dokłądnie są to wiersze od 1 i 2. Pomijamy je za pomocą argumentu `skip`.
 
 ```{r}
-dane[1]
+dane3 <- read.table(file = "dane3_brudny.txt", # lokalizacja i nazwa pliku
+                   header = TRUE, 
+                   sep = ";",  
+                   dec=".", skip = 2)
 ```
-
-Wybranie jednej kolumny powoduje, że jako wynik otrzymujemy nie ramkę danych ale wektor. Łatwo to poznać po sposobie wyświetlania danych.
-
-Próba indeksowania w sposób analogiczny jak wykonywane było to dla wektora pozwoliłą wyselekcjonować dane dla kolumny pierwszej. MOżna to zrobić również w z wykorzystaniem operatora `$`:
-
-```{r}
-dane$imie
-```
-
-Ta druga metoda odrazu wyświetla nam wywołąnie funkcji `levels()` czyli informacje o niepowtarzajacych sie obiektach. Wykonajmy teraz operacje selekcji kolumny stanowisko `Kraj`:
-
-```{r}
-dane[12] # metoda 1
-dane$Kraj # metoda 2
-levels(dane$Kraj) # tylko unikalne
-unique(dane$Kraj) # działa j.w. 
-```
-
-Dzieje się tak dlatego, bo nasz obiekt jest typu `factor()`, czyli cyznnikowe, lub inaczej wyliczeniowego. O cyzm powiemy sobie później więcej. 
-
-```{r}
-class(dane$imie)
-```
-
-Podobnie jak wiersze, można indeksować również kolumny. Aby wyłuskać drugą kolumnę można wskazać jej numer po przecinku. Uwaga Ten dziwny zapis jest konsekwencją tego, że operator [,] jest w gruncie rzeczy funkcją. Więcej o zaawansowanych elementach języka dowiemy się w kolejnych odcinkach.
-
-```{r}
-dane[,2]
-```
-
-Aby zapobiec konwersji na wektor i jako wynik wciąż mieć ramkę danych, należy dodać do operatora indeksowania argument `drop=FALSE`.
-
-```{r}
-dane[,2, drop=FALSE]
-```
-
-
-W ramce danych kolumny możemy indeksować nie tylko numerami ale również nazwami (kolumny są nazywane). Aby wyłuskać z ramki danych kolumnę o nazwie waga możemy użyć tej `nazwy kolumny` jako `indeksu`.
-
-
-```{r}
-colnames(dane) # nazwy
-dane[, "praca"]
-```
-
-Aby wybrać więcej niż jedna kolumnę, podobnie jak w przypadku wierszy i wektorów można wykorzystać funkcję `c()`. Przykładowo, jeżeli chcemy wybrać 1, 2, 11 i 12 kolumnę możemy użyć instrukcji.
 
 ```{r, eval=F}
-# równoważnie moglibyśmy napisać
-dane[, c("imie", "nazwisko", "plec", "kraj")]
-dane[ ,c(1,2,11:12)]
-kol <- c(1,2,11:12)
-dane[,kol]
+dane3 
 ```
 
+**czwarty przykład:**
+
+Funkcją `read.table()` można wczytać również pliki .csv. Otwórz plik "dane1_srednik.csv" w w notatniku.
+
 ```{r}
-kolumny <- c("imie", "nazwisko", "plec", "kraj")
-dane[, kolumny] # j.w.
+dane4 <- read.table(file = "dane1_srednik.csv", # lokalizacja i nazwa pliku
+                   header = TRUE, 
+                   sep = ";",  
+                   dec=".")
+```
+
+lub funkcja `read.csv`:
+
+```{r}
+read.csv("dane1_srednik.csv", sep = ";") -> dane6
+```
+
+Pliki można też pobierać za posrednictwem adresu internetowego.
+
+```{r}
+dane7 <- read.table(file = "http://biecek.pl/MOOC/dane/koty_ptaki.csv", 
+                    sep=";", dec=",", header=TRUE)
+
+read.csv(file = "http://biecek.pl/MOOC/dane/koty_ptaki.csv", sep = ";") -> dane7
 ```
 
 ***
 
-**Wybieranie pod ramki danych**
+### 4.2.2. Wczytywanie plików xlsx.
 
-Możemy jednocześnie odwoływać się do wierszy i kolumn w ramce danych, wybierając jej podramkę. Przykładowo, 
-
-
-```{r}
-# wybór czterech wierszy i czterech kolumn lub 
-dane[c(1:4), c(1:4)]
-#wybór czterech wierszy i jednej kolumny lub 
-dane[c(1:4), 2]
-#Jeden wiersz i cztery kolumny może wyglądać taki.
-dane[1, c(9:12)]
-```
-
-Pokazaliśmy wcześniej, jak można odwoływać się do kolumn poprzez ich nazwy. Podobnie można zrobić z wierszami. Funkcja rownames() pokazuje jak nazywają się wiersze w ramce danych. 
-
-```{r}
-rownames(dane)
-```
-
-Te nazwy niewiele mówią, używanie ich do indeksowania nie miałoby sensu. Zmieńmy więc nazwy wierszy na takie jak w kolumnie imie. Robimy to przez nadpisanie zmiennej wyniku funkcji `rownames()`. Najpier jednak zmienimy typ kolumny imie z factor na character.
-
-```{r}
-dane$imie <- as.character(dane$imie) # konwersja typu z nadpisaniem
-rownames(dane) <- dane$imie # podmiana nazwy wierszy
-dane[,3:6] # podgląd
-```
-
-Poniższy przykład wybiera wiersze dla czterech wskazanych miejsc urodzenia oraz trzy wybrane kolumny. Jeżeli wiersze mają sensowne nazwy, to wygodniej jest odwoływać się do wierszy przez nazwy niż przez indeksy liczbowe.
-
-```{r}
-dane[c("Zofia","Julia", "Robert", "Piotr"), 
-           c("waga", "wiek", "wzrost")]
-```
-
-Poniższym poleceniem przypisujemy spowrotem liczbowe nazwy wierszy jako liczbowe
-
-```{r}
-rownames(dane) <- NULL
-dane[,3:6] # podgląd
-```
-
-Analogiczną metodą można zmienić nazwy kolumn:
-
-```{r, eval=F}
-colnames(dane) <- c("tu wpisać nowe nazwy kolumn")
-# lub
-colnames(dane)[1:3] <- c("zmienisz tylko pierwsze trzy nazwy")
-```
-
-**Sortowanie przez indeksowanie**
-
-Interesujące i nieco zaawansowane zastosowanie indeksowania przedstawimy na przykładzie funkcji `order()`. Wynikiem tej funkcji, są indeksy kolejnych, rosnących wartości. Przykładowo, w kolumnie wzrost mamy następujące wartości
-
-
-```{r}
-dane[,"wzrost"]
-```
-
-Wynikiem funkcji `order()` są indeksy kolejnych, wartości. Najmniejsza wartość to 157, na pozycji 6, kolejna to 161 na pozycji 2, kolejna to 164 na pozycji 1 i tak dalej.
-
-```{r}
-order(dane[,"wzrost"])
-# Równoważnie
-order(dane$wzrost) ; dane$wzrost
-```
-
-Zwróć uwagę na składnie, `order()` jest funkcją nadrzędną. 
-
-Możemy wykorzystać ten wynik, aby posortować ramkę danych po określonej kolumnie. W przykładzie poniżej wykorzystujemy funkcję `order()` do wyznaczenia wektora kolejnosc. Który następnie wykorzystamy do indeksowania ramki `dane`.
-
-```{r}
-kolejnosc <- order(dane[,"wzrost"])
-dane[kolejnosc, c(1:2,7:9)]
-```
-
-Na koniec przykłąd z operatorem logicznym `&` koniunkcji. Wybierzemy na raz wrzystkie wiersze spełniajace dwa warunki.
-
-```{r}
-dane[dane$plec == "K" & dane$waga < 70, ] # 
-```
-
-***
-
-### ćwiczenie 10 {.tabset .tabset-pills}
-#### Treść
-
-Wybierz z ramki danych dane
-
-* wszystkie wiersze poza "AGH’’.
-* wiersze "Kowalska"" 
-* tylko kolumnę z wagą i wzrost.
-* wszystkie kolumny poza ostatnią.
-* wiersze dla których waga jest mniejsza niż 70 oraz cztery pierwsze kolumny.
-
-#### odp.
-
-wszystkie wiersze poza "AGH’’.
-
-```{r}
-dane[dane$praca == "AGH",]
-```
-
-wiersze "Kowalska"" 
-
-```{r}
-dane[dane$nazwisko == "Kowalska",]
-```
-
-tylko kolumnę z wagą i wzrost.
-
-```{r}
-dane[,c("waga", "wzrost")]
-```
-
-wszystkie kolumny poza ostatnią.
-```{r}
-dane[,-ncol(dane)]
-```
-
-wiersze dla których waga jest mniejsza niż 70 oraz cztery pierwsze kolumny + kolmna waga.
-
-```{r}
-dane[dane$waga < 70, c(1:4,8)]
-```
-
-####
-
-***
-
-
-
-***
-
-### 3.5.4. Operacje arytmetyczne na data.frame()
-
-Na ramkach danych możemy wykonywać wiele operacji obliczeniowych. W tym podrozdziale zaprezentujemy kilka prostych przykładów:
-
-rozwiąż równanie $$wskaźnik=\frac{X}{\overline{x}}$$ 
-
-gdzie: x - waga, a $\overline{x}$ - średnia waga
+Aby wczytać pliki xlsx, lub xls trzeba zainstalować i załadować pakiet `openxlsx`
 
 ```{r, eval=FALSE}
-wskaznik <- dane$waga/mean(dane$waga)
+install.packages("openxlsx")
 ```
-
-Chcemy mieć nasz wskaźnik w obiekcie `data.frame()`, możemy w łatwy sposób dodać dodatkową kolumnę:
 
 ```{r}
-dane$wskaznik <- dane$waga/mean(dane$waga)
+library(openxlsx)
 ```
 
-Na powyższym obiekcie możemy wykonać dowolne operacje arytmetyczne, relacyjne, czy stosując operatory logiczne.
+W folerze dane znajduje się plik, który składa się z dwóch arkuszy danych. Najpierw wczytamy arkusz dane, a potem arkusz koty_ptaki.
+
+```{r}
+openxlsx::read.xlsx("dwa_arkusze.xlsx", sheet = 1) -> dane
+dane
+```
+
+Teraz drugi arkusz:
+
+```{r}
+read.xlsx("dwa_arkusze.xlsx", sheet = 2) -> zwierz
+zwierz
+```
+
 
 ***
 
-**Funkcją aggregate()** - możemy stosować podsumowania danych w ramkach danych z podziałem na grupy, ale musimy posiadać obiekty typu factor(). 
+### 4.2.3. pliki binarne
 
-* `aggregate()`
-* `by()`
-* `taplly()`
+Natywnym formatem dla programu R są pliki binarne o rozszerzeniu `.rda` lub `.RData`. Dane w tym formacie są skompresowane, przez co zajmują mniej miejsca na dysku niż w pliku tekstowym lub formacie Excela. Wadą jest to, że niewiele programów poza programem R potrafi je odczytać.
 
-Sprawdzamy czy mamy jakiść wektor `factor()` czynnik.
+Dane w tym formacie można wczytać do programu R poleceniem `load()`. Pierwszym argumentem tej funkcji jest ścieżka do pliku z danymi. Jeżeli chcemy dane odczytać z internetu, należy dodatkowo użyć funkcji `url()`.
 
-```{r}
-str(dane)
-```
-
-Mamy 6 kolumny typu factor, oraz 7 typu numeric i jedną character. Teraz wyliczymy średnie zarobki w każdym kraju:
+Uwaga !!! W przeciwieństwie do wcześniej poznanych funkcji, funkcja `load()` nie zwraca zbioru danych jako wynik, ale ładuje zbiór danych bezpośrednio do przestrzeni nazw (dane zapisane są wraz z nazwą zmiennej). 
 
 ```{r}
-aggregate(dane$zarobki,       # kolumna uśrednia 
-          list(kraj = dane$kraj), # grupowanie wg.
-          FUN = mean)             # srednia
+load(url("http://biecek.pl/MOOC/dane/koty_ptaki.rda"))
+load("dane.RData")
 ```
 
-Obliczymy sumaryczne zarobki w grupie płeć, ale stosując prostszy zapis
+***
+
+## 4.3. Zapisywanie danych 
+
+Zapisywanie danych przebiega w sposób analogiczny. Funkcję różnią się z reguły nazwą, zamiast `read` jest `write`. Przykłady:
 
 ```{r}
-aggregate(dane$zarobki,list(plec = dane$plec), sum)
+getwd() # tu zapisujemy
+write.table(dane, file = "write1.txt",  # txt
+            sep = ";", dec = ".", 
+            row.names = F, col.names = T)
+
+write.table(dane, file = "write2.csv",  # csv
+            sep = ",", dec = ".", 
+            row.names = F, col.names = T)
+
+write.csv(dane, file = "write3.csv", row.names = F)
+
+write.xlsx(zwierz, file = "zwierz.xlsx")
+
+save(dane, dane2, zwierz, koty_ptaki,
+     file = "dane_all.RData") # można od razu zapisać kilka 
 ```
 
-Inna funkcja to `by()`
-
-```{r}
-sredni <- by(dane$zarobki, dane$plec, FUN=mean) 
-sredni
-```
-
-Wymaga konwersji do obiektu list, i data.frame:
-
-```{r}
-sredni 
-sredni <- as.list(sredni)
-as.data.frame(sredni)
-```
-
-I jeszcze funkcja `tapply()`
-
-```{r}
-tapply(dane$zarobki, dane$plec, mean) # średnia w grupach
-tapply(dane$zarobki, dane$plec, counts) # c
-```
+***
 
 
 
-
-
-
-badania
-# funkcja with(), należy nakazać drukowanie wyniku
-with(badania, {
-  czas = czas/60
-print(czas)
-  })
-# funkcja within() aktualizuje data.frame
-within(badania, {
-  czas = czas*60
-})
-# Funkcja transform() działa podobnie do within(), pozwala przekształcić 
-# dane w kolumnie i dodać nową kolumne
-transform(badania, czas = czas*60, plec2 = c(1,1,2,1,2,2))
-Dodawanie kolumn i wierszy cbind() i rbind()
-Poznaliśmy już te funkcje w ramach tego kursu.
-
-
-### 3.5.5. Wybrane funkcje dla obiektu data.frame() 
-
-# poleceniem data.frame możemy scalić dwa obiekty data.frame
-a <- data.frame(badania, badania)
-a # natomiast jest to dodawanie kolumn
-# cbind -- dodanie kolumny
-cbind(badania, stezenie = c(1,3,6,8,9,10))
-# dodanie dwóch data.frame
-rbind(badania, badania)
-# dodanie nowego wiersza danych
-rbind(badania, Katarzyna = c("K", "T", 45, 52))
-
-
-
-# 4. Cechy jakościowe
-
-### 3.5.4. Typ czynnikowy 
-
-Typ czynnikowy (nazywany również wyliczeniowym lub kategorycznym). Ten typ jest przydatny do przechowywania wektorów wartości występujących na kilku poziomach (w kilku kategoriach). Przykładowo płeć występuje na dwóch poziomach, tzn. może przyjmować tylko dwie wartości, dlatego przechowując w programie R wektor danych opisujących płeć, najlepiej użyć typu czynnikowego. Zmienne tego typu są najczęściej wykorzystywane do definiowania grup. Zmienne typu czynnikowego zajmują mniej miejsca w pamięci niż odpowiadające im łańcuchy znaków. Wewnętrznie takie wektory przechowywane są jako wektory liczb przez co można na nich szybciej wykonywać określone funkcje. Gdy możemy, warto używać tego typu dla poprawienia efektywności. Ponadto wiele funkcji programu R (szczególnie statystycznych) jest w stanie rozpoznać, że argument jest typu wyliczeniowego i zastosować odpowiednie działania, np. wyznaczyć liczebności poszczególnych grup, zastosować kodowanie z użyciem zmiennych pustych itp. Zazwyczaj zmienne tego typu tworzy się z użyciem funkcji factor(). Na poniższym przykładzie konstruujemy czteroelementowy wektor elementów typu wyliczeniowego, ze słownikiem składającym się z dwóch wartości [@biecek2008przewodnik]. 
-
-
-```{r}
-nz <- factor(c("sierzant", "kapitan", 
-               "sierzant", "sierzant"))
-nz
-```
-
-zmienna nz jest obiektem czynnikowym składającym się z 4 elemetów tekstowych utworzonych z dwóch słów. Każde słowo reprezentuje kategorię. W celu utworzenie tego obiektu skorzystano z dwóch funkcji. funkcji `c()`, która utworzyła wektor tekstowy składający się z 4 elementów. Następnie wektor ten uległ konwersji do obiektu typu czynnikowego za pośrednictwem funkcji `factor()`.
-
-
-```{r}
-summary(nz)
-table(nz)
-```
-
-
-# 5. Cechy ilościowe
-
-
-
-# 4. Wczytywanie danych
-# 5. Przetwarzanie tekstu
-# 6. Przetwarzanie daty
 
 

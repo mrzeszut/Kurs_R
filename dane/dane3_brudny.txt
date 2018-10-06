@@ -1,0 +1,12 @@
+﻿3455
+344
+"imie";"nazwisko";"praca";"stanow";"zarobki";"staz";"urlop";"waga";"wzrost";"wiek";"plec";"kraj";"urodzony"
+"Katarzyna";"Kowalska";"AGH";"asystent";4495.7;16;24;66;164;62;"K";"DE";"Tarnow"
+"Zofia";"Kowalska";"ZUS";"ksiegowy";4694.9;8;17;81;161;64;"K";"PL";"Gorlice"
+"Julia";"Kowalska";"NFZ";"ksiegowy";3284.5;18;4;59;174;61;"K";"USA";"Sekowa"
+"Kora";"Nowak";"AGH";"adniunk";2727.8;19;6;82;183;52;"K";"USA";"Krakow"
+"Piotr";"Zwykly";"PK";"prof.";3958.8;10;20;72;180;51;"M";"PL";"Berlin"
+"Adam";"Nowy";"UJ";"prof.";5382.2;13;20;68;157;60;"K";"USA";"Amsterdam"
+"Robert";"Nowy";"UG";"prof.";5062.5;5;9;55;175;44;"M";"DE";"Brzesko"
+"Janusz";"Ptak";"NFZ";"technik";4299.7;12;8;81;185;61;"M";"DE";"Wieliczka"
+"Beata";"Ptak";"UMK";"Inzynier";5873.5;12;9;101;188;51;"K";"DE";"Skawina"

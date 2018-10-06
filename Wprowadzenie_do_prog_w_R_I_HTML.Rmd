@@ -35,7 +35,7 @@ h1    { font-size: 24px;} h2    { font-size: 22px;} h3    { font-size: 20px;} </
 **lokalizacja:**  bud. C-4, p. V, pok. 511, al. A. Mickiewicz 30, Kraków, Polska.
 
 **konsultacje:** Zgodnie z informacjami na stronie
-[dziekantu](https://dziekanat.geod.agh.edu.pl/dziekanat/index.php?menu1=4&menu2=17&co=o&lin=o&wiad=@f_konsult_prez) lub po uzgodnieniu za pośrednictwem e-mail.
+[dziekanatu](https://dziekanat.geod.agh.edu.pl/dziekanat/index.php?menu1=4&menu2=17&co=o&lin=o&wiad=@f_konsult_prez) lub po uzgodnieniu za pośrednictwem e-mail.
 
 ***
 
